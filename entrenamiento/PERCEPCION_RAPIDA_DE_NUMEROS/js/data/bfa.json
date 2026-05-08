@@ -1,0 +1,64 @@
+var dato=[
+{
+	'tiempo':'700',
+	'vec':[
+	"El amor es una locura que nadie la cura, pero si el cura la cura es una locura del cura. ",
+	"Si la bruja desbruja al brujo y el brujo a la bruja desbruja, ni el brujo queda desbrujado, ni el brujo desbruja a la bruja. ",
+	"Te quiero porque me quieres, ¿Quieres que te quiera más? te quiero más que me quieres, ¿Qué más quieres que te quiera.? ",
+	"El cielo está enladrillado, ¿Quién lo desenladrillará? El desenladrillador que lo desenladrille, buen desenladrillador será. ",
+	"Tres tristes trapecistas con tres trapos troceados hacen trampas truculentas porque suben al trapecio por trapos y no por cuerdas.  ",
+	"Pepe Pecas pica papas con un pico, con un pico pica papas Pepe Pecas. Si Pepe Pecas pica papas con un pico, ¿Dónde está el pico con que Pepe Pecas pica papas.?",
+	"El Rey de Constantinopla esta constantinoplizado. Consta que Constanza, no lo pudo desconstantinoplizar el desconstantinoplizador que desconstantinoplizará al Rey de Constantinopla, buen desconstantinoplizador será. ",
+	"No me mires que nos mira, nos miran que nos miramos, miremos que no nos miren y cuando no nos miren nos miraremos, porque si no miramos descubrir pueden que nos amamos.  ",
+	"El cielo está encapotado, ¿Quién lo desencapotára?. El desencapotador que lo desencapote buen desencapotador será.  ",
+	"Me han dicho un dicho, que dicen que he dicho yo. Ese dicho está mal dicho, pues si yo lo hubiera dicho, estaría mejor dicho, que ese dicho que dicen que algún día dije yo.  ",
+	"El perro en el barro, rabiando rabea: su rabo se embarra cuando el barro barre, y el barro a arrobas le arrebosa el rabo. De ese bobo vino, nunca beber debe; vida boba y breve, vivirá si bebe.  ",
+	"Compró Paco pocas copas y, como pocas copas compró, pocas copas Paco pagó.  ",
+	"¡Compadre, cómpreme un coco! ¡Compadre, coco no compró!, porque el que poco coco come, poco coco compra y como yo poco coco como, poco coco compró!.  ",
+	"Doña Dírija, Dáriga, Dóriga, trompa pitáriga, tiene unos guantes de pellejo de zírriga zárriga, zórriga, trompa pitáriga, le vienen grandes.  ",
+	"Un podador podaba la parra y otro podador que por allí pasaba le dijo: -Podador que podas la parra, ¿Qué parra podas? ¿Podas mi parra o tu parra podas? -Ni podo tu parra, ni mi parra podo, que podo la parra de mi tío Bartolo.  "
+	]
+	
+},
+{
+	'tiempo':'700',
+	'vec':[
+	"Un tubo tiró un tubo y otro tubo lo detuvo. Hay tubos que tienen tubos pero este tubo no tuvo tubo.",
+	"Hay locos que vuelven locos a los que locos no son, pero más locos son los que creen que locos no son.",
+	"Cuando cuentes cuentos cuenta cuantos cuentos cuentas porque, si no cuentas cuantos cuentos cuentas, nunca sabrás cuantos cuentos sabes contar.",
+	"Treinta y tres tramos de troncos trozaron tres tristes trozadores de troncos y triplicaron su trabajo, triplicando su trabajo de trozar troncos y troncos.",
+	"Poquito a poquito Paquito empaca poquitas copitas en pocos paquetes.",
+	"Yo vi en un huerto un cuervo cruento comerse el cuero del cuerpo del puerco muerto.",
+	"No me mires, que miran que nos miramos, y verán en tus ojos que nos amamos. No nos miremos, que cuando no nos miren nos miremos.",
+	"Si la sierva que te sirve, no te sirve como sierva, de que sirve que te sirvas de una sierva que no sirve.",
+	"El perro en el barro, rabiando rabea: su rabo se embarra cuando el barro barre, y el barro a arrobas le arreboza el rabo.",
+	"Las cosas son mozas porque la vida tiene rosas, con las cosas tienes motas y las rosas son mozas porque rezas con las rosas mozas.",
+	"La razón de la sinrazón que a mi razón se hace, de tal manera mi razón enfurece que con razón me quejo, de la vuestra hermosura.",
+	"Pedro Pérez Pita pintor perpetuo pinta paisajes por poco precio para poder partir pronto para Paris.",
+	"Si a su gusto no le gustan los gustos de mi gusto, que disgusto para mi gusto saber que a su gusto no le gustan los gustos de mi gusto.",
+	"El pájaro caripocapote tiene muchos caripocapitos, yo quise agarrar un caripocapito y me picó el pájara caripocapote.",
+	"Un trabalengüista muy trabalenguoso creó un trabalenguas muy trabalenguado, que ni el mejor trabalengüista lo pudo destrabalenguar."
+	]
+},
+{
+	'tiempo':'700',
+	'vec':[
+	"El amor es una locura que nadie la cura, pero si el cura la cura es una locura del cura. ",
+	"Si la bruja desbruja al brujo y el brujo a la bruja desbruja, ni el brujo queda desbrujado, ni el brujo desbruja a la bruja. ",
+	"Te quiero porque me quieres, ¿Quieres que te quiera más?, te quiero más que me quieres, ¿Qué más quieres que te quiera.?",
+	"El cielo está enladrillado, ¿Quién lo desenladrillará?. El desenladrillador que lo desenladrille, buen desenladrillador será. ",
+	"Tres tristes trapecistas con tres trapos troceados hacen trampas truculentas porque suben al trapecio por trapos y no por cuerdas.  ",
+	"Pepe Pecas pica papas con un pico, con un pico pica papas Pepe Pecas. Si Pepe Pecas pica papas con un pico, ¿Dónde está el pico con que Pepe Pecas pica papas?.  ",
+	"El Rey de Constantinopla esta constantinoplizado. Consta que Constanza, no lo pudo desconstantinoplizar el desconstantinoplizador que desconstantinoplizara al Rey de Constantinopla, buen desconstantinoplizador será. ",
+	"No me mires que nos mira, nos miran que nos miramos, miremos que no nos miren y cuando no nos miren nos miraremos, porque si no miramos descubrir pueden que nos amamos.  ",
+	"Un tubo tiró un tubo y otro tubo lo detuvo. Hay tubos que tienen tubos pero este tubo no tuvo tubo.",
+	"Hay locos que vuelven locos a los que locos no son, pero más locos son los que creen que locos no son.",
+	"Cuando cuentes cuentos cuenta cuantos cuentos cuentas porque, si no cuentas cuantos cuentos cuentas, nunca sabrás cuantos cuentos sabes contar.",
+	"Treinta y tres tramos de troncos trozaron tres tristes trozadores de troncos y triplicaron su trabajo, triplicando su trabajo de trozar troncos y troncos.",
+	"Poquito a poquito Paquito empaca poquitas copitas en pocos paquetes.",
+	"Yo vi en un huerto un cuervo cruento comerse el cuero del cuerpo del puerco muerto.",
+	"No me mires, que miran que nos miramos, y verán en tus ojos que nos amamos. No nos miremos, que cuando no nos miren nos miremos.",
+	]
+}
+];
+

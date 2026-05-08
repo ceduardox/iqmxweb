@@ -1,0 +1,165 @@
+ul {
+    list-style-type: none;  
+}
+/******puntuacion*******/
+.caja-puntuacion
+{
+   margin: .8em auto;
+   text-align: center;
+   position: relative;
+   height: 60px;
+   width: 100%;
+   max-width: 500px;
+}
+.caja-puntuacion .caja-tiempo
+{
+   color: #0080C0;
+   margin: 0 auto;
+   text-align: center;
+   width: 180px;
+   height: 75px;
+   line-height: 1.7em;
+}
+.caja-tiempo .dato-tiempo
+{
+   font-size: 3em;
+   font-weight: bold;   
+}
+.caja-tiempo .unidad-tiempo {
+    font-size: 1em;
+    color: #0080C0;
+    font-weight: 500;
+    line-height: 0em;
+    
+}
+.caja-correctos
+{   
+   border:2px solid #35BA8F;
+   border-radius: 50%;
+   box-sizing:border-box;
+   color: #35BA8F;
+   font-size: 1.5em;
+   font-weight: bold;
+   padding: 0;
+   line-height: 1.7em;
+   position: absolute;
+   top: 0em;
+   left: 1.5em;
+   width: 50px;
+   height: 50px;
+}
+.caja-incorrectos
+{
+   
+   border:2px solid tomato;
+   border-radius: 50%;
+   box-sizing:border-box;
+   color: tomato;
+   font-size: 1.5em;
+   font-weight: bold;
+   padding: 0;
+   line-height: 1.7em;
+   position: absolute;
+   top: 0em;
+   right: 1.5em;
+   width: 50px;
+   height: 50px;
+}
+/*panel juego*/
+.panel-juego
+{
+   background: #FFFFF0;
+   border: 1px solid transparent; 
+   border-radius: 5px;
+   box-shadow: 0px 1px 2px rgba(0,0,0,.5);
+   margin: 0 auto;   
+   text-align: center;   
+}
+.caja-juego
+{     
+   width: 350px;      
+}
+.btn-jugar
+{
+   font-size: 1.2em;
+   text-align: center;
+   margin: .8em auto;  
+}
+/*acrv*/
+.acrv
+{
+   margin: 0 auto;   
+   width: 330px;
+   font-size: 1.5em;
+   font-weight: bold;
+   text-align: center;   
+}
+.acrv .table-row
+{
+   overflow: hidden;
+   margin: 0;
+   width: 100%;
+   color : #6e6e6e;
+}
+.acrv .table-row .col
+{
+    padding: 0;
+   width: 11.1%;
+   height: 45px;
+   float: left;
+}
+.acrv .table-row .punto
+{
+   background: tomato;
+   border-radius: 50%;
+   margin: .45em auto;
+   width: 15px;
+   height: 15px;      
+}
+#botones_acrv
+{
+   padding: 0;
+   margin: 0 auto; 
+   margin-bottom: 2em;  
+   width: 350px;   
+   overflow: hidden;
+}
+#botones_acrv button
+{
+   border: none;
+   border-radius: 50%;
+   color: #fff;
+   width: 60px;
+   height: 60px;
+   font-size: 2.5em;
+   padding: 0;
+   margin: 0;
+   line-height: 0em;   
+}
+#botones_acrv #boton1
+{
+   background: #E3564C;   
+}
+#botones_acrv #boton2
+{
+   background: #35BA8F;   
+}
+.iconResAcrv
+{
+   position: absolute;
+   z-index: 500;
+   top: 310px;
+   left: 50%;
+   margin-left: -32px;
+   width: 70px;
+   font-size: 3em;
+   opacity: 0.5;
+}
+.icon-bien
+{
+   color: #35BA8F;
+}
+.icon-mal
+{
+   color:tomato;
+}

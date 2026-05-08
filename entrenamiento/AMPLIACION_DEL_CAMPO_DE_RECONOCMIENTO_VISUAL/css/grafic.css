@@ -1,0 +1,96 @@
+.caja_grafica
+{
+   margin: 0 auto;
+   text-align: center;
+}
+.graficaDescipcion
+{
+   color: #3399DB;
+   box-shadow: 3px 0 #0080C0 inset;
+   margin: 0 auto;
+   text-align: left;
+   width: 95%;   
+}
+.graficaDescipcion h3
+{
+   padding-left: .5em;
+}
+.graficaSubdescripcion
+{
+   color: #1BBB9B;
+   font-size: 1.3em;
+   margin: .5em 0;
+   text-align: left;
+   padding-left: .5em;
+}
+.caja_grafica .panel-grafica
+{
+   margin: 1.5em 0;
+}
+.botonActivo
+{
+   background: #25AAE1;
+   color: #fff;
+   font-weight: 800;
+}
+.botonDesactivo
+{
+    border: none;
+   background: rgb(158, 212, 235);
+   color: #111111;
+}
+.cajaGrafica
+{   
+   margin: 0 auto;
+   width: 90%;   
+}
+
+
+#historial
+{
+  color: #146b6e;
+}
+.lineagrafica
+{
+  width: 100%;
+  border-bottom: 2px #146b6e dashed;
+  margin-top: .3em;  
+}
+
+.panelinformativo
+{
+   background: #2ECD71;
+  border-radius: 2px;
+  box-sizing:border-box;
+   color: #fff;
+  margin: 1em auto;  
+  width: 300px;
+  height: 50px;
+  padding: .7em 0 .5em 0;
+  text-align: center;
+  font-size: 1em;
+  font-weight: 500;
+}
+.panelinformativo span
+{
+  color: #FFF;
+  width: 25px;
+  font-size: 1.2em;
+   text-shadow: 1px 1px 5px #808080,
+               2px 2px 5px #808080;
+   -o-text-shadow: 1px 1px 5px #808080,
+               2px 2px 5px #808080;
+   -webkit-text-shadow: 1px 1px 5px #808080,
+   2px 2px 5px #808080;
+   -moz-text-shadow: 1px 1px 5px #808080,
+   2px 2px 5px #808080;
+}
+
+.caja-btn-grafica{
+    text-align: center;
+}
+.caja-btn-grafica button {
+    position: relative;
+    color: yellow;
+    
+}

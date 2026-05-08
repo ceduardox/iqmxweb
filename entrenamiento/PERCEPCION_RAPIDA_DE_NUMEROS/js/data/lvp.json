@@ -1,0 +1,115 @@
+var dato=[
+{
+	vec:[
+		{
+			texto:[
+			"Internet es un","conjunto de redes de","comunicación interconectadas. Gracias a","el disponemos de información en tres mil millones","de páginas de la world wide web. También podemos comunicarnos","con gente por medio del mail. Internet no está controlada","por nadie, sino que se rige por una serie de estándares","o normas que especifican como deben conectarse las computadoras","entre sí"
+			],
+			opciones:[
+			{texto:"conjunto de redes",		ref:true},
+			{texto:"la world wide web",		ref:true},
+			{texto:"por medio del mail",	ref:true},
+			{texto:"conjunto de robots",ref:false},
+			{texto:"la world white web",ref:false},
+			{texto:"no contiene  normas",ref:false}
+			]
+		},		
+		{
+			texto:[
+			"Un hombre tenía","un caballo y un asno. Un día cuando iban camino a la ciudad, el asno sintiéndose cansado le","dijo al caballo: Toma una parte de mi carga si te interesa mi vida. El","caballo haciéndose el sordo no dijo nada el asno murió víctima de la fatiga.","Entonces el dueño echó toda la carga encima del caballo, incluso","la piel del asno. Y el caballo, suspirando dijo: !Por","no haber querido cargar con un ligero","fardo ahora tengo que cargar","con todo, hasta la piel","del asno."
+			],
+			opciones:[
+			{texto:"piel del asno",ref:true},
+			{texto:"caballo y asno",ref:true},
+			{texto:"asno murió",ref:true},
+			{texto:"caballo y conejo",ref:false},
+			{texto:"caballo murió",ref:false},
+			{texto:"rumbo al rebaño",ref:false}
+			]
+		},
+		{
+			texto:[
+			"Júpiter tiene","anillos a su alrededor,","que son muy difíciles de ver, está formado","por tres partes: El más interno es un anillo en forma de nube","llamado anillo Halo. El siguiente es el anillo es bastante estrecho y delgado y el","último es el anillo, Gossamer, que es casi transparente. Los","anillos de Júpiter son muy oscuros y difíciles ","de ver, están hechos de pedazos de","polvo, que cae órbita alrededor","de Júpiter y forma de anillos"
+			],
+			opciones:[
+			{texto:"Venus",ref:true},
+			{texto:"Júpiter",ref:true},
+			{texto:"anillos oscuros",ref:true},
+			{texto:"anillo Hammer",ref:false},
+			{texto:"no posee anillos",ref:false},
+			{texto:"cerca de la tierra",ref:false}
+			]
+		},
+		{
+			texto:[
+			"Los robots son","máquinas que se comportan casi","como seres humanos y pueden llevar a cabo","tareas difíciles y repetitivas. Los robots humanoides tienen","incluso un aspecto parecido al de las personas y son capaces de","realizar diferentes trabajos sin ayuda humana. Sin embargo","casi todos los robots necesitan personas que los","guíen. A pesar de sus limitaciones, estos","contribuirán a mejorar los robots","del futuro."
+			],
+			opciones:[
+			{texto:"seres humanos",		ref:true},
+			{texto:"robots humanoides",		ref:true},
+			{texto:"sin ayuda humana",	ref:true},
+			{texto:"conjunto de mail",ref:false},
+			{texto:"conjunto de robots",ref:false},
+			{texto:"comunicados por computadoras",ref:false}
+			]
+		}
+	]		
+},
+{		
+	vec:[
+		{
+			texto:[
+			"Los astrónomos creen","que el universo empezó a existir","hace 13 mil 700 millones de años, con una","gran explosión conocida como Big Bang. En un instante se","crearon el espacio y los bloques de construcción de la materia y empezó","el tiempo. Desde ese instante, el universo empezó a expandirse","y sigue expandiendose en la actualidad. A lo largo","de miles de millones de años la materia fue","formando estructuras cada vez mayores","y más complejas que continúan","evolucionando."
+			],
+			opciones:[
+			{texto:"el Big Bang",		ref:true},
+			{texto:"bloques de construcción",		ref:true},
+			{texto:"el universo pudo expandirse",	ref:true},
+			{texto:"gran población",ref:false},
+			{texto:"dominar el mundo",ref:false},
+			{texto:"un sistema vació",ref:false}
+			]
+		},		
+		{
+			texto:[
+			"Las estrellas son","masas de gases, principalmente","hidrógeno y helio, que emiten luz.","El sol es una estrella que tenemos muy cerca.","El número de las estrellas observables a simple vista desde la tierra","se ha calculado en unas 8.000, la mitad en cada hemisferio.","Durante la noche no se pueden ver más de 2.000 al","mismo tiempo, el resto quedan ocultas por la","neblina atmosférica. La estrella más","cercana al sistema Solar es","Alfa Centauro."
+			],
+			opciones:[
+			{texto:"estrellas",ref:true},
+			{texto:"hidrogeno y helio",ref:true},
+			{texto:"alfa Centauro",ref:true},
+			{texto:"el sol",ref:false},
+			{texto:"alfa Centurion",ref:false},
+			{texto:"emiten radiación",ref:false}
+			]
+		},
+		{
+			texto:[
+			"Una duna es","una acumulación de arena,","generada por el viento. Cuando el viento tiene","una dirección dominante, las dunas adquieren la forma de una C. Este","fenómeno puede causar serios problemas, como: la invasión de terrenos cultivados,","obstrucción y ocultación de carreteras y vías de comunicación, invasión","de áreas pobladas. Para evitar estos problemas existen","procedimientos para limitar el avance de las","dunas, entre ellos; sembrar plantas","que requieren poca agua","para subsistir."
+			],
+			opciones:[
+			{texto:"acumulación de arena",ref:true},
+			{texto:"serios problemas",ref:true},
+			{texto:"sembrar plantas",ref:true},
+			{texto:"obstáculos de agua",ref:false},
+			{texto:"hacer hoyos",ref:false},
+			{texto:"no causa problemas",ref:false}
+			]
+		},
+		{
+			texto:[
+			"La rana gigante","de San Antón, o dedos de","coral, es un anfibio de gran tamaño en","comparación con la mayoría de las otras especies de","ranas australianas. Su color varía de marrón a verde, dependiendo","de la temperatura y el entorno y llega a tener manchas","blancas de forma irregular en la espalda, sus","ojos son de tamaño prominente y","de color dorado."
+			],
+			opciones:[
+			{texto:"ranas australianas",		ref:true},
+			{texto:"anfibio de gran tamaño",		ref:true},
+			{texto:"ojos de color dorado",	ref:true},
+			{texto:"ranas americanas",ref:false},
+			{texto:"reptiles de menor tamaño",ref:false},
+			{texto:"boca de color rosado",ref:false}
+			]
+		}
+	]	
+}	
+];
+

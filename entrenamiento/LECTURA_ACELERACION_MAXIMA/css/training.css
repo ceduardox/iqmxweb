@@ -1,0 +1,88 @@
+ul {
+  list-style-type: none;  
+}
+
+
+.panel-obj
+{ 
+  box-sizing:border-box;
+  margin-top: 1em; 
+  width: 100%;
+  padding: .5em;
+}
+
+.text-juego
+{
+  color: #0080C0;
+  box-shadow: 3px 0 #615F7E inset;
+}
+.text-juego h3
+{
+   padding-left:.4em;
+   font-size: 1.3em;
+   font-weight: 500;
+}
+
+.comentario_objetivos .lista-objetivos:after
+{
+   content: '';
+   display: block;
+   clear: both;
+   height: 15px;
+   width: 100%;  
+}
+
+
+.comentario_objetivos .comentario_caja
+{
+   width: 100%;
+   float: right;
+   position: relative;
+   box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.comentario_caja .comentario_cabecera
+{
+   background: #fcfcfc;
+   padding: 10px 12px;
+   border-bottom: 1px solid #E5E5E5;
+   overflow: hidden;
+   border-radius: 4px 4px 0 0;
+}
+
+.comentario_caja .comentario_tipo
+{
+   color: #0080C0;
+   font-size: 1em;
+   font-weight: 600;
+   float: left;
+   font-style: italic;;
+   margin: .1em .5em 0 0;
+}
+.comentario_caja .comentario_descripcion
+{
+   padding: 10px;
+   font-size: 1em;
+   line-height: 1.5em;
+   color: #595959;
+   border-radius: 0 0 4px 0px;
+}
+.comentario_caja .comentario_descripcion .lista-jugar li
+{
+   position: relative;
+   padding-left: 20px;
+   line-height: 1.7em;
+   font-size: 1em;
+}
+.comentario_caja .comentario_descripcion .lista-jugar li:before
+{
+   content: "\2713";
+   color: #0080C0;
+   font-weight: bold;
+   position: absolute;
+   left: 0;
+}
+.caja_niveles
+{
+  margin: 0 auto;
+  text-align: center;
+}

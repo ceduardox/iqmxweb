@@ -1,0 +1,15 @@
+@media (max-width: 576px) {
+    .page-programas section#index-testList .text ul li {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    .page-programas section#index-testList .image {
+        display: none;
+    }
+}
+
+.btn-reset {
+    background: #fff;
+    border: 1px solid #1d3c6d;
+    color: #1d3c6d!important;
+}

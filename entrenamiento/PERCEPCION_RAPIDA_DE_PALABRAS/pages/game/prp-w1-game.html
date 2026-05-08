@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.core.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.default.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.default.css" />
+    <link rel="stylesheet" href="../../css/prp-w1-game.css" />
+    <title>IQMAX</title>
+  </head>
+  <body class="body-juego">
+    <header>
+      <nav class="navbar navbar-dark bg-primary">
+        <a class="navbar-brand" href="../../index.html">
+          <i class="fa fa-fw fa-chevron-left"></i>
+          <span id="nivel-juego">Percepción Rápida de Palabras</span>
+        </a>
+      </nav>
+    </header>
+    <section class="container-fluid">
+      <div class="caja-puntuacion">
+        <div class="principal">
+          <div class="caja-tiempo">
+            <p id="seg" class="dato-tiempo">25</p>
+            <p class="unidad-tiempo">pal/min</p>
+          </div>
+          <div id="aciertos" class="caja-correctos">
+            <p>0</p>
+          </div>
+          <div id="vida" class="caja-incorrectos">
+            <p>0</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel-juego caja-juego">
+        <div class="marcoJuegoS1">
+          <div id="tabla_juego1" class="cajaGrupo1">
+            <div id="grupo1" class="grupo1">
+              <div id="puntos" class="elemPunto elemento">
+                <div id="col1_1"><img id="img1_1" src="../../img/punto2.png" /></div>
+                <div id="col1_2"><img id="img1_2" src="../../img/punto2.png" /></div>
+                <div id="col1_3"><img id="img1_3" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemLinea elemento">
+                <div id="linea1_1"><img src="../../img/linea.png" /></div>
+                <div id="linea1_2"><img src="../../img/linea.png" /></div>
+                <div id="linea1_3"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+            <div id="grupo2" class="grupo1">
+              <div id="puntos" class="elemPunto elemento">
+                <div id="col1_4"><img id="img1_4" src="../../img/punto2.png" /></div>
+                <div id="col1_5"><img id="img1_5" src="../../img/punto2.png" /></div>
+                <div id="col1_6"><img id="img1_6" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemLinea elemento">
+                <div id="linea1_4"><img src="../../img/linea.png" /></div>
+                <div id="linea1_5"><img src="../../img/linea.png" /></div>
+                <div id="linea1_6"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+          </div>
+          <div id="tabla_juego2" class="cajaGrupo1">
+            <div id="grupo2_1" class="grupoDos">
+              <div id="puntos" class="elemPunto elemento2">
+                <div id="col2_1"><img id="img2_1" src="../../img/punto2.png" /></div>
+                <div id="col2_2"><img id="img2_2" src="../../img/punto2.png" /></div>
+                <div id="col2_3"><img id="img2_3" src="../../img/punto2.png" /></div>
+                <div id="col2_4"><img id="img2_4" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento2">
+                <div id="linea2_1"><img src="../../img/linea.png" /></div>
+                <div id="linea2_2"><img src="../../img/linea.png" /></div>
+                <div id="linea2_3"><img src="../../img/linea.png" /></div>
+                <div id="linea2_4"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+            <div id="grupo2_2" class="grupoDos">
+              <div id="puntos" class="elemPunto elemento2">
+                <div id="col2_5"><img id="img2_5" src="../../img/punto2.png" /></div>
+                <div id="col2_6"><img id="img2_6" src="../../img/punto2.png" /></div>
+                <div id="col2_7"><img id="img2_7" src="../../img/punto2.png" /></div>
+                <div id="col2_8"><img id="img2_8" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento2">
+                <div id="linea2_5"><img src="../../img/linea.png" /></div>
+                <div id="linea2_6"><img src="../../img/linea.png" /></div>
+                <div id="linea2_7"><img src="../../img/linea.png" /></div>
+                <div id="linea2_8"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+          </div>
+          <div id="tabla_juego3" class="cajaGrupo1">
+            <div id="grupo3_1" class="grupotres">
+              <div id="puntos" class="elemPunto elemento3">
+                <div id="col3_1"><img id="img3_1" src="../../img/punto2.png" /></div>
+                <div id="col3_2"><img id="img3_2" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento3">
+                <div id="linea3_1"><img src="../../img/linea.png" /></div>
+                <div id="linea3_2"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+            <div id="grupo3_2" class="grupotres">
+              <div id="puntos" class="elemPunto elemento3">
+                <div id="col3_3"><img id="img3_3" src="../../img/punto2.png" /></div>
+                <div id="col3_4"><img id="img3_4" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento3">
+                <div id="linea3_3"><img src="../../img/linea.png" /></div>
+                <div id="linea3_4"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+          </div>
+          <div id="tabla_juego4" class="cajaGrupo2">
+            <div id="grupo4_1" class="grupoCuatro">
+              <div id="puntos" class="elemPunto elemento4">
+                <div id="col4_1"><img id="img4_1" src="../../img/punto2.png" /></div>
+                <div id="col4_2"><img id="img4_2" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento4">
+                <div id="linea4_1"><img src="../../img/linea.png" /></div>
+                <div id="linea4_2"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+            <div id="grupo4_2" class="grupoCuatro">
+              <div id="puntos" class="elemPunto elemento4">
+                <div id="col4_3"><img id="img4_3" src="../../img/punto2.png" /></div>
+                <div id="col4_4"><img id="img4_4" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento4">
+                <div id="linea4_3"><img src="../../img/linea.png" /></div>
+                <div id="linea4_4"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+            <div id="grupo4_3" class="grupoCuatro">
+              <div id="puntos" class="elemPunto elemento4">
+                <div id="col4_5"><img id="img4_5" src="../../img/punto2.png" /></div>
+                <div id="col4_6"><img id="img4_6" src="../../img/punto2.png" /></div>
+              </div>
+              <div id="lineas" class="elemento4">
+                <div id="linea4_5"><img src="../../img/linea.png" /></div>
+                <div id="linea4_6"><img src="../../img/linea.png" /></div>
+              </div>
+            </div>
+          </div>
+          <div id="respuestas">
+            <button id="btn1_1" onclick="datop('btn1_1')">1</button>
+            <button id="btn2_1" onclick="datop('btn2_1')">2</button>
+            <button id="btn3_1" onclick="datop('btn3_1')">3</button>
+            <button id="btn4_1" onclick="datop('btn4_1')">4</button>
+            <button id="btn5_1" onclick="datop('btn5_1')">5</button>
+            <button id="btn6_1" onclick="datop('btn6_1')">6</button>
+          </div>
+          <div id="panelbien" class="iconResAcrv icon-bien">
+            <i class="fa fa-check"></i>
+          </div>
+          <div id="panelmal" class="iconResAcrv icon-mal">
+            <i class="fa fa-times"></i>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col text-center">
+            <button id="btn-jugar" type="button" class="btn btn-primary btn-jugar" onclick="juego()">Iniciar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="../../js/lib/jquery.min.js"></script>
+    <script src="../../js/lib/fastclick.js"></script>
+    <script src="../../js/alertify/alertify.js"></script>
+    <script src="../../js/database.js"></script>
+    <script src="../../js/data/prp.json"></script>
+    <script src="../../js/prp-w1-game1.js"></script>
+  </body>
+</html>

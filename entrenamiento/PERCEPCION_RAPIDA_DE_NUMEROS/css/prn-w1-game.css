@@ -1,0 +1,143 @@
+ul {
+    list-style-type: none;  
+}
+
+/******puntuacion*******/
+.caja-puntuacion
+{
+   margin: .8em auto;
+   text-align: center;
+   position: relative;
+   height: 60px;
+   width: 100%;
+   max-width: 500px;
+}
+.caja-puntuacion .caja-tiempo
+{
+   color: #0080C0;
+   margin: 0 auto;
+   text-align: center;
+   width: 180px;
+   height: 75px;
+   line-height: 1.7em;
+}
+.caja-tiempo .dato-tiempo
+{
+   font-size: 3em;
+   font-weight: bold;   
+}
+.caja-tiempo .unidad-tiempo {
+    font-size: 1em;
+    color: #0080C0;
+    font-weight: 500;
+    line-height: 0em;
+    
+}
+.caja-correctos
+{   
+   border:2px solid #35BA8F;
+   border-radius: 50%;
+   box-sizing:border-box;
+   color: #35BA8F;
+   font-size: 1.5em;
+   font-weight: bold;
+   padding: 0;
+   line-height: 1.7em;
+   position: absolute;
+   top: 0em;
+   left: 1.5em;
+   width: 50px;
+   height: 50px;
+}
+.caja-incorrectos
+{
+   
+   border:2px solid tomato;
+   border-radius: 50%;
+   box-sizing:border-box;
+   color: tomato;
+   font-size: 1.5em;
+   font-weight: bold;
+   padding: 0;
+   line-height: 1.7em;
+   position: absolute;
+   top: 0em;
+   right: 1.5em;
+   width: 50px;
+   height: 50px;
+}
+
+/*panel juego*/
+.panel-juego
+{
+   background: #FFFFF0;
+   border: 1px solid transparent; 
+   border-radius: 5px;
+   box-shadow: 0px 1px 2px rgba(0,0,0,.5);
+   margin: 0 auto;   
+   text-align: center;   
+}
+
+.caja-juego
+{     
+   width: 400px;      
+}
+
+
+.btn-jugar
+{
+   font-size: 1.2em;
+   text-align: center;
+   margin: .8em auto;  
+}
+/* percepcion rapida de numeros*/
+.bloque_s1
+{
+   color: #FFF;
+   text-align: center;
+   margin: 0em auto;
+   
+}
+.bloque_s1 .caja_buscar
+{
+   background: #2ECD71;
+   border-radius: 5px;
+   font-size: 1.6em;
+   font-weight: bold;
+   line-height: 3em;
+   width: 80px;
+   height: 80px;
+   margin: .5em auto;
+   padding: 0;   
+}
+.grupo_s1
+{
+   margin-top: .5em;
+   width: 100%;        
+}
+.grupo_s1 button
+{
+   background: #ebf2f7;
+   text-align: center;
+   border-radius: 5px;
+   border:none;
+   color: #383737;   
+   width: 70px;
+   height: 70px;   
+   display: inline-block;
+   padding: 0;
+   vertical-align: top;
+   font-weight: 500;
+}
+
+
+
+/*================= colores de bien o mal =============*/
+.rojo
+{
+  background: #FE540C !important;
+}
+.verde
+{
+  background: #6BCB24 !important;
+}

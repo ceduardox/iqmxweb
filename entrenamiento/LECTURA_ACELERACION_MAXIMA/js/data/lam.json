@@ -1,0 +1,77 @@
+var lec=[
+	{
+		'titulo':"El perrito",
+		'texto':"Bo era un perrito muy alegre y juguetón que no podía caminar desde que nació porque tenía una parálisis en las patas traseras. Amina, una niña que lo vio al nacer, convenció a sus papás para llevarlo a casa y cuidarlo para evitar que lo sacrificasen."+
+		"Bo y su pequeña dueña Amina jugaban mucho juntos. El perrito se esforzaba por moverse usando solo sus patas delanteras y puesto que no podía saltar y apenas moverse, ladraba para expresar todo lo que necesitaba. A pesar de las dificultades, Bo era un perro feliz que llenaba de alegría y optimismo la casa en la que vivía."+
+		"Un día los papás de Amina llegaron a casa con Adela,una niña de la edad de Amina que iba vivir con ellos una temporada. Cuando Bo la vio se arrastró enseguida a saludarle y a darle la bienvenida con su alegría de siempre. Pero Adela lo miró con desprecio y se echó a llorar."+
+		"Bo no se rindió e intentó hacer todas las tonterías que sabía para hacerla reír, pero no nada funcionaba y Adela no dejaba de llorar."+
+		"- No te preocupes, Bo- decían los papás de Amina-. Adela está triste porque viene de un país muy pobre que está en guerra y ha sufrido mucho. Está triste porque ha tenido que separarse de su familia."+
+		"Bo pareció entender lo que le decían, porque se acercó a Adela y se quedó con ella sin ladrar ni hacer nada, sólo haciéndole compañía."+
+		"La tristeza de Adela fue poco a poco inundando la casa. Todos estaban muy preocupados por ella, porque no eran capaces de hacerla sonreír ni un poquito."+
+		"Pasaron los días y Bo no se separaba de Adela, y eso que la niña lo intentaba apartar y huía a esconderse cuando lo veía e incluso protestaba cuando Bo intentaba jugar con ella."+
+		"Pero el perrito no se daba por vencido. Cuando Amina estaba, Bo jugaba con ella mientras Adela miraba y, aunque no sonreía, dejaba de llorar cuando Bo jugueteaba y hacía sus gracias."+
+		"Un día que Amina no estaba a Bo le entraron muchas ganas de jugar y se le ocurrió intentar que fuera Adela quien jugara con él. Como la niña no le hacía caso, Bo no paraba de moverse y, de pronto, se chocó contra una mesa tan fuerte que se le cayó encima un vaso de leche. El vaso no se rompió porque era de plástico, pero empapó al pobre Bo de leche y lo dejó paralizado del susto."+
+		"Adela, cuando lo vio, le quedó mirando al perrito sin decir nada. De repente, se echó a reír, viendo lo gracioso que estaba el perrito lleno de leche con su cara de susto."+
+		"Cuando Bo vio que Adela se reía, empezó a lamerse la leche y a hacer más tonterías mientras la niña, sin parar de reír, intentaba limpiarlo con el mantel. Cuando Amina y sus vio lo que se reía Adela se alegró muchísimo, y corrió a decírselo a sus papás. Por fin todos volvían a estar alegres."+
+		"A pesar de no ser un perrito como los demás, Bo fue el único capaz de lograr que la alegría y el optimismo volvieran a aquella casa."
+	},
+	{		
+		'titulo':"La miel",
+		'texto':"La miel es un fluido dulce y viscoso producido por las abejas a partir del néctar de las flores o de secreciones de partes vivas de plantas o de excreciones de insectos chupadores de plantas. Las abejas lo recogen, transforman y combinan con la enzima invertasa que contiene la saliva de las abejas y lo almacenan en los panales donde madura."+
+		"La producción mundial de miel es aproximadamente de 1.200.000 tn. La miel tiene cualidades reconocidas por los seres humanos como alimento y para endulzar, con un poder mayor al de la caña de azúcar, tiene muchas propiedades terapéuticas, se puede usar externamente debido a sus propiedades antimicrobianas y antisépticas. Ya que ayuda a cicatrizar y a prevenir infecciones en heridas o quemaduras superficiales. También es utilizada en cosmética  y como tónicos debido a sus cualidades astringentes y suavizantes."+
+		"Es usada para el alivio sintomático del resfriado. Estudios en personas de entre 2 a 18 años con infecciones en las vías respiratorias demostraron que es capaz de aliviar las membranas irritadas en la parte posterior de la garganta y que tiene efectos antioxidantes y antivirales. Su dulzura y textura de jarabe calmarían el dolor de garganta, pero también influirían su contenido antioxidante y su efecto antimicrobiano. Para niños menores de un año no es recomendable porque existe el peligro del desarrollo del botulismo. Este último riesgo se hace ínfimo en niños más grandes."+
+		"Los catarros se combaten popularmente en algunos países endulzando con miel al zumo de limón o el té de cebolla. La Organización Mundial de la Salud recomienda el uso de miel para el alivio de la tos en niños mayores de un año. "+ 
+		"Es un excelente conservante natural. Sin embargo, no siempre es saludable. Debido a que procede de flores silvestres, hay algunos momentos y lugares en los que la miel producida por las abejas es altamente tóxica. Los rododendros y azaleas producen un néctar altamente venenoso para los humanos, aunque inofensivo para las abejas, que producen así una miel mortífera. En algunas regiones del mundo las colmenas se vacían inmediatamente después de la temporada de flores, eliminando cualquier residuo para evitar envenenamientos accidentales."
+	},
+	{		
+		'titulo':"El Hada",
+		'texto':"Las hadas, por lo general, son criaturas bellas, dulces, amables y llenas de amor. Pero hubo una vez un hada que no eran tan hermosa. La verdad, es que era horrible, tanto, que parecía una bruja."+
+		"El Hada Fea vivía en un bosque encantado en el que todo era perfecto, tan perfecto que ella no encajaba en el paisaje, por eso se fue a vivir apartada en una cueva del rincón más alejado del bosque. Allí cuidaba de los animalitos que vivían con ella, y disfrutaba de la compañía de los niños que la visitaban para escuchar sus cuentos y canciones. Todos la admiraban por su paciencia, la belleza de su voz y la dedicación que prestaba a todo lo que hacía. Para los niños no era importante en absoluto su aspecto."+
+		"- Hada, ¿por qué vives apartada? -le preguntaban los niños."+
+		"-Porque así vivo más tranquila -contestaba ella."+ 
+		"No quería contarles que en realidad era porque el resto de las hadas la rechazaban por su aspecto."+
+		"Un día llegó una visita muy especial al bosque encantado. Era la reina suprema de todas las hadas del universo: el Hada Reina. La cual estaba visitando todos los reinos, países, bosques y parajes donde vivían sus súbditos para comprobar que realmente cumplían su misión: llevar la belleza y la paz allá donde estuvieran."+
+		"Para comprobar que todo estaba en orden, el Hada Reina lanzaba un hechizo muy peculiar, que ideaba en función de lo que observaba en cada lugar."+
+		"-Ilustrísima Majestad-dijo el Hada Gobernadora de aquel bosque encantado-. Podéis ver que nuestro bosque encantado es un lugar perfecto donde reina la belleza y la armonía."+
+		"-Veo que así parece -dijo el Hada Reina-. Veamos a ver si es verdad. Yo conjuro este lugar para que en él reinen los colores más hermosos si lo que decís es verdad, o para que desaparezca el color si realmente hay algo feo aquí."+
+
+		"Pero en ese momento, el bosque encantado empezó a quedarse sin colores, y todo se volvió gris."+
+
+		"-Parece que no es verdad lo que me decís -dijo el Hada Reina-. Tendréis que buscar el motivo de que vuestro hogar haya perdido el color. Cuando lo hagáis, este bosque encantado recuperará todo su brillo y esplendor. Sólo cuando la auténtica belleza viva entre vosotras este lugar volverá a ser perfecto."+
+
+		"Tras la visita del Hada Reina se reunieron urgentemente todas las hadas del consejo del bosque encantado."+
+		"-Esto es cosa del Hada Fea -dijo una de las hadas del consejo-. Ella es la culpable."+
+		"-Vayamos a buscarla -dijo el Hada Gobernadora del bosque -. Hay que expulsarla de aquí."+
+
+		"Todas las hadas fueron en busca del Hada Fea. Cuando la encontraron le pidieron que se marchara. La pobre Hada Fea, pensando que era la culpable, se marchó."+
+
+		"Pero cuando cruzó las fronteras del bosque, éste dejó de ser gris y pasó a ser de color negro."+
+
+		"Mientras los niños se enteraron de la noticia fueron rápidamente a hablar con el resto de las hadas muy enfadados."+
+		"-¿Qué habéis hecho? ¿Por qué le habéis echado de aquí? -decían llorando los niños -. Puede que el Hada Fea no sea muy bonita, pero es mucho mejor que vosotras."+
+		"-¡Dejadla que vuelva a entrar! Ella es buena y cariñosa, y no como vosotras que sois presumidas y egoístas. No es el Hada Fea quien hace feo este lugar sino vuestro egoísmo."+
+
+		"El Hada FeaEl Hada Fea no andaba muy lejos del bosque y al escuchar a los niños gritar enfadados volvió para ver qué ocurría."+ 
+
+		"-Niños, ¿qué ocurre? -dijo el Hada Fea entrando de nuevo en el bosque."+
+
+		"Los niños corrieron a abrazarla. Todos menos uno, que se quedó con la boca abierta."+
+
+		"- ¡Mirad eso! -dijo el niño. El suelo que acaba de pisar el Hada Fea ha recuperado su color, y también las flores que tiene a su lado."+
+
+		"El resto de hadas comprendieron en ese momento lo equivocadas que habían estado."+ 
+
+		"-Hada Fea, perdónanos -dijo el Hada Gobernadora-. Pensábamos que estropeabas nuestro bosque y no hemos sido capaces de ver que éramos nosotras quienes lo hacíamos siendo injustas contigo. Tienes un corazón es bueno y puro. Te pedimos que nos disculpes por favor."+
+
+		"El Hada Fea perdonó a sus hermanas y las acompañó por todo el bosque. Todo el mundo pudo admirar el gran corazón de aquel hada que, aunque tenía una cara muy fea, emocionaba a todos con su belleza interior."
+	}
+];
+
+var  velocidad=[{
+	'tiempoV':["46000","43000","40000","37000","34000","31000","28000","25000","22000","19000","16000","13000","12000","11000","10000","9700","9400","9100","8800","8500","8200","7900","7600","7300","7000","6900","6800","6700","6600","6500","6400","6300","6200"]
+	},
+	{
+	'nombreV':["100","125","150","175","200","225","250","275","300","325","350","375","400","425","450","475","500","525","550","575","600","625","650","675","700","725","750","775","800","825","850","875","900","925","950","975","1000"]
+	}
+];
+

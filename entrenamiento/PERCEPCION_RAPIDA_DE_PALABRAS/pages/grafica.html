@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/grafic.css" />
+    <title>IQMAX</title>
+  </head>
+  <body class="body_juego">
+    <header class="header">
+      <nav class="navbar navbar-dark bg-primary">
+        <a class="navbar-brand" href="../index.html">
+          <i class="fa fa-fw fa-chevron-left"></i>
+          AVANCES
+        </a>
+      </nav>
+    </header>
+    <section class="">
+      <div class="caja_grafica">
+        <div class="panel-grafica">
+          <div class="graficaDescipcion">
+            <h3 id="juego">Percepción Rápida de Palabras</h3>
+          </div>
+          <div class="caja-btn-grafica">
+            <button id="btn-nivel-graf0" class="btn btn-primary botonDesactivo btn0" onclick="nivelGrafica('1')">
+              1
+            </button>
+            <button id="btn-nivel-graf1" class="btn btn-primary botonDesactivo btn1" onclick="nivelGrafica('2')">
+              2
+            </button>
+            <button id="btn-nivel-graf2" class="btn btn-primary botonDesactivo btn2" onclick="nivelGrafica('3')">
+              3
+            </button>
+            <button id="btn-nivel-graf3" class="btn btn-primary botonDesactivo btn3" onclick="nivelGrafica('4')">
+              4
+            </button>
+          </div>
+        </div>
+        <div class="panel-grafic">
+          <div class="panelinformativo">
+            <div>
+              [<span class="fa fa-long-arrow-up"></span> Aciertos] [<span class="fa fa-long-arrow-right"></span> N° de
+              Prueba]
+            </div>
+          </div>
+        </div>
+        <div class="cajaGrafica">
+          <div>
+            <canvas id="canvas" height="450" width="600"></canvas>
+          </div>
+        </div>
+        <div class="caja_testimonio">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Tiempo</th>
+                <th scope="col">Aciertos</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-grafica"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/lib/fastclick.js"></script>
+    <script src="../js/lib/Chart.js"></script>
+    <script src="../js/lib/tiempo.js"></script>
+    <script src="../js/database.js"></script>
+    <script src="../js/grafica.js"></script>
+  </body>
+</html>

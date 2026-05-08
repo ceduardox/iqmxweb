@@ -1,0 +1,89 @@
+var dato=[
+{
+	'tiempo':'600',
+	vec:[
+	{
+		'texto':[
+		"Soy","animal","en el campo","soy pintura en la","ciudad y mi nombre","como dice Braulio en","esta adivinanza está."
+		],
+		'textoBtn':[
+		{"texto":"BRAULIO","resp":0},{"texto":"LA CEBRA","resp":1},{"texto":"LA PINTURA","resp":0}
+		]
+	},
+	{
+		'texto':[
+		"En","medio del cielo","estoy sin ser lucero ni","estrella sin ser sol ni luna","bella, a ver si aciertas quien soy."
+		],
+		'textoBtn':[
+		{"texto":"LUCIERNAGA","resp":0},{"texto":'LA LETRA "E"',"resp":1},{"texto":"ESTRELLA","resp":0}
+		]
+	},
+	{
+		'texto':[
+		"Soy","hijo del agua","del agua natural","a ser agua vuelvo sin","hacer nunca mal."
+		],
+		'textoBtn':[
+		{"texto":"LA CASCADA","resp":0},{"texto":"EL HIELO","resp":1},{"texto":"EL RIO","resp":0}
+		]
+	}	
+	]
+},
+{
+	'tiempo':'500',
+	vec:[
+	{
+		'texto':[
+		"Un","platito de","avellanas que de","día se recogen y de","noche se desparraman."
+		],
+		'textoBtn':[
+		{"texto":"LAS ESTRELLAS","resp":1},{"texto":"EL SOL","resp":0},{"texto":"LA LUNA","resp":0}
+		]
+	},
+	{
+		'texto':[
+		"Agita","el cartucho","carga la pistola","pasa un algodón, y con","un azote pone la inyección."
+		],
+		'textoBtn':[
+		{"texto":"LA ENFERMERA","resp":1},{"texto":"EL POLICIA","resp":0},{"texto":"EL MAGO","resp":0}
+		]
+	},
+	{
+		'texto':[
+		"Nací","en tu cuerpo","contigo, yo te acompaño","y te aliento, aunque a veces","te atormento, si te faltase este","amigo. no contarías más el cuento."
+		],
+		'textoBtn':[
+		{"texto":"EL CALOR","resp":1},{"texto":"EL SOL","resp":0},{"texto":"LA SOMBRA","resp":0}
+		]
+	}	
+	]
+},
+{
+	'tiempo':'400',
+	vec:[
+	{
+		'texto':[
+		"Es","como","una paloma","blanca y negra","pero vuela sin alas","o plumas y habla sin lengua."
+		],
+		'textoBtn':[
+		{"texto":"EL MIMO","resp":0},{"texto":"LA PALOMA","resp":0},{"texto":"LA CARTA","resp":1}		
+		]
+	},
+	{
+		'texto':[
+		"Alto","y flaco caballero","justiciero y soñador,","que, a lomos de Rocinante,","a molinos se enfrentó","creyendo que eran gigantes."
+		],
+		'textoBtn':[
+		{"texto":"EL MIMO","resp":0},{"texto":"DAVID","resp":0},{"texto":"DON QUIJOTE DE LA MANCHA","resp":1}
+		]
+	},
+	{
+		'texto':[
+		"No","soy un árbol","pero hojas tengo.","No, soy cuaderno","y hojas pierdo y en","cada mes, una menos cuento."
+		],
+		'textoBtn':[
+		{"texto":"AGENDA","resp":0},{"texto":"ALMANAQUE","resp":0},{"texto":"El CALENDARIO","resp":1}
+		]
+	}	
+	]
+}		
+]

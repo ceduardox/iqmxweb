@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../css/acrv-w1-game.css" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.core.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.default.css" />
+    <title>IQMAX</title>
+  </head>
+  <body class="body-juego">
+    <nav class="navbar navbar-dark bg-primary">
+      <a class="navbar-brand" href="../../index.html">
+        <i class="fa fa-fw fa-chevron-left"></i>
+        <span id="nivel-juego">AMPLIACIÓN DEL CAMPO DE RECONOCIMIENTO VISUAL</span>
+      </a>
+    </nav>
+    <section class="container-fluid">
+      <div class="caja-puntuacion">
+        <div class="principal">
+          <div class="caja-tiempo">
+            <p id="seg" class="dato-tiempo">60</p>
+            <p class="unidad-tiempo">segundos</p>
+          </div>
+          <div id="aciertos" class="caja-correctos">
+            <p>0</p>
+          </div>
+          <div id="vida" class="caja-incorrectos">
+            <p>0</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel-juego caja-juego">
+        <div id="acrv-1" class="acrv">
+          <div class="table">
+            <div class="table-row">
+              <div id="col-00" class="col">A</div>
+              <div id="col-01" class="col">B</div>
+              <div id="col-02" class="col">C</div>
+              <div id="col-03" class="col">D</div>
+              <div id="col-04" class="col">A</div>
+              <div id="col-05" class="col">W</div>
+              <div id="col-06" class="col">C</div>
+              <div id="col-07" class="col">D</div>
+              <div id="col-08" class="col">D</div>
+            </div>
+            <div class="table-row">
+              <div id="col-10" class="col">A</div>
+              <div id="col-11" class="col">B</div>
+              <div id="col-12" class="col">M</div>
+              <div id="col-13" class="col">D</div>
+              <div id="col-14" class="col">A</div>
+              <div id="col-15" class="col">B</div>
+              <div id="col-16" class="col">C</div>
+              <div id="col-17" class="col">D</div>
+              <div id="col-18" class="col">D</div>
+            </div>
+            <div class="table-row">
+              <div id="col-20" class="col">A</div>
+              <div id="col-21" class="col">B</div>
+              <div id="col-22" class="col">C</div>
+              <div id="col-23" class="col">D</div>
+              <div id="col-24" class="col">A</div>
+              <div id="col-25" class="col">W</div>
+              <div id="col-26" class="col">C</div>
+              <div id="col-27" class="col">D</div>
+              <div id="col-28" class="col">D</div>
+            </div>
+            <div class="table-row">
+              <div id="col-30" class="col">A</div>
+              <div id="col-31" class="col">B</div>
+              <div id="col-32" class="col">M</div>
+              <div id="col-33" class="col">D</div>
+              <div id="col-34" class="col">
+                <div class="punto"></div>
+              </div>
+              <div id="col-35" class="col">B</div>
+              <div id="col-36" class="col">C</div>
+              <div id="col-37" class="col">D</div>
+              <div id="col-38" class="col">D</div>
+            </div>
+            <div class="table-row">
+              <div id="col-40" class="col">A</div>
+              <div id="col-41" class="col">B</div>
+              <div id="col-42" class="col">C</div>
+              <div id="col-43" class="col">D</div>
+              <div id="col-44" class="col">A</div>
+              <div id="col-45" class="col">W</div>
+              <div id="col-46" class="col">C</div>
+              <div id="col-47" class="col">D</div>
+              <div id="col-48" class="col">D</div>
+            </div>
+            <div class="table-row">
+              <div id="col-50" class="col">A</div>
+              <div id="col-51" class="col">B</div>
+              <div id="col-52" class="col">M</div>
+              <div id="col-53" class="col">D</div>
+              <div id="col-54" class="col">A</div>
+              <div id="col-55" class="col">B</div>
+              <div id="col-56" class="col">C</div>
+              <div id="col-57" class="col">D</div>
+              <div id="col-58" class="col">D</div>
+            </div>
+            <div class="table-row">
+              <div id="col-60" class="col">A</div>
+              <div id="col-61" class="col">B</div>
+              <div id="col-62" class="col">C</div>
+              <div id="col-63" class="col">D</div>
+              <div id="col-64" class="col">A</div>
+              <div id="col-65" class="col">W</div>
+              <div id="col-66" class="col">C</div>
+              <div id="col-67" class="col">D</div>
+              <div id="col-68" class="col">D</div>
+            </div>
+          </div>
+        </div>
+        <div id="botones_acrv">
+          <button id="boton1" onclick="respuestaMal()"><i class="fa fa-times"></i></button>
+          <button id="boton2" onclick="respuestaBien()"><i class="fa fa-check"></i></button>
+        </div>
+        <div id="panelbien" class="iconResAcrv icon-bien">
+          <i class="fa fa-check"></i>
+        </div>
+        <div id="panelmal" class="iconResAcrv icon-mal">
+          <i class="fa fa-times"></i>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col text-center">
+            <button id="btn-jugar" type="button" class="btn btn-primary btn-jugar" onclick="juego()">Iniciar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="../../js/lib/jquery.min.js"></script>
+    <script src="../../js/lib/fastclick.js"></script>
+    <script src="../../js/alertify/alertify.js"></script>
+    <script src="../../js/data/acrv.json"></script>
+    <script src="../../js/database.js"></script>
+    <script src="../../js/acrv-w1-game1.js"></script>
+  </body>
+</html>

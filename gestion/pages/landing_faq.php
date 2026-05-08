@@ -1,0 +1,84 @@
+<?php
+extract($_REQUEST);
+$cls  = new ClssLandingFAQ();
+
+$cods  = (isset($cod)) ? $cod : array();
+$codArr = explode("_",$cods); 
+$landing_id = $codArr[0];
+$cod = $codArr[1];
+
+$dato = $cls->listar($landing_id,$cod);
+if ($cod == 0) { 
+  $dato = array();
+  $dato[0]['title'] = ''; 
+  $dato[0]['text'] = '';  
+}
+ 
+?>
+
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+  <ol class="breadcrumb">
+    <li><a href="index"><i class="fa fa-home"></i> Inicio</a></li>
+  </ol>
+  <h1><i class="fa fa-file"></i> Landing Page / F.A.Q. <small>Editar información</small> </h1>
+</section>
+
+<!-- Main content -->
+
+<form method="post" name="form_" id="form_" action="ajax" enctype="multipart/form-data">
+  <input type="hidden" value="saveLandingFAQ" name="accion" />
+  <input type="hidden" value="<?php echo $landing_id;?>" name="landing_id" /> 
+  <input type="hidden" value="<?php echo $cod;?>" name="cod" /> 
+  <section class="content ">
+ 
+    <!--Precio 1-->
+    <div class="box ">
+      <div class="box-header with-border">
+        <h3 class="box-title">Información</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="title">Pregunta </label>
+              <input name="title" id="title" type="text" class="required form-control" value="<?php echo $dato[0]['title']; ?>" />
+            </div> 
+            <div class="form-group">
+              <label for="text">Respuesta </label>
+              <textarea name="text" id="text" rows="5"
+                class="required form-control"><?php echo $dato[0]['text']; ?></textarea>
+            </div> 
+          </div> 
+        </div>  
+
+      </div> 
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary" id="guardar" name="guardar">Guardar</button>
+        <button type="button" onclick="javascript:location.href='page-landing_faqs-<?php echo $landing_id;?>'" class="btn btn-default"
+          id="btn-cancelar" name="cancelar">Volver</button>
+        <div class="alert hidden"></div>
+      </div>
+    </div>
+  </section>
+</form>
+
+<!-- /.content -->
+
+<script src="plugins/ckeditor/ckeditor.js"></script> 
+<script>
+$(function() { 
+
+  var options = {
+    beforeSubmit: showRequest,
+    success: showResponse
+  };
+
+  $("#form_").validate({
+    submitHandler: function(form) {
+      $(form).ajaxSubmit(options);
+    }
+  });
+}); 
+</script>

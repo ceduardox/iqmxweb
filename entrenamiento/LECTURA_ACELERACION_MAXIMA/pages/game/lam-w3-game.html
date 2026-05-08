@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.core.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.default.css" />
+    <link rel="stylesheet" href="../../css/lam-w3-game.css" />
+    <title>IQMAX</title>
+  </head>
+  <body class="body-juego">
+    <header>
+      <nav class="navbar navbar-dark bg-primary">
+        <a class="navbar-brand" href="../../index.html">
+          <i class="fa fa-fw fa-chevron-left"></i>
+          <span id="nivel-juego">LECTURA ACELERACIÓN MÁXIMA</span>
+        </a>
+      </nav>
+    </header>
+    <section class="container-fluid">
+      <div class="panel-juego caja-juego">
+        <div id="slider_juego">
+          <section>
+            <div id="" class="cajaAceleracion">
+              <div class="vel-pal">
+                <p id="vel">200 palabras/min.</p>
+              </div>
+              <div class="cuadro-palabra">
+                <div class="linea"></div>
+                <div class="marco-palabra">
+                  <p id="dato">Observe aquí</p>
+                </div>
+                <div class="linea"></div>
+              </div>
+              <div class="control-pal">
+                <button onclick="menos()" class="btnLam1"><i class="fa fa-backward"></i></button>
+                <button id="play" onclick="play()" class="btnLam1"><i class="fa fa-play"></i></button>
+                <button id="pause" onclick="pausa()" class="btnLam1"><i class="fa fa-pause"></i></button>
+                <button onclick="mas()" class="btnLam1"><i class="fa fa-forward"></i></button>
+              </div>
+            </div>
+            <div class="caja_btn_sgte">
+              <button class="btn btn-info btn-sgte" onclick="atras()" id="btn-sgte" class="btn_sgte">
+                <i class="fa fa-chevron-left"></i> volver
+              </button>
+            </div>
+          </section>
+          <section>
+            <div class="cajaAceleracion">
+              <div id="lista-lectura" class="lista-lectura">
+                <ul></ul>
+              </div>
+              <div class="grupo-boton">
+                <button onclick="comenzar('2')">Lectura de Desplazamiento</button>
+                <button onclick="comenzar('1')">Lectura por golpes de vista</button>
+              </div>
+            </div>
+          </section>
+          <section>
+            <div id="" class="cajaAceleracion">
+              <div class="vel-pal">
+                <p id="velm">400 palabras/min. <span id="pantalla" style="font-size: 0.5em">aa</span></p>
+              </div>
+              <div id="" class="cajaLam">
+                <div id="cajaletras" class="cajaLetras" align="center">
+                  Un rey que había llegado a ser rey siendo aún muy joven, andaba enamorado de la hija de uno de los
+                  guardas que cuidaban de las tierras que pertenecían al palacio. Este guarda tenía su casa dentro de
+                  los límites de los jardines de palacio y por eso el rey acostumbraba a pasear por ellos con la
+                  esperanza de encontrarse con la muchacha que él quería, pero nunca conseguía verla a solas y tenía que
+                  conformarse con contemplarla, a ella y a sus dos hermanas, por entre los pocos huecos que dejaba el
+                  tupido seto que rodeaba la casa. Así pasaban los días y el espíritu del rey oscilaba entre la ansiedad
+                  y la melancolía. Una de las veces en que entretenía el tiempo mirando a través del seto, vio que las
+                  tres hijas del guarda estaban a la puerta de su casa cosiendo tranquilamente.
+                </div>
+              </div>
+              <div class="control-pal">
+                <button onclick="menosm()" id="menosm" class="btnLam2"><i class="fa fa-backward"></i></button>
+                <button id="playm" onclick="playm()" class="btnLam2"><i class="fa fa-play"></i></button>
+                <button id="pausem" onclick="pausem()" class="btnLam2"><i class="fa fa-pause"></i></button>
+                <button onclick="masm()" id="masm" class="btnLam2"><i class="fa fa-forward"></i></button>
+              </div>
+            </div>
+            <div class="caja_btn_sgte">
+              <button class="btn btn-info btn-sgte" onclick="atras()" id="btn-sgte" class="btn_sgte">
+                <i class="fa fa-chevron-left"></i> volver
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+    <script src="../../js/lib/jquery.min.js"></script>
+    <script src="../../js/lib/fastclick.js"></script>
+    <script src="../../js/alertify/alertify.js"></script>
+    <script src="../../js/database.js"></script>
+    <script src="../../js/data/lam.json"></script>
+    <script src="../../js/objeto.js"></script>
+    <script src="../../js/lam-w3-game.js"></script>
+  </body>
+</html>

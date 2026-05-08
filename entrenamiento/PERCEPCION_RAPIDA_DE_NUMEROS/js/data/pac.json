@@ -1,0 +1,69 @@
+var dato=[
+{	
+	vec:[
+	{primero:"yeso",	segundo:"alcázar",	tercero:"fax"},
+	{primero:"luz",		segundo:"alero",	tercero:"zumo"},
+	{primero:"disnea",	segundo:"visar",	tercero:"caldas"},
+	{primero:"lazo",	segundo:"dos",		tercero:"alce"},
+	{primero:"cita",	segundo:"cáctus",	tercero:"zona"},
+	{primero:"pan",		segundo:"sino",		tercero:"res"},
+	{primero:"anís",	segundo:"izar",		tercero:"humus"},
+	{primero:"empezó",	segundo:"años",	tercero:"derechos"},
+	{primero:"obtuvo",	segundo:"datos",	tercero:"personal"},
+	{primero:"acuerdo",	segundo:"santa",	tercero:"ministerio"},
+	{primero:"foráneo",	segundo:"mas",	tercero:"designado"},
+	{primero:"formación",	segundo:"para",	tercero:"lugares"},
+	{primero:"extranjero",	segundo:"roma",	tercero:"vocero"},
+	{primero:"repudiado",	segundo:"días",	tercero:"personal"},
+	{primero:"mostraba",	segundo:"pudo",	tercero:"alimentar"},
+	{primero:"pendiente",	segundo:"juez",	tercero:"celebrar"},
+	{primero:"representar",	segundo:"todo",	tercero:"domicilio"},
+	{primero:"explicó",	segundo:"país",	tercero:"eliminar"},
+	{primero:"pontífice",	segundo:"vivir",	tercero:"último"},
+	{primero:"decisión",	segundo:"pero",	tercero:"recuperar"},
+	{primero:"asesinar",	segundo:"que",	tercero:"prelado"},
+	{primero:"mencionar",	segundo:"amor",	tercero:"poseción"},
+	{primero:"infinidad",	segundo:"era",	tercero:"bautizmo"},
+	{primero:"anuncio",	segundo:"dos",	tercero:"mejorar"},
+	{primero:"diciembre",	segundo:"llegó",	tercero:"familiar"},
+	{primero:"dragón",	segundo:"rojo",	tercero:"experto"},
+	{primero:"ideales",	segundo:"uso",	tercero:"organismo"},
+	{primero:"reconocer",	segundo:"del",	tercero:"indefinido"}
+
+	]	
+},
+{
+	nivel:[
+	{
+		'vecA':[
+		"cachorro","ayudante","huerto","bayadera","azadilla","caballo","cebolla","discurso"],
+		'vecB':[
+		"parilla","semilla","honor","honra","plantilla","yerba","ballena","soberano"]
+	},
+	{
+		'vecA':[
+		"marino","pandilla","forestal","avestruz","redactar","bautizar","original","próspero"],
+		'vecB':[
+		"perejíl","bautista","sinfonía","mayonesa","uniforme","camiseta","carolina","auxiliar"]
+	},
+	{
+		'vecA':[
+		"elegante","viscacha","palacio","trimestre","santidad","salvador","expuesto","frescura"],
+		'vecB':[
+		"herencia","cepillo","delgado","suavidad","gelatina","zapallo","monolito","mexicano"]
+	}
+	]
+},
+{
+	vecF:["cama","mesa","cerco","halo","melón","viaje","té","cinta","primeros","olvida",
+		"norte","lista","juan","foto","día","copa","foca","beso","arroz","pero",
+		"diego","vaso","cabo","bajío","poste","mono","karla","puma","indía","mucho",
+		"sólo","veleta","paleta","nuez","limón","xola","cero","segundo","pío","fresa",
+		"giro","burro","campo","aro","bando","elote","helio","oruga","rosa","tuna",
+		"gente","átomo","grupo","factor","chino","llave","juez","humo","leche","guerra",
+		"pueblo","ocio","útil","cobra","queja","viña","hueso","vaciar","sida","marco",
+		"dardo","nieve","perejil","Francia","Asia","koala","iglesia","origen","estado","Pablo",
+		"amor","odio","luna","sol","dedo","uña","arco","luz","rosa","oído",
+		"foco","pila","flor","cana","hoja","rodó","China","rama","vela","lima"]
+}
+];

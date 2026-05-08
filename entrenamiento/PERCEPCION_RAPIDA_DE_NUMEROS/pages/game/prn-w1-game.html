@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../css/prn-w1-game.css" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.core.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.default.css" />
+    <link rel="stylesheet" href="../../css/alertify/alertify.default.css" />
+    <title>IQMAX</title>
+  </head>
+  <body class="body-juego">
+    <header>
+      <nav class="navbar navbar-dark bg-primary">
+        <a class="navbar-brand" href="../../index.html">
+          <i class="fa fa-fw fa-chevron-left"></i>
+          <span id="nivel-juego">PERCEPCIÓN RÁPIDA DE NÚMEROS</span>
+        </a>
+      </nav>
+    </header>
+    <section class="container-fluid">
+      <div class="caja-puntuacion">
+        <div class="principal">
+          <div class="caja-tiempo">
+            <p id="seg" class="dato-tiempo">25</p>
+            <p class="unidad-tiempo">segundos</p>
+          </div>
+          <div id="aciertos" class="caja-correctos">
+            <p>0</p>
+          </div>
+          <div id="vida" class="caja-incorrectos">
+            <p>0</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel-juego caja-juego">
+        <div id="bloque-s1-1" class="bloque_s1 marco-prn-s1">
+          <div class="caja_buscar" id="buscar1">
+            <p class="buscar">XVIII</p>
+          </div>
+          <div class="grupo_s1">
+            <button class="cuadro" onclick="datop('a10')" id="a10">1</button>
+            <button class="cuadro" onclick="datop('a11')" id="a11">2</button>
+            <button class="cuadro" onclick="datop('a12')" id="a12">3</button>
+            <button class="cuadro" onclick="datop('a13')" id="a13">4</button>
+            <button class="cuadro" onclick="datop('a14')" id="a14">5</button>
+          </div>
+          <div class="grupo_s1">
+            <button class="cuadro" onclick="datop('a15')" id="a15">6</button>
+            <button class="cuadro" onclick="datop('a16')" id="a16">7</button>
+            <button class="cuadro" onclick="datop('a17')" id="a17">8</button>
+            <button class="cuadro" onclick="datop('a18')" id="a18">9</button>
+            <button class="cuadro" onclick="datop('a19')" id="a19">10</button>
+          </div>
+          <div class="grupo_s1">
+            <button class="cuadro" onclick="datop('a110')" id="a110">I</button>
+            <button class="cuadro" onclick="datop('a111')" id="a111">II</button>
+            <button class="cuadro" onclick="datop('a112')" id="a112">III</button>
+            <button class="cuadro" onclick="datop('a113')" id="a113">IV</button>
+            <button class="cuadro" onclick="datop('a114')" id="a114">V</button>
+          </div>
+          <div class="grupo_s1">
+            <button class="cuadro" onclick="datop('a115')" id="a115">A</button>
+            <button class="cuadro" onclick="datop('a116')" id="a116">B</button>
+            <button class="cuadro" onclick="datop('a117')" id="a117">C</button>
+            <button class="cuadro" onclick="datop('a118')" id="a118">D</button>
+            <button class="cuadro" onclick="datop('a119')" id="a119">E</button>
+          </div>
+          <div class="grupo_s1">
+            <button class="cuadro" onclick="datop('a120')" id="a120">F</button>
+            <button class="cuadro" onclick="datop('a121')" id="a121">G</button>
+            <button class="cuadro" onclick="datop('a122')" id="a122">H</button>
+            <button class="cuadro" onclick="datop('a123')" id="a123">I</button>
+            <button class="cuadro" onclick="datop('a124')" id="a124">J</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col text-center">
+            <button id="btn-jugar" type="button" class="btn btn-primary btn-jugar" onclick="comenzar()">Iniciar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="../../js/lib/jquery.min.js"></script>
+    <script src="../../js/lib/fastclick.js"></script>
+    <script src="../../js/alertify/alertify.js"></script>
+    <script src="../../js/data/prn-s1.json"></script>
+    <script src="../../js/database.js"></script>
+    <script src="../../js/prn-w1-game1.js"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+require/config.local.php
+error_log
+custom.log
+*.log
+*.sql
+*.sql.gz
+*.tar
+*.tar.gz
+*.zip
+*.bak
+*.old
+*.orig
+*.php_
+*.php__
+.DS_Store
+Thumbs.db

@@ -1,0 +1,193 @@
+ul {
+    list-style-type: none;  
+}
+/******puntuacion*******/
+.caja-puntuacion
+{
+   margin: .8em auto;
+   text-align: center;
+   position: relative;
+   height: 60px;
+   width: 100%;
+   max-width: 500px;
+}
+.caja-puntuacion .caja-tiempo
+{
+   color: #0080C0;
+   margin: 0 auto;
+   text-align: center;
+   width: 180px;
+   height: 75px;
+   line-height: 1.7em;
+}
+.caja-tiempo .dato-tiempo
+{
+   font-size: 3em;
+   font-weight: bold;   
+}
+.caja-tiempo .unidad-tiempo {
+    font-size: 1em;
+    color: #0080C0;
+    font-weight: 500;
+    line-height: 0em;
+    
+}
+.caja-correctos
+{   
+   border:2px solid #35BA8F;
+   border-radius: 50%;
+   box-sizing:border-box;
+   color: #35BA8F;
+   font-size: 1.5em;
+   font-weight: bold;
+   padding: 0;
+   line-height: 1.7em;
+   position: absolute;
+   top: 0em;
+   left: 1.5em;
+   width: 50px;
+   height: 50px;
+}
+.caja-incorrectos
+{
+   
+   border:2px solid tomato;
+   border-radius: 50%;
+   box-sizing:border-box;
+   color: tomato;
+   font-size: 1.5em;
+   font-weight: bold;
+   padding: 0;
+   line-height: 1.7em;
+   position: absolute;
+   top: 0em;
+   right: 1.5em;
+   width: 50px;
+   height: 50px;
+}
+/*panel juego*/
+.panel-juego
+{
+   background: #FFFFF0;
+   border: 1px solid transparent; 
+   border-radius: 5px;
+   box-shadow: 0px 1px 2px rgba(0,0,0,.5);
+   margin: 0 auto;   
+   text-align: center;   
+}
+.caja-juego
+{     
+   width: 350px;      
+}
+.btn-jugar
+{
+   font-size: 1.2em;
+   text-align: center;
+   margin: .8em auto;  
+}
+/*============================= prp s1 ==============================*/
+.cajaGrupo1
+{
+   margin: 8em 0 8em 0;
+}
+.cajaGrupo2
+{
+   margin: 6.8em 0 6.8em 0;
+}
+.grupo1,.grupoDos,.grupoTres
+{
+   margin: 4.5em 0;
+}
+.grupoCuatro
+{
+   margin: 4em 0 4em 0;
+   width: 100%;
+} 
+.grupo1 .elemento div,.grupoDos .elemento2 div,
+.grupoTres .elemento3 div,.grupoCuatro .elemento4 div
+{
+   display: inline-block;
+   vertical-align: top;      
+}
+.grupo1 .elemento div,.grupoTres .elemento3 div,.grupoCuatro .elemento4 div
+{
+   width: 30%;
+}
+.grupoDos .elemento2 div
+{
+   width: 20%; 
+}
+
+.grupo1 .elemPunto,.grupoDos .elemPunto,
+.grupoTres .elemPunto,.grupoCuatro .elemPunto
+{   
+   box-sizing:border-box;
+   height: 35px;
+   position: relative;
+   padding-top: .6em;
+}
+
+.elemento div,.elemento2 div, .elemento3 div,.elemento4 div
+{
+   font-size: 1.2em;
+}
+#puntos img
+{ 
+   width: 20px;
+}
+#lineas img
+{ 
+   width: 70%;
+   height: 7px;
+}
+#respuestas
+{
+   margin: 1.6em auto;
+}
+#respuestas button
+{
+   display: inline-block;   
+   width: 45%;
+   padding: 0;
+   height: 60px;
+   margin: 2em 0;
+   background: #ebf2f7;
+   color: #383737;
+   font-weight: 500;
+}
+.panelPrpS1
+{
+   position: absolute;
+   z-index: 500;
+   top: 300px;
+   left: 50%;
+   margin-left: -35px;
+   width: 70px;
+}
+.bien-acrv
+{
+  top:200px;
+}
+.mal-acrv
+{
+  top:220px;
+}
+
+.iconResAcrv
+{
+   position: absolute;
+   z-index: 500;
+   top: 310px;
+   left: 50%;
+   margin-left: -32px;
+   width: 70px;
+   font-size: 3em;
+}
+.icon-bien
+{
+   color: #35BA8F;
+}
+.icon-mal
+{
+   color:tomato;
+}

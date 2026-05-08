@@ -1,0 +1,114 @@
+#test-container{ margin:0px auto; text-align:center;  width:100%}
+#test-container #test-body{ border:10px solid #037cc8; background:#FFF;  min-height:450px;vertical-align:top;  border-radius:4px 4px 0px 0px; }
+#test-container #test-body #test-header {position:relative;}
+#test-container #test-body #test-header .volver{ left:-10px; position:absolute; top:0; z-index:2;margin-top:3px; text-transform:uppercase; font-size:16px}
+#test-container #test-body #test-header .volver a{ background:#e25e03; color:#FFF; display:inline-block; padding:6px 7px; border-radius:3px; text-decoration:none;}
+#test-container #test-body #test-header .volver a:before{ content:"\f053"; font-family:FontAwesome; font-size:14px; color:#FFF; margin-right:5px}
+#test-container #test-body #test-header .icono{ position:absolute; right:0; top:0}
+#test-container #test-body #test-contend{ padding:20px}
+body.tipo-cerebral div#test-body div.row .tituTop,
+#test-container #test-body #test-header .titulo{ font-family: 'calibri-bold'; font-size:30px;text-align:center; display:inline-block; padding:10px 20px 14px;  margin-top: -4px;background:#037cc8; color:#FFF}
+body.tipo-cerebral div#test-body div.row h3.titu,
+#test-container #test-body #test-contend .titulo h3{ display: inline-block; font-family: 'calibri-bold'; position:relative; text-align:center; font-size:30px; color:#037cc8 }
+#test-container #test-body #test-contend .titulo h3:before,  
+#test-container #test-body #test-contend .titulo h3:after{  
+	border-bottom: 1px solid #dfdfdf;
+	content: "";
+	display: inline-block;
+	height: 2px;
+	position: absolute;
+	top: 50%;
+	width: 150px;
+}
+#test-container #test-body #test-contend .titulo h3:before{left: auto;margin-right: 30px;right: 100%;}
+#test-container #test-body #test-contend .titulo h3:after{right: auto;margin-left: 30px;left: 100%;}
+#test-container #test-body #test-contend .titulo h4{text-align:center;font-family: 'calibri'; font-size:18px; color:#CCC; margin-bottom:2em}
+#test-container #test-body #test-contend .info ul li{ list-style:none; float:left; margin-right:20px; margin-left:20px; width:21%; text-align:center}
+#test-container #test-body #test-contend .info ul li a { text-decoration: none; font-family: 'calibri-bold'; color:#333; font-size:26px}
+#test-container #test-body #test-contend .info ul li a i.icono { height: 170px; display:inline-block; width:170px; background-repeat:no-repeat; background:url(../../img/util/testIcono.png)}
+#test-container #test-body #test-contend .info ul li a.nino i.icono{ background-position:0px 0px}
+#test-container #test-body #test-contend .info ul li a.adolescente i.icono{ background-position:0px -170px}
+#test-container #test-body #test-contend .info ul li a.adulto i.icono{ background-position:0px -340px}
+#test-container #test-body:after{     visibility: hidden;display: block;font-size: 0;content: " ";clear: both;}
+#test-container #test-footer{ background:#037cc8; line-height:60px; color:#81bee4; padding-bottom:10px; text-align:center;  border-radius:0px 0px 4px 4px }
+
+#test-body #test-contend .info #contenido .lectura{ margin-top:20px; text-align:left}
+#test-body #test-contend .info #contenido .lectura .pregunta { margin-bottom:2em}
+#test-body #test-contend .info #contenido .lectura .pregunta:after{  
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  position: relative;
+  clear: both;}
+#test-body #test-contend .info #contenido .lectura .pregunta label{ float:left; text-align:left; cursor:pointer; display:inline-block; padding:8px 10px; background:#ededed; border-radius: 4px; margin-right:20px; margin-bottom:10px}
+#test-body #test-contend .info #contenido .lectura .pregunta label input[type="radio"]{ margin-right:5px} 
+#test-body #test-contend .info #contenido .lectura .pregunta label:hover{ color:#FFF; background:#ed9a00} 
+#test-body #test-contend .info #contenido form label input{ width:93.9%}
+
+#test-body #test-contend .titulo .mensaje.estado span#tipo-persona,
+#test-body #test-contend .titulo .mensaje.estado span#display{   color:#FFF; display:inline-block; padding:10px 30px;font-size: 22px; }
+#test-body #test-contend .titulo .mensaje.estado span#tipo-persona{ background: #066bab; border-radius: 3px 0 0 3px; text-transform:uppercase} 
+#test-body #test-contend .titulo .mensaje.estado span#display{ background: #1392e2; border-radius: 0 3px 3px 0; }
+#test-body #test-contend .titulo .mensaje.estado span#display:before{ content:"\f017"; font-family: FontAwesome; margin-right:10px}
+
+#test-body #test-contend .info #contenido .lectura .titulo{ text-align:center;font-family: 'calibri-bold'; color:#333; font-size:26px}
+#test-body #test-contend .info #contenido .lectura .subtitulo{ text-align:center;font-family: 'calibri-bold'; color:#333; font-size:20px}
+#test-body #test-contend .info #contenido .lectura .texto{ margin-top:20px; text-align:justify}
+
+a.link-test{ display: inline-block;padding:10px 40px; margin-right:5px; margin-left:5px; margin-bottom:15px; background:#ed9a00; color:#FFF; border-bottom:4px solid #a46d08}
+a.link-test:hover{ opacity:0.8}
+
+i.corner-left{
+	border:7px solid #037cc8;
+	border-right-color:transparent;
+	border-left-color:transparent;
+	border-width:65px 0 0 60px;
+	margin-left: -80px;
+	top:0; position: absolute;
+}
+i.corner-right{
+	border:7px solid #037cc8;
+	border-left-color:transparent;
+	border-right-color:transparent;
+	border-width: 65px 50px 0 0;
+	margin-left: 20px;
+	top:0; position: absolute;
+}
+.separaVertical{  
+	background:#066BAB;
+	border:7px solid #1392E2;
+	border-right-color:transparent;
+	border-left-color:transparent;
+	border-width:47px 0px 0px 24px;
+ 	  display: inline-block;
+	  vertical-align: bottom;
+}
+form#form_test label{ display:block}
+
+body.tipo-iq .contend-alternativas span.contend-item{ display:inline-block}
+body.tipo-iq .contend-alternativas span.contend-item label {
+	cursor: pointer;
+	display: inline-block;
+	padding: 10px;
+	border: 2px solid #E2E2E2;
+	border-radius: 5px;
+	margin: 10px;
+	position:relative;
+	overflow:hidden
+}
+body.tipo-iq .contend-series h4{ margin-bottom: 1em !important;}
+body.tipo-iq .contend-alternativas span.contend-item label.active,
+body.tipo-iq .contend-alternativas span.contend-item label:hover {	border: 2px solid #E25D02}
+body.tipo-iq .contend-alternativas span.contend-item label input{ text-indent:-9999; position:absolute; margin-left:-2em}
+body.tipo-iq .contend-alternativas span.contend-item label img{ margin-top:10px}
+body.tipo-iq .contend-alternativas span.contend-item label span.text-mini{ position:absolute; left:0; top:0; background:#FFF; padding:2px 6px; font-size:14px}
+body.tipo-iq button i.fa:before{ color: #FFF}
+body.tipo-iq button[disabled='disabled']{ background:#CCC; cursor:auto}
+
+
+body#page-test-iq-avanzada .contend-alternativas span.contend-item label img ,
+body#page-test-iq-general .contend-alternativas span.contend-item label img { width: 140px;}
+
+#test-contend div.btn, #test-contend div.btn p { color: #333; width: 100%;}
+#test-contend #formTest label {    width: 100%; text-align: left}

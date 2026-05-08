@@ -1,0 +1,97 @@
+RewriteEngine on
+Options -Indexes
+Options +FollowSymlinks
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php 
+
+# BLOG
+RewriteRule ^blog-detalle-([a-z0-9-]+)/?$ blog-detalle.php?blog=$1
+RewriteRule ^blog-categoria-([a-z0-9-]+)/?$ blog.php?categoria=$1
+RewriteRule ^blog-tag-([a-z0-9-]+)/?$ blog.php?etiqueta=$1
+RewriteRule ^blog-buscar-([a-z0-9-]+)/?$ blog.php?q=$1
+
+# MATERIALES
+RewriteRule ^material-tipo-([a-z0-9-]+)/?$ materiales.php?tipo=$1
+RewriteRule ^material-categoria-([a-z0-9-]+)/?$ materiales.php?categoria=$1
+RewriteRule ^material-([a-z0-9-]+)/?$ materiales-detalle.php?material=$1
+
+# CONTRASENA
+RewriteRule ^contrasena-generar-([a-z0-9-]+)/?$ contrasena-generar.php?id=$1
+
+# APIs
+RewriteRule ^api/lectura/([a-zA-Z]+)(/.*)?$ api/lectura/index.php?action=$1&$2 [L,QSA]
+RewriteRule ^api/razonamiento/([a-zA-Z]+)(/.*)?$ api/razonamiento/index.php?action=$1&$2 [L,QSA]
+RewriteRule ^api/iq/([a-zA-Z]+)(/.*)?$ api/iq/index.php?action=$1&$2 [L,QSA]
+RewriteRule ^api/contacto/([a-zA-Z]+)(/.*)?$ api/contacto/index.php?action=$1&$2 [L,QSA]
+RewriteRule ^api/cerebral/([a-zA-Z]+)(/.*)?$ api/cerebral/index.php?action=$1&$2 [L,QSA]
+RewriteRule ^api/push-notification/([a-zA-Z]+)(/.*)?$ api/push-notification/index.php?action=$1&$2 [L,QSA]
+
+# TEST
+RewriteRule ^test-([a-z]+)/?$ test.php?tipo=$1
+RewriteRule ^test-([a-z]+)-([a-z]+)/?$ test.php?tipo=$1&categoria=$2
+ 
+ErrorDocument 404 "Ups! Se ha producido un error"
+ErrorDocument 403 "Ups! Se ha producido un error"
+ErrorDocument 400 "Ups! Se ha producido un error"
+ErrorDocument 406 "Ups! Se ha producido un error"
+ErrorDocument 412 "Ups! Se ha producido un error"
+ErrorDocument 416 "Ups! Se ha producido un error"
+ErrorDocument 501 "Ups! Se ha producido un error"
+ErrorDocument 401 "Ups! Se ha producido un error"
+ErrorDocument 500 "Ups! Se ha producido un error"
+
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [NC,OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [NC,OR]
+RewriteCond %{QUERY_STRING} mosConfig_[a-zA-Z_]{1,21}(=|\%3D) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C)([^i]*i)+frame.*(>|%3E)  
+RewriteRule ^(.*)$ index.php [F,L]
+
+RewriteCond %{THE_REQUEST} ^.*(\\r|\\n|%0A|%0D).* [NC,OR]
+RewriteCond %{HTTP_COOKIE} ^.*(<|>|'|%0A|%0D|%27|%3C|%3E|).* [NC,OR]
+RewriteCond %{REQUEST_URI} ^/(,|;|:|<|>|">|"<|/|\\\.\.\\).{0,9999}.* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^$ [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^(java|curl|wget).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(libwww-perl|curl|wget|python|nikto|scan).* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^.*(<|>|'|%0A|%0D|%27|%3C|%3E|).* 
+
+RewriteCond %{QUERY_STRING} base64_encode.*(.*) [NC,OR]
+RewriteCond %{QUERY_STRING} concat[^\(]*\( [NC,OR]
+RewriteCond %{QUERY_STRING} union([^s]*s)+elect [NC,OR]
+RewriteCond %{QUERY_STRING} union([^a]*a)+ll([^s]*s)+elect [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*(;|<|>|'|"|\)|%0A|%0D|%22|%27|%3C|%3E|).*(/\*|union|select|insert|like|cast|set|declare|drop|truncate|update|md5|benchmark|url).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*(localhost|loopback|127\.0\.0\.1).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*(<|>|'|%0A|%0D|%27|%3C|%3E|).* [NC]
+RewriteCond %{QUERY_STRING} (\<|%3C).*iframe.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (\<|%3C).*style.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E)  
+
+RewriteCond %{REQUEST_METHOD} ^(HEAD|TRACE|DELETE|TRACK|DEBUG) [NC,OR]
+RewriteCond %{REQUEST_URI} (timthumb\.php|phpthumb\.php|thumb\.php|thumbs\.php) [NC]
+RewriteRule . - [S=1]
+
+RewriteRule ^gestion/page-(.*)-(.*)-pagina-([0-9]*)$ /gestion/main?page=$1&cod=$2&pagina=$3 [L]
+RewriteRule ^gestion/page-(.*)-pagina-([0-9]*)$ /gestion/main?page=$1&pagina=$2 [L]
+RewriteRule ^gestion/page-(.*)-([0-9_]*)$ /gestion/main?page=$1&cod=$2 [L]
+RewriteRule ^gestion/page-(.*)$ /gestion/main?page=$1 [L]
+RewriteRule ^gestion/report-(.*)$ /gestion/reports/downloadReport?report=$1&%{QUERY_STRING} [L,QSA]
+
+#SetEnvIfNoCase User-Agent ^$ keep_out
+SetEnvIfNoCase User-Agent (pycurl|casper|cmsworldmap|diavol|dotbot) keep_out
+SetEnvIfNoCase User-Agent (flicky|ia_archiver|jakarta|kmccrew) keep_out
+SetEnvIfNoCase User-Agent (purebot|comodo|feedfinder|planetwork) keep_out
+
+<Limit GET POST PUT>
+    Order Allow,Deny
+    Allow from all
+    Deny from env=keep_out
+</Limit>
+
+<IfModule mod_php5.c>
+php_value memory_limit 128M
+</IfModule>
+
+# Set the “ea-php72” package as the default “PHP” programming language.
