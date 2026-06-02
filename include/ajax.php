@@ -963,7 +963,7 @@ if (isset($tipo)) {
 			$mensaje .= '      <span class="headtitle">bailarina</span>';
 			$mensaje .= '    </div>  </div>';
 			$mensaje .= '  <div class="row text-left mtop20">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/taenzerin.gif"/>';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/taenzerin.gif"/>';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      Según funcione su cerebro, la bailarina girará hacia la izquierda o hacia la derecha. Si gira hacia la derecha, significa que utiliza predominantemente el lado derecho de su cerebro; además, tiene más posibilidades de ser diestro.';
 			$mensaje .= '    </div>';
@@ -975,7 +975,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/explain_farben.png"/>';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/explain_farben.png"/>';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '     Conflicto:El lado derecho del cerebro quiere elegir el color que concuerda con la palabra, mientras que el izquierdo quiere elegir la palabra escrita. Si comete un error, es debido a la acción del lado izquierdo del cerebro.';
 			$mensaje .= '    </div>';
@@ -987,7 +987,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/figur01.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/figur01.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta A:</h5>';
 			$mensaje .= '      <p>';
@@ -996,7 +996,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/figur02.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/figur02.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta B:</h5>';
 			$mensaje .= '      <p>';
@@ -1005,7 +1005,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/figur03.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/figur03.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '     <h5>Respuesta C:</h5>';
 			$mensaje .= '      <p>';
@@ -1019,7 +1019,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/passen01.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/passen01.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta A:</h5>';
 			$mensaje .= '      <p>';
@@ -1028,7 +1028,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/passen02.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/passen02.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta B:</h5>';
 			$mensaje .= '      <p>';
@@ -1037,7 +1037,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/passen03.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/passen03.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta C:</h5>';
 			$mensaje .= '      <p>';
@@ -1052,7 +1052,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/freundschaft01.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/freundschaft01.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta A:</h5>';
 			$mensaje .= '      <p>';
@@ -1061,7 +1061,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/freundschaft02.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/freundschaft02.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta B:</h5>';
 			$mensaje .= '      <p>        La disposición de los círculos en esta imagen es la que se espera típicamente de un circulo de amigos. Este factor visual es el resultado de la dominancia del lado izquierdo del cerebro.';
@@ -1069,7 +1069,7 @@ if (isset($tipo)) {
 			$mensaje .= '    </div>';
 			$mensaje .= '  </div>';
 			$mensaje .= '  <div class="row text-left mtop10">';
-			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="citex.bo/img/freundschaft03.png">';
+			$mensaje .= '    <img class="img-responsive col-md-3 col-md-offset-1" src="https://iqmaximo.com/cerebral/img/freundschaft03.png">';
 			$mensaje .= '    <div class="col-md-7">';
 			$mensaje .= '      <h5>Respuesta C:</h5>';
 			$mensaje .= '      <p>        En esta imagen, los círculos están igualmente distantes entre sí. La respuesta C es elegida con más frecuencia por aquellos cuya parte derecha del cerebro es dominante.      </p>   </div>  </div>';
