@@ -67,22 +67,23 @@ function getExtensionFichero($name) {
 
 function validActive($page = '', $pageMain = false) {
 	$active = '';
+	$currentPage = $_REQUEST['page'] ?? '';
 	if($pageMain == false) {
 		if(is_array($page)) {
 			$cta = 0;
 			foreach($page as $pages) {
-				if($pages == $_REQUEST['page'] and PAG_ACTUAL == 'main') {
+				if($pages == $currentPage and PAG_ACTUAL == 'main') {
 					$cta++;
 				}
 			}
 			$active = ($cta>0) ? 'active' : '';
 		} else {
-			if($page == $_REQUEST['page'] and PAG_ACTUAL == 'main') {
+			if($page == $currentPage and PAG_ACTUAL == 'main') {
 				$active = 'active';
 			}
 		}
 	} else {
-		if($page == PAG_ACTUAL and !isset($_REQUEST['page']) and $_REQUEST['page']=="") {
+		if($page == PAG_ACTUAL and $currentPage == "") {
 			$active = 'active';
 		}
 	}
@@ -419,7 +420,7 @@ class Paginacion {
 }
 
 function getPage($page = 'dashboard') {
-	$file = 'pages/'.$page.'.php';
+	$file = __DIR__ . '/../pages/' . $page . '.php';
  	if(file_exists($file)) {
 		include($file);
 	} else {
@@ -440,7 +441,7 @@ function validaSesionLogon() {
 }
 
 function validaSesionAdm() {
-	if (!isset($_SESSION['USER_CITEXBO_ADM']) and $_SESSION['USER_CITEXBO_ADM'] == "") {
+	if (!isset($_SESSION['USER_CITEXBO_ADM']) || $_SESSION['USER_CITEXBO_ADM'] == "") {
 		header('Location: index');
 		exit;
 	}
