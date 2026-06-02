@@ -116,8 +116,87 @@ function logger($mensaje)
 }
 
 
+function iqmaximoPrepararMensajeEmail($msje)
+{
+	$mensaje = array();
+	if (!is_array($msje)) {
+		$mensaje['tipo'] = '';
+		$mensaje['texto'] = $msje;
+		$mensaje['contacto'] = FALSE;
+	} else {
+		$mensaje = $msje;
+	}
+
+	return $mensaje;
+}
+
+function iqmaximoEnviarResend($toEmail, $subject, $msje, $fromEmail = MAIL_WEBMASTER, $file = '')
+{
+	$resendApiKey = iqmaximo_config("IQMAXIMO_RESEND_API_KEY", "");
+	if ($resendApiKey == "") {
+		return false;
+	}
+
+	$from = iqmaximo_config("IQMAXIMO_RESEND_FROM_EMAIL", $fromEmail);
+	$fromName = iqmaximo_config("IQMAXIMO_RESEND_FROM_NAME", "iQmaximo.com");
+	$mensaje = iqmaximoPrepararMensajeEmail($msje);
+
+	$payload = array(
+		"from" => $fromName . " <" . $from . ">",
+		"to" => array($toEmail),
+		"subject" => $subject,
+		"html" => generateEmailBodyMessage($mensaje)
+	);
+
+	if ($file !== '') {
+		$filePath = '/home/iqmaximo/public_html/' . $file;
+		if (is_file($filePath)) {
+			$payload['attachments'] = array(
+				array(
+					"filename" => basename($file),
+					"content" => base64_encode(file_get_contents($filePath))
+				)
+			);
+		}
+	}
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://api.resend.com/emails");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		"Authorization: Bearer " . $resendApiKey,
+		"Content-Type: application/json"
+	));
+
+	$response = curl_exec($ch);
+	$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$result = array();
+
+	if (curl_errno($ch)) {
+		$result['mensaje'] = 'Vuelve a intentarlo. ' . curl_error($ch);
+		$result['estado'] = 0;
+	} elseif ($status >= 200 && $status < 300) {
+		$result['mensaje'] = 'Tu mensaje fue enviado.';
+		$result['estado'] = 1;
+	} else {
+		$result['mensaje'] = 'Vuelve a intentarlo. Resend HTTP ' . $status;
+		$result['estado'] = 0;
+	}
+
+	curl_close($ch);
+	logger($response);
+	return json_encode($result);
+}
+
 function enviaMail($toEmail, $subject, $msje, $fromEmail = MAIL_WEBMASTER, $file = '')
 {
+	$resend = iqmaximoEnviarResend($toEmail, $subject, $msje, $fromEmail, $file);
+	if ($resend !== false) {
+		return $resend;
+	}
+
 	$mailjetApiKey = iqmaximo_config("IQMAXIMO_MAILJET_API_KEY", "");
 	$mailjetSecretKey = iqmaximo_config("IQMAXIMO_MAILJET_SECRET_KEY", "");
 	if ($mailjetApiKey == "" || $mailjetSecretKey == "") {
@@ -134,14 +213,7 @@ function enviaMail($toEmail, $subject, $msje, $fromEmail = MAIL_WEBMASTER, $file
 	curl_setopt($ch, CURLOPT_USERPWD, $mailjetApiKey . ":" . $mailjetSecretKey);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
-	$mensaje = array();
-	if (!is_array($msje)) {
-		$mensaje['tipo'] = '';
-		$mensaje['texto'] = $msje;
-		$mensaje['contacto'] = FALSE;
-	} else {
-		$mensaje = $msje;
-	}
+	$mensaje = iqmaximoPrepararMensajeEmail($msje);
 
 	$message = array(
 		"From" => array(
@@ -202,16 +274,14 @@ function enviaMail($toEmail, $subject, $msje, $fromEmail = MAIL_WEBMASTER, $file
 
 function enviaMailAdmin($mail_destino, $asunto, $msje, $datos_remitente = MAIL_WEBMASTER, $file = '')
 {
+	$resend = iqmaximoEnviarResend($mail_destino, $asunto, $msje, $datos_remitente, $file);
+	if ($resend !== false) {
+		return $resend;
+	}
+
 	require_once("class.phpmailer.php");
 
-	$mensaje = array();
-	if (!is_array($msje)) {
-		$mensaje['tipo'] = '';
-		$mensaje['texto'] = $msje;
-		$mensaje['contacto'] = FALSE;
-	} else {
-		$mensaje = $msje;
-	}
+	$mensaje = iqmaximoPrepararMensajeEmail($msje);
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
 	$mail->Port = 587; // Usa el puerto correcto
