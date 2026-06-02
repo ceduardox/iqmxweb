@@ -32,6 +32,7 @@ setlocale(LC_ALL, 'es-ES');
 	<link href='assets/css/mediaquery.css?v=<?php echo rand(); ?>' rel='stylesheet'>
 	<link href='assets/css/mediaquery_manual.css?v=<?php echo rand(); ?>' rel='stylesheet'>
 	<link href='assets/css/modern-font.css?v=<?php echo rand(); ?>' rel='stylesheet'>
+	<link href='assets/css/home-polish.css?v=<?php echo rand(); ?>' rel='stylesheet'>
 	<script type="text/javascript" src="assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/js/javascript.js"></script>
 	<script type="text/javascript" src="assets/js/index.js"></script>
