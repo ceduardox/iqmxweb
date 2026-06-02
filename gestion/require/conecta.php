@@ -1,5 +1,5 @@
 <?php
-require_once ("configuracion.php");
+require_once(__DIR__ . "/configuracion.php");
 class DB
 {
 
@@ -104,8 +104,7 @@ class DB
 					$sql .= " WHERE $condition";
 				$recordset = $conn->query($sql);
 				$row = $recordset->fetch(PDO::FETCH_ASSOC);
-				$total = count($row);
-				if ($total) {
+				if (is_array($row) && count($row)) {
 					return $row;
 				} else {
 					return false;

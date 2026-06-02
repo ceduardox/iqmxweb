@@ -39,10 +39,10 @@ define("RUTA_LANDING", 'landing/registro/assets/img/');
  
  //URL 
 define("URL", iqmaximo_config("IQMAXIMO_URL", "https://iqmaximo.com/"));
-define("URL_ACTUAL", str_replace('.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']));
+define("URL_ACTUAL", str_replace('.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?' . ($_SERVER['QUERY_STRING'] ?? '')));
 define("PAG_ACTUAL_FULL", basename($_SERVER['PHP_SELF']));
 define("PAG_ACTUAL", str_replace('.php', '', PAG_ACTUAL_FULL));
-define("QUERY_ACTUAL", str_replace('.php', '', $_SERVER['QUERY_STRING']));
+define("QUERY_ACTUAL", str_replace('.php', '', $_SERVER['QUERY_STRING'] ?? ''));
 
 
 ?>

@@ -11,8 +11,8 @@ $msje = '';
 $class = 'alert-danger';
 try {
 	if ($accion != '') {
-		require_once ("require/util.php");
-		require_once ("require/transacciones.php");
+		require_once(__DIR__ . "/require/util.php");
+		require_once(__DIR__ . "/require/transacciones.php");
 		$REQUEST = array();
 		if ($accion == 'sendPushNotification') {
 			$obj = new ClssPushNoification();

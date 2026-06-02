@@ -1,5 +1,5 @@
 <?php
-require_once("conecta.php");
+require_once(__DIR__ . "/conecta.php");
 
 class ClssLandingTestimonio extends DB
 {
@@ -988,7 +988,7 @@ class ClssNoticia extends DB
 		return $rst;
 	}
 
-	function getNoticiaCategoria($cod = '', $noticia)
+	function getNoticiaCategoria($cod = '', $noticia = '')
 	{
 		$where = "";
 		if ($cod != "") {
@@ -1027,7 +1027,7 @@ class ClssNoticia extends DB
 		return $rst;
 	}
 
-	function getNoticiaEtiqueta($cod = '', $noticia)
+	function getNoticiaEtiqueta($cod = '', $noticia = '')
 	{
 		$where = "";
 		if ($cod != "") {
@@ -1046,7 +1046,7 @@ class ClssNoticia extends DB
 		return $rst;
 	}
 
-	function getNoticiaComentario($cod = '', $noticia)
+	function getNoticiaComentario($cod = '', $noticia = '')
 	{
 		$where = "";
 		if ($cod != "") {
@@ -2580,7 +2580,7 @@ class ClssTest extends DB
 		return $rst;
 	}
 
-	function listarPregunta($cod = '', $lectura, $paginacion = false)
+	function listarPregunta($cod = '', $lectura = '', $paginacion = false)
 	{
 		$where = "";
 		if ($cod != "") {
@@ -2593,7 +2593,7 @@ class ClssTest extends DB
 		return $rst;
 	}
 
-	function listarAlternativas($cod = '', $pregunta, $paginacion = false)
+	function listarAlternativas($cod = '', $pregunta = '', $paginacion = false)
 	{
 		$where = "";
 		if ($cod != "") {

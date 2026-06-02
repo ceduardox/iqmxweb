@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("require/util.php");
-require("require/transacciones.php");
+require(__DIR__ . "/require/util.php");
+require(__DIR__ . "/require/transacciones.php");
 validaSesionAdm();
 ?>
 <!DOCTYPE html>
@@ -56,9 +56,9 @@ validaSesionAdm();
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-  <?php include('include/header.php')?>
+  <?php include(__DIR__ . '/include/header.php')?>
   <!-- Left side column. contains the logo and sidebar -->
-  <?php include('include/menu.php')?>
+  <?php include(__DIR__ . '/include/menu.php')?>
   
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -68,7 +68,7 @@ validaSesionAdm();
 	  ?>
   </div>
   <!-- /.content-wrapper -->
-  <?php include('include/footer.php')?>
+  <?php include(__DIR__ . '/include/footer.php')?>
 </div>
 <!-- ./wrapper --> 
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require("require/util.php");
+require(__DIR__ . "/require/util.php");
 validaSesionLogon();
 ?>
 <!DOCTYPE html>
