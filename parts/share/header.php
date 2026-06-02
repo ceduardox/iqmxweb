@@ -21,6 +21,9 @@ setlocale(LC_ALL, 'es-ES');
 	<![endif]-->
 
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 	<link href="assets/fonts/font-awesome-4.3.0/css/font-awesome.min.css" rel='stylesheet' type='text/css' />
 	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css' rel='stylesheet'
 		integrity='sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x' crossorigin='anonymous'>
@@ -28,6 +31,7 @@ setlocale(LC_ALL, 'es-ES');
 	<link href='assets/css/index.css?v=<?php echo rand(); ?>' rel='stylesheet'>
 	<link href='assets/css/mediaquery.css?v=<?php echo rand(); ?>' rel='stylesheet'>
 	<link href='assets/css/mediaquery_manual.css?v=<?php echo rand(); ?>' rel='stylesheet'>
+	<link href='assets/css/modern-font.css?v=<?php echo rand(); ?>' rel='stylesheet'>
 	<script type="text/javascript" src="assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/js/javascript.js"></script>
 	<script type="text/javascript" src="assets/js/index.js"></script>

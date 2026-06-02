@@ -1,0 +1,50 @@
+body {
+  font-family: "Outfit", arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+input,
+optgroup,
+select,
+textarea,
+button,
+label {
+  font-family: "Outfit", arial, sans-serif !important;
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.section-title,
+strong,
+footer h1,
+section#contact h1,
+body.page-blog .list .card .card-body .card-title,
+body.page-blog section#blog-content.blog-detail .titulo {
+  font-family: "Outfit", arial, sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+.section-title,
+strong,
+footer h1,
+section#contact h1 {
+  font-weight: 800;
+}
+
+section#navigation nav ul.navbar-nav li.nav-item a.nav-link {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.btn,
+body.page-test .botonera button {
+  font-weight: 600;
+}
