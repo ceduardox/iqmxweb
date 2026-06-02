@@ -3,7 +3,7 @@ require_once(__DIR__ . "/config.runtime.php");
 
 //URL
 define("URL", iqmaximo_config("IQMAXIMO_URL", "https://iqmaximo.com/")); 
-define("URL_ACTUAL",'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING']); 
+define("URL_ACTUAL", 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?' . ($_SERVER['QUERY_STRING'] ?? '')); 
 define("PAG_ACTUAL",str_replace(".php","",basename($_SERVER['PHP_SELF']))); 
 
 //SECCION CONTACTO
