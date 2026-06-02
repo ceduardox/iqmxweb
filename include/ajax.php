@@ -5,9 +5,9 @@ extract($_REQUEST);
 $rtn = 'Acceso restringido';
 
 if (isset($tipo)) {
-	require_once ('../require/configuracion.php');
-	require_once ('../require/class.phpmailer.php');
-	require_once ('../require/util.php');
+	require_once (__DIR__ . '/../require/configuracion.php');
+	require_once (__DIR__ . '/../require/class.phpmailer.php');
+	require_once (__DIR__ . '/../require/util.php');
 
 	switch ($tipo) {
 		case 'comienzaAhora':
@@ -492,7 +492,7 @@ if (isset($tipo)) {
 			break;
 
 		case 'testiq':
-			require_once ('../require/transacciones.php');
+			require_once (__DIR__ . '/../require/transacciones.php');
 
 			$estado = 0;
 			$mensaje = "Se ha producido un error interno, por favor vuelve a intentarlo.";

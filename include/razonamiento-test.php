@@ -2,9 +2,9 @@
 session_start();
 extract($_REQUEST);
 header('Content-Type: text/html; charset=utf-8');
-require_once("../require/configuracion.php");
-require_once("../require/util.php");
-require_once("../require/transacciones.php");
+require_once(__DIR__ . "/../require/configuracion.php");
+require_once(__DIR__ . "/../require/util.php");
+require_once(__DIR__ . "/../require/transacciones.php");
 $objeto = new ClssTest();
 
 $arrClss = $objeto->listarLectura($lecturaIDCitex);

@@ -5,8 +5,8 @@
 <?php
 require_once("require/util.php");
 require_once("require/transacciones.php");
-$tipo = (isset($tipo)) ? $tipo : '';
-$categoria = (isset($categoria)) ? $categoria : '';
+$tipo = (isset($tipo)) ? $tipo : ($_GET['tipo'] ?? '');
+$categoria = (isset($categoria)) ? $categoria : ($_GET['categoria'] ?? '');
 $_SESSION['lecturaIDCitex'] = '';
 ?>
 

@@ -31,7 +31,13 @@ if($tipo!="" and $tipo!="iq" and $categoria=="") { ?>
 } else if($tipo!="" and $tipo!="iq" and $categoria!="") { 
 	//global $_CATEGORIA;
 	$objTest = new ClssTest();  
-    $categorias = $objTest -> listarCategoria('',$categoria);
+	$categoriaIds = array('adulto' => 1, 'adolescente' => 2, 'nino' => 3, 'preescolar' => 4);
+	$categoriaId = isset($categoriaIds[$categoria]) ? $categoriaIds[$categoria] : '';
+    $categorias = $objTest -> listarCategoria($categoriaId, $categoriaId == '' ? $categoria : '');
+	if(empty($categorias['result'][0])) {
+		echo "<h3>AÃºn no hay informaciÃ³n para este Test.</h3>";
+		return;
+	}
 	$NUMERO_DE_PRUEBAS = 99;
 ?>
 <div id="test-header">
