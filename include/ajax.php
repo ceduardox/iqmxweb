@@ -3,6 +3,7 @@
 extract($_REQUEST);
 
 $rtn = 'Acceso restringido';
+$file = $_REQUEST['file'] ?? '';
 
 if (isset($tipo)) {
 	require_once (__DIR__ . '/../require/configuracion.php');
@@ -97,11 +98,8 @@ if (isset($tipo)) {
 
 		case 'formRegistroAuspiciador':
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
 
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 
 					$nombre_responsable = trim($nombre_responsable);
 					$ci_responsable = trim($ci_responsable);
@@ -173,11 +171,7 @@ if (isset($tipo)) {
 		case 'formRegistroEstudiante':
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
-
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 
 					$nombre_tutor = trim($nombre_tutor);
 					$parentesco = trim($parentesco);
@@ -248,11 +242,8 @@ if (isset($tipo)) {
 
 		case 'formRegistroColegio':
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
 
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 					$nombre_responsable = trim($nombre_responsable);
 					$ci_responsable = trim($ci_responsable);
 					$cargo_responsable = trim($cargo_responsable);
@@ -338,11 +329,8 @@ if (isset($tipo)) {
 
 		case 'contacto':
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
 
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 					$validaEMail = comprobarEmail($email);
 
 					if ($validaEMail['valida'] == 0) {
@@ -423,11 +411,8 @@ if (isset($tipo)) {
 
 		case 'contacto2':
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
 
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 					$validaEMail = comprobarEmail($email);
 
 					if ($validaEMail['valida'] == 0) {

@@ -207,7 +207,7 @@ function enviaMailAdmin($mail_destino, $asunto, $msje, $datos_remitente = MAIL_W
 	$mensaje = array();
 	if (!is_array($msje)) {
 		$mensaje['tipo'] = '';
-		$mensaje['texto'] = utf8_encode($msje);
+		$mensaje['texto'] = $msje;
 		$mensaje['contacto'] = FALSE;
 	} else {
 		$mensaje = $msje;
