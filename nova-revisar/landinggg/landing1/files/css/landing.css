@@ -1,0 +1,232 @@
+
+    * { 
+       padding:0;
+       margin:0;
+    }
+
+    .container-fluid{
+        max-width: 1200px;
+    }
+
+    .banner_1{
+        width: 100%;
+        height: 90%;
+    }
+
+    .banner_video{
+        width: 100%;
+        height: 50%;
+    }
+
+    .video_2{
+        width: 100%;
+        height: 100%;
+    }
+
+    .img_3{
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100%;
+        margin-top: 50px;
+        margin-right:20px;
+        float: left;
+    }
+
+    .text_4{
+        text-align: left;
+        padding-right: 80px;
+        margin-top: 50px;
+    }
+
+    .imagen_5{
+        width: 100%;
+        height: 100%;
+        
+    }
+
+    .imagen_6{
+        width: 100%;
+        height: 90%;
+    }
+
+    .titulo_7{
+        /*background-color: red;*/
+        /*width: 100%;
+        height: 100%;
+        object-fit: cover;*/
+        /*background-size: contain;
+        background-repeat: no-repeat;
+        grid-column: 1/3;
+        grid-row: 11/13;*/
+        /*margin-left: 20px;*/
+    }
+
+    .texto_8{
+        /*margin: 0 30px;*/
+        text-align: justify;
+    }
+
+    .imagen_9{
+        width: 80%;
+        height: 80%;
+    }
+
+    .imagen_10{
+        width: 90%;
+        height: 90%;
+    }
+
+    .texto_11{
+        background: linear-gradient(to right, #B93568, #C3396B, #592B91);
+        /*background:linear-gradient(30deg, crimson,sienna, royalblue, indianred, purple);*/
+        color:white;
+        border-radius: 10px;
+
+    }
+
+    .texto_111{
+        color: black;
+        padding: 0 100px;
+        
+
+    }
+
+    .imagen_12{
+        /*background-image: url(../../archivos/landing/<?php echo $img6;?>);*/
+        width: 100%;
+        height: 100%;
+    }
+
+    .imagen_13{
+        /*background-image: url(../../archivos/landing/<?php echo $img6;?>);*/
+        width: 100%;
+        height: 100%;
+    }
+
+    .imagen_14{
+        /*background-image: url(../../archivos/landing/<?php echo $img6;?>);*/
+        width: 100%;
+        height: 100%;
+    }
+
+    .imagen_15{
+      
+        width: 100%;
+        height: 100%;
+    }
+
+    .imagen_16{
+
+        width: 100%;
+        height: 100%;
+    }
+
+    .imagen_17{
+        margin-left: 100px;
+        width: 80%;
+        height: 80%;
+    }
+
+    .texto_17{
+        margin-right: 150px;
+        text-align: left;
+    }
+    
+    .imagen_18{
+        width: 85%;
+        height: 50%;
+        margin-bottom: 10px;
+    }
+
+    .imagen_19{
+        width: 85%;
+        height: 50%;
+        margin-bottom: 10px;
+    }
+
+    .imagen_20{
+        width: 85%;
+        height: 50%;
+        margin-bottom: 10px;
+    }
+
+    .select_21{
+        grid-column: 2/4;
+        grid-row: 28/29; 
+        margin-right: 20px;
+    }
+
+    .select_22{
+        grid-column: 4/6;
+        grid-row: 28/29; 
+        margin-right: 20px;
+    }
+
+    .select_23{
+        grid-column: 6/8;
+        grid-row: 28/29; 
+        margin-right: 20px;
+    }
+
+    .imagen_24{
+        width: 100%;
+
+    }
+
+    .imagen_25{
+        background-image: url(../../archivos/landing/inscribete.png);
+        /*width: 100%;
+        height: 100%;
+        object-fit: cover;*/
+        background-size: contain;
+        background-repeat: no-repeat;
+        grid-column: 4/6;
+        grid-row: 28/30;
+        margin-right: 20px;
+        margin-top: 50px;
+    }
+
+    .imagen_26{
+        background-image: url(../../archivos/landing/inscribete.png);
+        /*width: 100%;
+        height: 100%;
+        object-fit: cover;*/
+        background-size: contain;
+        background-repeat: no-repeat;
+        grid-column: 6/8;
+        grid-row: 28/30;
+        margin-right: 20px;
+        margin-top: 50px;
+    }
+
+    .formulario_25{
+        background-color: #B20164;
+        margin: 0 50px;
+        padding: 20px 30px;
+    }
+
+    .texto_27{
+        color: white;
+    }
+
+    .formulario_28{
+        background-color: #FFFFFF;
+        /*margin: 0 50px;*/
+        padding: 20px 30px;
+        color: #808081;
+
+    }
+    .form-control{
+        background-color: #D0D0D0;
+     }
+
+    .imagen_29{
+        width: 100%;
+        height: 100%;
+
+    }
+
+    .boton{
+        background-color: #DD3B33;
+        color: white;
+    }

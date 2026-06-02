@@ -1,0 +1,89 @@
+
+/* ----------------------- INICIO ESTILOS DE TODO --------------------------------*/
+/*
+.body{
+     font:normal 1em Arial,Verdana;text-align: justify;
+     font-size: 12px;
+}*/
+p,ul,li{
+    font:normal 1em Arial,Verdana;text-align: justify;
+    font-size: 12px;
+
+}
+h1{
+    font-family: 'Cooper Std','Times New Roman',sans-serif;
+    /*
+    font-family: 'Cooper Std','Times New Roman'Verdana,Arial,sans-serif;
+    */
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #94191f;
+
+    /*width: 100%;*/
+    text-decoration: underline;
+
+}
+h2,h3,h4,h5,h6{
+    font-family: 'Franklin Gothic Medium','Times New Roman',Verdana,Arial,sans-serif;
+    color: #94191f;
+}
+.titulo_hoja{
+    text-align: center;
+    font-size: 24px;
+    /*font-weight: bold;*/
+    color: #bf1626;        
+    float:left;
+    width: 100%;
+    
+    text-decoration: underline;
+    
+}
+.subtitulo_hoja{
+    text-align: left;
+    font-size: 18px;
+    /*font-weight: bold;*/
+    color: #bf1626;
+    float:left;
+    width: 100%;
+    padding: 20px 10px;
+
+}
+.contenido{
+
+   
+    border:double 2px #b80e2c;
+    padding: 5px 10px;
+}
+.cuadro1
+	{
+            background-color:#f2f5fd; border:solid 1px #e4e0df; padding:10px 10px;
+            overflow: hidden;
+            /*display: block;*/
+
+		-moz-border-radius:20px 20px 20px 20px;
+		-webkit-border-top-right-radius:20px;
+		-webkit-border-top-left-radius:20px;
+		-webkit-border-bottom-right-radius:20px;
+		-webkit-border-bottom-left-radius:20px;
+		border-radius:20px 20px 20px 20px;
+
+
+
+	}
+.cuadro2
+	{
+            background-color:#4d9fbf; border:solid 1px #e8eae9; padding:10px 10px;
+            overflow: hidden;
+            /*display: block;*/
+
+		-moz-border-radius:10px 10px 10px 10px;
+		-webkit-border-top-right-radius:10px;
+		-webkit-border-top-left-radius:10px;
+		-webkit-border-bottom-right-radius:10px;
+		-webkit-border-bottom-left-radius:10px;
+		border-radius:10px 10px 10px 10px;
+
+
+
+	}

@@ -1,0 +1,235 @@
+@font-face {
+    font-family: 'Roboto Condensed';
+    src: url('./fonts/roboto/RobotoCondensed-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Myriad';
+    src: url('./fonts/myriad/MYRIADPRO-REGULAR.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Myriad Bold';
+    src: url('./fonts/myriad/MYRIADPRO-BOLD.OTF') format('truetype');
+}
+h1{
+	font-family: 'Roboto Condensed', Arial;
+	letter-spacing: -1px;
+}
+h4{
+	font-family: 'Roboto Condensed', Arial;
+	letter-spacing: -1px;
+}
+h5{
+	font-family: 'Myriad', Arial;
+	letter-spacing: -1px;
+}
+.mostrar-responsive{
+	display:none;
+}
+.ocultar-responsive{
+	display:block;
+}
+.rojo{
+	border:2px solid red;
+}
+.amar{
+	border:2px solid yellow;
+}
+.narj{
+	border:2px solid orange;
+}
+.verde{
+	border:2px solid lime;
+}
+.logo-menu{
+	height:auto; width:95%;
+}
+.sticky {
+  position: fixed;
+  top: 0;
+  right:0;
+  left:0;
+}
+.s-margin{
+	margin:0;
+}
+.s-padding{
+	padding:0;
+}
+.c-vertical {
+   display: flex;
+   align-items: center;
+}
+.menu-g li a{
+	color:#2e0d3c;
+	font-type:Arial;
+	font-size:20px;
+}
+.l-blanco{
+	color:white;
+}
+.f-w-1{
+	font-weight:100;
+}
+.f-w-2{
+	font-weight:200;
+}
+.f-w-3{
+	font-weight:300;
+}
+.f-w-4{
+	font-weight:400;
+}
+.f-w-5{
+	font-weight:500;
+}
+.f-w-6{
+	font-weight:600;
+}
+.f-w-7{
+	font-weight:700;
+}
+.f-w-8{
+	font-weight:800;
+}
+.f-w-9{
+	font-weight:900;
+}
+.w-100{
+	width:100%;
+}
+.h-100{
+	height:100%;
+}
+.l-morado{
+	color:#301c2d;
+}
+
+.l-morado-2{
+	color:#2b0d38;
+}
+
+.navbar-toggler{
+    width: 47px;
+    height: 34px;
+    border:1px solid #2e0d3c;
+}
+.navbar-toggler .line{
+    width: 100%;
+    float: left;
+    height: 2px;
+    background-color: #2e0d3c;
+    margin-bottom: 5px;
+}
+.t-pag-prin{
+	height:100%;
+	border-bottom:2px solid orange;
+}
+.box-img-over{
+    overflow: hidden;
+}
+.fondo-b{
+	background-color:white;
+}
+.caja-nov{
+	height:354px;width:305px;
+}
+.img-nov{
+	height:195px;width:305px;
+}
+.sombra{
+    box-shadow: 2px 2px 10px #666;
+}
+.fondo-b-menu{
+		background-color:rgba(255, 255, 255, 0);
+	}
+.alto{
+	margin-bottom:4%;margin-top:2%;
+}
+.img-pub{
+	height:300px;width:235px;
+}
+.banner-alto{
+	height:650px;
+}
+
+.videoteca{
+	width:380px;height:auto;padding-bottom:5px;
+}
+.logo-pacha-1{
+	width:90%;
+}
+	.logo-gregoria-1{
+		height:160px;
+	}
+	.logo-pacha-h-1{
+		height:150px;
+	}
+.cifras{
+	height:354px;
+	position: relative;
+	font-family:Arial;
+	font-size:26px;
+	
+}
+.dato-cifra{
+	height:354px;
+	position: absolute;
+   top: 48%;
+   height: 30%;
+   width: 100%;
+   margin-top: -15%;
+   margin-bottom: -25%;
+   text-align:center;
+   padding:10px;
+}
+.dato-cifra h6{
+	color:white;
+	font-family:Arial;
+	font-size:28px;
+	font-weight:600;
+}
+.dato-cifra p{
+	color:#2b0d38;
+	font-weight:600;
+}
+
+@media all and (max-width: 992px) {
+.dato-cifra{
+	height:354px;
+	position: absolute;
+	top: 35%;
+   height: 30%;
+   width: 100%;
+   margin-top: -15%;
+   margin-bottom: -25%;
+   text-align:center;
+   padding:10px;
+}
+	.logo-gregoria-1{
+		height:100px;
+	}
+	.logo-pacha-h-1{
+		height:90px;
+	}
+	.logo-pacha-1{
+	width:70%;
+	}
+	.videoteca{
+		width:280px;height:auto;padding-bottom:5px;
+	}
+	.logo-menu{
+	height:auto; width:100%;
+	}
+	.fondo-b-menu{
+		background-color:rgba(255, 255, 255, 0.9);
+	}
+	.banner-alto{
+	height:240px;
+	}
+	.mostrar-responsive{
+	display:block;
+	}
+	.ocultar-responsive{
+	display:none;
+	}
+}
