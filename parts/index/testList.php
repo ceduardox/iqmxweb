@@ -2,8 +2,11 @@
   <div class='container'>
     <div class='row'>
       <div class='image col-md-4'>
-        <img src="./assets/images/beautiful-young-woman-posing-over-grey-wall-and-holding-tablet-in-hands.jpg" alt=""
-          class="img-fluid">
+        <picture>
+          <source srcset="./assets/images/beautiful-young-woman-posing-over-grey-wall-and-holding-tablet-in-hands.webp" type="image/webp">
+          <img src="./assets/images/beautiful-young-woman-posing-over-grey-wall-and-holding-tablet-in-hands.jpg" alt=""
+            class="img-fluid" loading="lazy" decoding="async">
+        </picture>
       </div>
       <div class='text col-md-8'>
         <ul>

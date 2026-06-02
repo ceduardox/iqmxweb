@@ -13,7 +13,10 @@
             title="Instagram">Instagram</a>
           <a href="<?php echo $_SOCIAL_URL['twitter'];?>" target="_blank" class="link-footer link-tw"
             title="Twitter">Twitter</a>
-          <img src="./assets/images/items-contact.jpg" alt="contacts" class="img-fluid" />
+          <picture>
+            <source srcset="./assets/images/items-contact.webp" type="image/webp">
+            <img src="./assets/images/items-contact.jpg" alt="contacts" class="img-fluid" loading="lazy" decoding="async" />
+          </picture>
         </div>
       </div>
       <div class='text col-md-4  d-flex'>
@@ -34,7 +37,10 @@
         </div>
       </div>
       <div class='image-2 col-md-4'>
-        <img src="./assets/images/phone-store.png" alt="Descargar" class="img-fluid" />
+        <picture>
+          <source srcset="./assets/images/phone-store.webp" type="image/webp">
+          <img src="./assets/images/phone-store.png" alt="Descargar" class="img-fluid" loading="lazy" decoding="async" />
+        </picture>
       </div>
     </div>
   </div>

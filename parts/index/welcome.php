@@ -5,7 +5,10 @@
 				<h1>BIENVENIDOS <br />
 					A <strong>IQmaximo</strong>
 				</h1>
-				<img src="./assets/images/welcome.png" alt="welcome" class="img-fluid">
+				<picture>
+					<source srcset="./assets/images/welcome.webp" type="image/webp">
+					<img src="./assets/images/welcome.png" alt="welcome" class="img-fluid" loading="lazy" decoding="async">
+				</picture>
 			</div>
 			<div class='text col-md-6'>
 				<p>
