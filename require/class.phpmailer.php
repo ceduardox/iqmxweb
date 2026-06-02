@@ -72,6 +72,13 @@ class PHPMailer {
   public $Encoding          = '8bit';
 
   /**
+   * Enables automatic TLS upgrade when supported by the SMTP server.
+   * Kept for compatibility with newer PHP versions that disallow dynamic properties.
+   * @var bool
+   */
+  public $SMTPAutoTLS       = false;
+
+  /**
    * Holds the most recent mailer error message.
    * @var string
    */

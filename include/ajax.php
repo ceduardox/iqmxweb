@@ -9,6 +9,32 @@ if (isset($tipo)) {
 	require_once (__DIR__ . '/../require/class.phpmailer.php');
 	require_once (__DIR__ . '/../require/util.php');
 
+	function iqmaximoCaptchaValido()
+	{
+		$token = $_POST['g-recaptcha-response'] ?? '';
+		$host = $_SERVER['HTTP_HOST'] ?? '';
+		$esLocal = preg_match('/^(127\.0\.0\.1|localhost)(:\d+)?$/', $host);
+
+		if ($esLocal && KEY_CAPTCHA_SECRET_V2 == '') {
+			return true;
+		}
+
+		if ($token == '' || KEY_CAPTCHA_SECRET_V2 == '') {
+			return false;
+		}
+
+		$url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode(KEY_CAPTCHA_SECRET_V2) . '&response=' . urlencode($token);
+		$context = stream_context_create(array('http' => array('timeout' => 8)));
+		$response = @file_get_contents($url, false, $context);
+
+		if ($response === false) {
+			return false;
+		}
+
+		$response = json_decode($response, true);
+		return is_array($response) && isset($response['success']) && $response['success'] === true;
+	}
+
 	switch ($tipo) {
 		case 'comienzaAhora':
 			$validaEMail = comprobarEmail($email);
@@ -618,11 +644,8 @@ if (isset($tipo)) {
 		case 'lectura':
 
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
 
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 					$mensajeUsu = '';
 
 					($tipoPersonaForm == 'ninho') ? $tipoPersonaForm = 'NIÑO' : $tipoPersonaForm = strtoupper($tipoPersonaForm);
@@ -651,7 +674,7 @@ if (isset($tipo)) {
 					$cta_rsptasOk = 100 / count($rsptasOk);
 
 					foreach ($rsptasOk as $rsptaOk) {
-						($rsptaOk == $rsptas[$i]) ? $ok++ : $ko++;
+						($rsptaOk == ($rsptas[$i] ?? '')) ? $ok++ : $ko++;
 						$i++;
 					}
 
@@ -661,10 +684,12 @@ if (isset($tipo)) {
 					$mensajeUsu .= '<b>TU COMPRENSIÓN ES DEL: </b>' . $porcentajeComprension . '%<br/>';
 
 					$ctaLecturaTiempo = explode(':', $tiempoLecturaForm);
-					$divPalabras = ((ltrim($ctaLecturaTiempo[0], '0') * 60) + ltrim($ctaLecturaTiempo[1], '0'));
+					$minutosLectura = (int) ($ctaLecturaTiempo[0] ?? 0);
+					$segundosLectura = (int) ($ctaLecturaTiempo[1] ?? 0);
+					$divPalabras = (($minutosLectura * 60) + $segundosLectura);
 
 					$divPalabras = ($divPalabras == 0) ? 1 : $divPalabras;
-					$totalCantPalabras = $cantPalabrasForm / $divPalabras;
+					$totalCantPalabras = ((int) $cantPalabrasForm) / $divPalabras;
 
 					$mensaje .= '<b>TU VELOCIDAD ES: </b>' . number_format($totalCantPalabras * 60, 0) . ' PALABRAS POR MINUTO<br/>';
 					$mensajeUsu .= '<b>TU VELOCIDAD ES: </b>' . number_format($totalCantPalabras * 60, 0) . ' PALABRAS POR MINUTO<br/>';
@@ -736,15 +761,14 @@ if (isset($tipo)) {
 					$rtnVal = json_decode($rtnVal);
 
 					$rtnResult = array();
-					if ($rtnVal->{'estado'} == 1) {
+					if (is_numeric($rst)) {
 						$rtnResult['mensaje'] = $mensajeUsu;
 						$rtnResult['valor1'] = $porcentajeComprension . "%";
 						$rtnResult['valor2'] = number_format($totalCantPalabras * 60, 0) . ' palabras por minuto';
 						$rtnResult['valor3'] = 'Lectura y nivel de comprensión';
 						$rtnResult['estado'] = 1;
 					} else {
-						$error = $rtnVal->{'mensaje'};
-						$rtnResult['mensaje'] = $error;
+						$rtnResult['mensaje'] = 'No se pudo guardar el resultado, vuelve a intentarlo.';
 						$rtnResult['valor1'] = 0;
 						$rtnResult['valor2'] = 0;
 						$rtnResult['valor3'] = '';
@@ -765,11 +789,8 @@ if (isset($tipo)) {
 		case 'razonamiento':
 
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
-				$recaptcha_secret = KEY_CAPTCHA_SECRET_V2;
-				$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $recaptcha_secret . "&response=" . $_POST['g-recaptcha-response']);
-				$response = json_decode($response, true);
 
-				if ($response["success"] === true) {
+				if (iqmaximoCaptchaValido()) {
 					($tipoPersonaForm == 'ninho') ? $tipoPersonaForm = 'NIÑO' : $tipoPersonaForm = strtoupper($tipoPersonaForm);
 
 					$mensajeUsu = '';
@@ -791,7 +812,7 @@ if (isset($tipo)) {
 					$cta_rsptasOk = 100 / count($rsptasOk);
 
 					foreach ($rsptasOk as $rsptaOk) {
-						($rsptaOk == $rsptas[$i]) ? $ok++ : $ko++;
+						($rsptaOk == ($rsptas[$i] ?? '')) ? $ok++ : $ko++;
 						$i++;
 					}
 
@@ -838,12 +859,12 @@ if (isset($tipo)) {
 							'respais' => 'BOLIVIA',
 							'rescat' => $tipoPersonaForm,
 							'restipo' => 'RAZONA',
-							'reslect' => '',
-							'rescant' => '',
-							'restime' => '',
+							'reslect' => $nomLecturaForm,
+							'rescant' => '0',
+							'restime' => '00:00',
 							'restmres' => $tiempoRespuestasForm,
 							'rescomp' => $porcentajeComprension,
-							'resvel' => '',
+							'resvel' => '0',
 							'rescom' => $comentarioTest,
 							'ressoy' => $soyTest,
 							'rescarrera' => $carreraTest,
@@ -862,15 +883,14 @@ if (isset($tipo)) {
 					$rtnVal = json_decode($rtnVal);
 
 					$rtnResult = array();
-					if ($rtnVal->{'estado'} == 1) {
+					if (is_numeric($rst)) {
 						$rtnResult['mensaje'] = $mensajeUsu;
 						$rtnResult['valor1'] = $porcentajeComprension . '%';
 						$rtnResult['valor2'] = $tiempoRespuestasForm . ' en tiempo de respuesta';
 						$rtnResult['valor3'] = 'Razonamiento';
 						$rtnResult['estado'] = 1;
 					} else {
-						$error = $rtnVal->{'mensaje'};
-						$rtnResult['mensaje'] = $error;
+						$rtnResult['mensaje'] = 'No se pudo guardar el resultado, vuelve a intentarlo.';
 						$rtnResult['valor1'] = 0;
 						$rtnResult['valor2'] = 0;
 						$rtnResult['valor3'] = '';
