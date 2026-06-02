@@ -59,13 +59,14 @@
               href="page-noticias_etiquetas"><i class="fa fa-circle-o"></i> Etiquetas</a></li>
         </ul>
       </li>
-      <li class="treeview <?php validActive(array('contactos', 'contacto')); ?>"> <a href="#"> <i
+      <li class="treeview <?php validActive(array('contactos', 'contacto', 'contacto_mensajes')); ?>"> <a href="#"> <i
             class="fa fa-map-marker"></i> <span>Contactos</span> </a>
         <ul class="treeview-menu">
           <li class='<?php validActive('contactos'); ?>'><a href="page-contactos"><i class="fa fa-circle-o"></i> Ver
               todos</a></li>
           <li class='<?php validActive('contacto'); ?>'><a href="page-contacto"><i class="fa fa-circle-o"></i> Crear
               nuevo</a></li>
+          <li class='<?php validActive('contacto_mensajes'); ?>'><a href="page-contacto_mensajes"><i class="fa fa-circle-o"></i> Mensajes</a></li>
         </ul>
       </li>
       <li

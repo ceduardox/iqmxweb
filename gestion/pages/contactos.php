@@ -34,7 +34,8 @@ extract( $_REQUEST );
   </ol>
   <h1><i class="fa fa-map-marker"></i> Contactos <small>Listado de contactos</small> </h1>
 
-  <button type="button" onclick="javascript:location.href='./report-contacto'"  class="btn btn-primary"  id="downloadBtn" name="btn-nuevo"  ><i class="fa fa-download"></i> Mensajes</button>
+  <button type="button" onclick="javascript:location.href='page-contacto_mensajes'" class="btn btn-primary" id="btn-mensajes" name="btn-mensajes"><i class="fa fa-envelope"></i> Ver mensajes</button>
+  <button type="button" onclick="javascript:location.href='./report-contacto'" class="btn btn-default" id="downloadBtn" name="btn-nuevo"><i class="fa fa-download"></i> Descargar mensajes</button>
   
 </section>
 <?php
