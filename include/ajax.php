@@ -897,6 +897,11 @@ if (isset($tipo)) {
 		case 'cerebro':
 
 			$mensajeUsu = '';
+			$soyTest = $soyTest ?? '';
+			$carreraTest = $carreraTest ?? '';
+			$semestreTest = $semestreTest ?? '';
+			$institucionTest = $institucionTest ?? '';
+			$comentarioTest = $comentarioTest ?? '';
 
 			//TO USUARIO
 			$mensaje = 'Hola ' . $nombreTest . ', <br/><br/>';
@@ -1089,15 +1094,14 @@ if (isset($tipo)) {
 			$rtnVal = json_decode($rtnVal);
 			$rtnResult = array();
 
-			if ($rtnVal->{'estado'} == 1) {
+			if (is_numeric($rst)) {
 				$rtnResult['mensaje'] = $mensajeUsu;
 				$rtnResult['valor1'] = $izquierdo;
 				$rtnResult['valor2'] = $derecho;
 				$rtnResult['valor3'] = 'Cerebral';
 				$rtnResult['estado'] = 1;
 			} else {
-				$error = $rtnVal->{'mensaje'};
-				$rtnResult['mensaje'] = $error;
+				$rtnResult['mensaje'] = 'No se pudo guardar el resultado, vuelve a intentarlo.';
 				$rtnResult['valor1'] = 0;
 				$rtnResult['valor2'] = 0;
 				$rtnResult['valor3'] = '';
