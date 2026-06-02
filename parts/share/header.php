@@ -99,7 +99,7 @@ setlocale(LC_ALL, 'es-ES');
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
 						<?php
 						foreach (getObj($_MENU) as $item) {
-							if ($item->topMenu !== 'no') {
+							if (!isset($item->topMenu) || $item->topMenu !== 'no') {
 								?>
 								<li class="nav-item">
 									<a class="nav-link <?php if ($item->slug === $_PAGE_SLUG->slug) {

@@ -741,7 +741,7 @@ class ClssTestiQ
 		return $rtnEdad;
 	}
 
-	function getPercentil($edad = 5, $totalOk, $totalKo, $tipo = "")
+	function getPercentil($edad = 5, $totalOk = 0, $totalKo = 0, $tipo = "")
 	{
 		$where = "";
 		if ($tipo != "") {
@@ -831,7 +831,7 @@ class ClssTest
 		return $rst;
 	}
 
-	function listarPregunta($cod = '', $lectura)
+	function listarPregunta($cod = '', $lectura = '')
 	{
 		$where = "";
 		if ($cod != "") {
@@ -845,7 +845,7 @@ class ClssTest
 		return $rst;
 	}
 
-	function listarAlternativas($cod = '', $pregunta)
+	function listarAlternativas($cod = '', $pregunta = '')
 	{
 		$where = "";
 		if ($cod != "") {
