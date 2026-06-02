@@ -632,6 +632,11 @@ if (isset($tipo)) {
 
 				if (iqmaximoCaptchaValido()) {
 					$mensajeUsu = '';
+					$soyTest = $soyTest ?? '';
+					$carreraTest = $carreraTest ?? '';
+					$semestreTest = $semestreTest ?? '';
+					$institucionTest = $institucionTest ?? '';
+					$comentarioTest = $comentarioTest ?? '';
 
 					($tipoPersonaForm == 'ninho') ? $tipoPersonaForm = 'NIÑO' : $tipoPersonaForm = strtoupper($tipoPersonaForm);
 
@@ -776,6 +781,12 @@ if (isset($tipo)) {
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 				if (iqmaximoCaptchaValido()) {
+					$soyTest = $soyTest ?? '';
+					$carreraTest = $carreraTest ?? '';
+					$semestreTest = $semestreTest ?? '';
+					$institucionTest = $institucionTest ?? '';
+					$comentarioTest = $comentarioTest ?? '';
+
 					($tipoPersonaForm == 'ninho') ? $tipoPersonaForm = 'NIÑO' : $tipoPersonaForm = strtoupper($tipoPersonaForm);
 
 					$mensajeUsu = '';
