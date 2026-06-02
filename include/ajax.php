@@ -36,6 +36,17 @@ if (isset($tipo)) {
 		return is_array($response) && isset($response['success']) && $response['success'] === true;
 	}
 
+	function iqmaximoEdadTestValida($edad)
+	{
+		$edad = trim((string) $edad);
+		if (!preg_match('/^\d{1,2}$/', $edad)) {
+			return false;
+		}
+
+		$edad = (int) $edad;
+		return $edad > 0 && $edad <= 99;
+	}
+
 	switch ($tipo) {
 		case 'comienzaAhora':
 			$validaEMail = comprobarEmail($email);
@@ -630,6 +641,13 @@ if (isset($tipo)) {
 
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+				if (!iqmaximoEdadTestValida($edadTest ?? '')) {
+					$rtnResult['estado'] = 0;
+					$rtnResult['mensaje'] = 'Ingresa una edad valida entre 1 y 99.';
+					$rtn = json_encode($rtnResult);
+					break;
+				}
+
 				if (iqmaximoCaptchaValido()) {
 					$mensajeUsu = '';
 					$soyTest = $soyTest ?? '';
@@ -780,6 +798,13 @@ if (isset($tipo)) {
 
 			if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+				if (!iqmaximoEdadTestValida($edadTest ?? '')) {
+					$rtnResult['estado'] = 0;
+					$rtnResult['mensaje'] = 'Ingresa una edad valida entre 1 y 99.';
+					$rtn = json_encode($rtnResult);
+					break;
+				}
+
 				if (iqmaximoCaptchaValido()) {
 					$soyTest = $soyTest ?? '';
 					$carreraTest = $carreraTest ?? '';
@@ -913,6 +938,17 @@ if (isset($tipo)) {
 			$semestreTest = $semestreTest ?? '';
 			$institucionTest = $institucionTest ?? '';
 			$comentarioTest = $comentarioTest ?? '';
+
+			if (!iqmaximoEdadTestValida($edadTest ?? '')) {
+				$rtnResult = array();
+				$rtnResult['estado'] = 0;
+				$rtnResult['mensaje'] = 'Ingresa una edad valida entre 1 y 99.';
+				$rtnResult['valor1'] = 0;
+				$rtnResult['valor2'] = 0;
+				$rtnResult['valor3'] = '';
+				$rtn = json_encode($rtnResult);
+				break;
+			}
 
 			//TO USUARIO
 			$mensaje = 'Hola ' . $nombreTest . ', <br/><br/>';

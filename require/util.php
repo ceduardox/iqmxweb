@@ -97,10 +97,10 @@ function logger($mensaje)
 	$archivoLog = 'custom.log';  // Asegúrate de tener permisos de escritura en esta ruta
 
 	// Abre el archivo para añadir contenido al final (append)
-	$fileHandle = fopen($archivoLog, 'a');
+	$fileHandle = @fopen($archivoLog, 'a');
 
 	if ($fileHandle === false) {
-		echo "ERROR: No se pudo abrir el archivo log.";
+		error_log("No se pudo abrir el archivo log: " . $archivoLog);
 		return;  // Sale de la función si no puede abrir el archivo
 	}
 
@@ -543,7 +543,12 @@ function insertData($table, $array)
 		$cont++;
 	}
 	$sql = "INSERT INTO $table($keys) VALUES ($values)";
-	$recordset = mysqli_query($link, $sql);
+	try {
+		$recordset = mysqli_query($link, $sql);
+	} catch (Throwable $e) {
+		error_log("Error insertData($table): " . $e->getMessage());
+		return $e->getMessage();
+	}
 	if ($recordset) {
 		$rtn = mysqli_insert_id($link);
 	} else {

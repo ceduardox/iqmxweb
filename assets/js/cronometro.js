@@ -114,8 +114,13 @@ function setPuntaje() {
 function showResponseTestCerebralx(responseText) {
   var obj = JSON.parse(responseText);
   //habilitarInputs("formTestx");
-  $('#result').fadeOut();
-  $('#resultado').fadeIn();
+  if (obj['estado'] == 1) {
+    $('#result').fadeOut();
+    $('#resultado').fadeIn();
+  } else {
+    $('.retorno').fadeOut();
+    alert(obj['mensaje'] || 'Ha ocurrido un error al intentar enviar los datos.');
+  }
 }
 
 //CRONOMETRO

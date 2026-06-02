@@ -68,7 +68,7 @@ $_SESSION['lecturaIDCitex'] = $arrLect['id'];
 
                 <div class="col-md-2">
                   <label class="form-label" for='edadTest'>EDAD:</label>
-                  <input name='edadTest' type='text' id='edadTest' class='required form-control' />
+                  <input name='edadTest' type='number' min='1' max='99' maxlength='2' id='edadTest' class='required form-control' />
                 </div>
 
                 <div class="col-md-4">
