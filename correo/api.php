@@ -132,12 +132,11 @@ switch ($action) {
             correo_json(false, array(), 'Falta el id.');
         }
         $kind = trim((string) ($input['kind'] ?? 'received'));
-        $endpoint = $kind === 'sent' ? '/emails/' . rawurlencode($id) : '/emails/received/' . rawurlencode($id);
-        $result = correo_call_resend('GET', $endpoint);
-        if (empty($result['ok'])) {
-            correo_json(false, array(), $result['error'] ?? 'No se pudo consultar el correo.');
+        $result = correo_db_find_message($id, $kind === 'sent' ? 'sent' : 'received');
+        if (!$result) {
+            correo_json(false, array(), 'No se encontro el correo.');
         }
-        correo_json(true, array('data' => $result['data']));
+        correo_json(true, array('data' => $result));
         break;
 
     default:

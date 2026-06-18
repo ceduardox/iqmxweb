@@ -588,6 +588,35 @@ function correo_db_list_messages($direction)
     return $items;
 }
 
+function correo_db_find_message($id, $direction = '')
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $id = correo_db_escape($id);
+    $direction = correo_db_escape($direction);
+    $where = "resend_id='$id' OR message_id='$id'";
+    if ($direction !== '') {
+        $where = "direction='$direction' AND (" . $where . ")";
+    }
+    $sql = "SELECT * FROM correo_messages WHERE $where ORDER BY id DESC LIMIT 1";
+    $result = mysqli_query($link, $sql);
+    if ($result && ($row = mysqli_fetch_assoc($result))) {
+        return array(
+            'id' => $row['resend_id'] ?: $row['message_id'] ?: (string) $row['id'],
+            'from' => $row['sender_email'] ?? '',
+            'to' => $row['recipient_email'] ?? '',
+            'subject' => $row['subject'] ?? '',
+            'text' => $row['text'] ?? '',
+            'html' => $row['html'] ?? '',
+            'preview' => $row['text'] ?? '',
+            'created_at' => $row['created_at'] ?? '',
+            'status' => $row['status'] ?? '',
+            'payload_json' => $row['payload_json'] ?? '',
+        );
+    }
+    return null;
+}
+
 function correo_resend_list_all($endpoint)
 {
     $path = $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . 'limit=100';
@@ -617,43 +646,41 @@ function correo_import_history_for_email($email)
     $imported = 0;
     $updates = 0;
 
-    foreach (array('/emails', '/emails/received') as $endpoint) {
-        $result = correo_resend_list_all($endpoint);
-        if (empty($result['ok'])) {
-            return $result;
+    $result = correo_resend_list_all('/emails');
+    if (empty($result['ok'])) {
+        return $result;
+    }
+
+    foreach (($result['items'] ?? array()) as $item) {
+        $from = correo_norm_email($item['from'] ?? '');
+        $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
+        if ($from !== $email && strpos($to, $email) === false) {
+            continue;
         }
 
-        foreach (($result['items'] ?? array()) as $item) {
-            $from = correo_norm_email($item['from'] ?? '');
-            $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
-            if ($from !== $email && strpos($to, $email) === false) {
-                continue;
-            }
-
-            $direction = $endpoint === '/emails/received' ? 'received' : 'sent';
-            $resendId = $item['id'] ?? '';
-            $existingUpdated = false;
-            if ($resendId !== '') {
-                $existingUpdated = correo_db_update_message_status($resendId, $direction, 'import');
-            }
-            if (!$existingUpdated) {
-                correo_db_insert_message(array(
-                    'direction' => $direction,
-                    'resend_id' => $resendId,
-                    'message_id' => $resendId,
-                    'sender_email' => $from,
-                    'recipient_email' => $to,
-                    'subject' => $item['subject'] ?? '',
-                    'html' => $item['html'] ?? '',
-                    'text' => $item['text'] ?? '',
-                    'status' => $direction,
-                    'event_type' => 'import',
-                    'payload_json' => json_encode($item, JSON_UNESCAPED_UNICODE),
-                ));
-                $imported++;
-            } else {
-                $updates++;
-            }
+        $direction = strpos($from, $email) !== false ? 'sent' : 'received';
+        $resendId = $item['id'] ?? '';
+        $existingUpdated = false;
+        if ($resendId !== '') {
+            $existingUpdated = correo_db_update_message_status($resendId, $direction, 'import');
+        }
+        if (!$existingUpdated) {
+            correo_db_insert_message(array(
+                'direction' => $direction,
+                'resend_id' => $resendId,
+                'message_id' => $resendId,
+                'sender_email' => $from,
+                'recipient_email' => $to,
+                'subject' => $item['subject'] ?? '',
+                'html' => $item['html'] ?? '',
+                'text' => $item['text'] ?? '',
+                'status' => $direction,
+                'event_type' => 'import',
+                'payload_json' => json_encode($item, JSON_UNESCAPED_UNICODE),
+            ));
+            $imported++;
+        } else {
+            $updates++;
         }
     }
 
