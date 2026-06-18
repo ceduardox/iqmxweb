@@ -292,6 +292,7 @@ function correo_mailboxes()
         return array(
             array('username' => 'info', 'email' => MAIL_INFO, 'assigned_email' => MAIL_INFO, 'active' => true),
             array('username' => 'webmaster', 'email' => MAIL_WEBMASTER, 'assigned_email' => MAIL_WEBMASTER, 'active' => true),
+            array('username' => 'fparedes', 'email' => 'fparedes@iqmaximo.com', 'assigned_email' => 'fparedes@iqmaximo.com', 'active' => true),
         );
     }
 
@@ -316,16 +317,17 @@ function correo_mailboxes()
             'active' => !isset($item['active']) || (bool) $item['active'],
         );
     }
+    if (!$mailboxes) {
+        return array(
+            array('username' => 'info', 'email' => MAIL_INFO, 'assigned_email' => MAIL_INFO, 'active' => true),
+            array('username' => 'fparedes', 'email' => 'fparedes@iqmaximo.com', 'assigned_email' => 'fparedes@iqmaximo.com', 'active' => true),
+        );
+    }
     return $mailboxes;
 }
 
 function correo_default_mailbox()
 {
-    $default = trim((string) iqmaximo_config('IQMAXIMO_CORREO_DEFAULT_MAILBOX', ''));
-    if ($default !== '') {
-        return $default;
-    }
-
     $mailboxes = correo_mailboxes();
     foreach ($mailboxes as $mailbox) {
         $email = strtolower(trim((string) ($mailbox['assigned_email'] ?? ($mailbox['email'] ?? ''))));
@@ -333,11 +335,15 @@ function correo_default_mailbox()
             return 'fparedes@iqmaximo.com';
         }
     }
+    $default = trim((string) iqmaximo_config('IQMAXIMO_CORREO_DEFAULT_MAILBOX', ''));
+    if ($default !== '') {
+        return $default;
+    }
     if (!empty($mailboxes[0])) {
         return $mailboxes[0]['assigned_email'] ?? ($mailboxes[0]['email'] ?? '');
     }
 
-    return '';
+    return 'fparedes@iqmaximo.com';
 }
 
 function correo_log_boot($context = array())
