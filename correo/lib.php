@@ -494,6 +494,56 @@ function correo_db_insert_message($data)
     return mysqli_insert_id($link);
 }
 
+function correo_db_update_message_fields($id, $data, $direction = '')
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $id = correo_db_escape($id);
+    $direction = correo_db_escape($direction);
+    $sender = correo_db_escape($data['sender_email'] ?? '');
+    $recipient = correo_db_escape($data['recipient_email'] ?? '');
+    $subject = correo_db_escape($data['subject'] ?? '');
+    $html = correo_db_escape($data['html'] ?? '');
+    $text = correo_db_escape($data['text'] ?? '');
+    $status = correo_db_escape($data['status'] ?? 'stored');
+    $eventType = correo_db_escape($data['event_type'] ?? '');
+    $payload = correo_db_escape($data['payload_json'] ?? '');
+
+    $set = array(
+        "sender_email=" . ($sender === '' ? 'NULL' : "'$sender'"),
+        "recipient_email=" . ($recipient === '' ? 'NULL' : "'$recipient'"),
+        "subject=" . ($subject === '' ? 'NULL' : "'$subject'"),
+        "html=" . ($html === '' ? 'NULL' : "'$html'"),
+        "text=" . ($text === '' ? 'NULL' : "'$text'"),
+        "status='" . $status . "'",
+        "payload_json=" . ($payload === '' ? 'NULL' : "'$payload'"),
+    );
+    if ($eventType !== '') {
+        $set[] = "event_type='$eventType'";
+    }
+    $where = "(resend_id='$id' OR message_id='$id')";
+    if ($direction !== '') {
+        $where = "direction='$direction' AND " . $where;
+    }
+    $sql = "UPDATE correo_messages SET " . implode(', ', $set) . " WHERE " . $where . " LIMIT 1";
+    mysqli_query($link, $sql);
+    return mysqli_affected_rows($link);
+}
+
+function correo_db_save_message($data)
+{
+    $resendId = trim((string) ($data['resend_id'] ?? ''));
+    $messageId = trim((string) ($data['message_id'] ?? ''));
+    $direction = trim((string) ($data['direction'] ?? ''));
+    $lookupId = $resendId !== '' ? $resendId : $messageId;
+    if ($lookupId !== '' && correo_db_find_message($lookupId, $direction)) {
+        correo_db_update_message_fields($lookupId, $data, $direction);
+        return true;
+    }
+    correo_db_insert_message($data);
+    return true;
+}
+
 function correo_db_insert_event($data)
 {
     correo_db_ready();
@@ -593,21 +643,51 @@ function correo_db_find_message($id, $direction = '')
 
 function correo_resend_list_all($endpoint)
 {
-    $path = $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . 'limit=100';
-    $result = correo_call_resend('GET', $path);
-    if (empty($result['ok'])) {
-        return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar Resend.');
-    }
-
-    $payload = $result['data'] ?? array();
     $items = array();
-    if (isset($payload['data']) && is_array($payload['data'])) {
-        $items = $payload['data'];
-    } elseif (is_array($payload)) {
-        $items = $payload;
-    }
+    $after = '';
+    $guard = 0;
+    do {
+        $path = $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . 'limit=100';
+        if ($after !== '') {
+            $path .= '&after=' . urlencode($after);
+        }
+        $result = correo_call_resend('GET', $path);
+        if (empty($result['ok'])) {
+            return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar Resend.');
+        }
+
+        $payload = $result['data'] ?? array();
+        $pageItems = array();
+        if (isset($payload['data']) && is_array($payload['data'])) {
+            $pageItems = $payload['data'];
+        } elseif (is_array($payload)) {
+            $pageItems = $payload;
+        }
+
+        $items = array_merge($items, $pageItems);
+        $hasMore = !empty($payload['has_more']);
+        $after = '';
+        if ($hasMore && !empty($pageItems)) {
+            $last = end($pageItems);
+            $after = is_array($last) && !empty($last['id']) ? (string) $last['id'] : '';
+        }
+        $guard++;
+    } while ($after !== '' && $guard < 20);
 
     return array('ok' => true, 'items' => $items);
+}
+
+function correo_resend_get_received_email($id)
+{
+    $id = trim((string) $id);
+    if ($id === '') {
+        return array('ok' => false, 'error' => 'Falta el id.');
+    }
+    $result = correo_call_resend('GET', '/emails/receiving/' . rawurlencode($id));
+    if (empty($result['ok'])) {
+        return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar el correo.');
+    }
+    return array('ok' => true, 'item' => $result['data'] ?? array());
 }
 
 function correo_import_history_for_email($email)
@@ -618,14 +698,14 @@ function correo_import_history_for_email($email)
     }
 
     $imported = 0;
-    $updates = 0;
+    $updated = 0;
 
-    $result = correo_resend_list_all('/emails');
-    if (empty($result['ok'])) {
-        return $result;
+    $sentResult = correo_resend_list_all('/emails');
+    if (empty($sentResult['ok'])) {
+        return $sentResult;
     }
 
-    foreach (($result['items'] ?? array()) as $item) {
+    foreach (($sentResult['items'] ?? array()) as $item) {
         $from = correo_norm_email($item['from'] ?? '');
         $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
         if ($from !== $email && strpos($to, $email) === false) {
@@ -633,30 +713,65 @@ function correo_import_history_for_email($email)
         }
 
         $direction = strpos($from, $email) !== false ? 'sent' : 'received';
-        $resendId = $item['id'] ?? '';
-        $existingUpdated = false;
-        if ($resendId !== '') {
-            $existingUpdated = correo_db_update_message_status($resendId, $direction, 'import');
-        }
-        if (!$existingUpdated) {
-            correo_db_insert_message(array(
-                'direction' => $direction,
-                'resend_id' => $resendId,
-                'message_id' => $resendId,
-                'sender_email' => $from,
-                'recipient_email' => $to,
-                'subject' => $item['subject'] ?? '',
-                'html' => $item['html'] ?? '',
-                'text' => $item['text'] ?? '',
-                'status' => $direction,
-                'event_type' => 'import',
-                'payload_json' => json_encode($item, JSON_UNESCAPED_UNICODE),
-            ));
-            $imported++;
-        } else {
-            $updates++;
-        }
+        $resendId = (string) ($item['id'] ?? '');
+        $payload = json_encode($item, JSON_UNESCAPED_UNICODE);
+        $saved = correo_db_save_message(array(
+            'direction' => $direction,
+            'resend_id' => $resendId,
+            'message_id' => $resendId,
+            'sender_email' => $from,
+            'recipient_email' => $to,
+            'subject' => $item['subject'] ?? '',
+            'html' => $item['html'] ?? '',
+            'text' => $item['text'] ?? '',
+            'status' => $direction,
+            'event_type' => 'import',
+            'payload_json' => $payload,
+        ));
+        $imported += $saved ? 1 : 0;
     }
 
-    return array('ok' => true, 'imported' => $imported, 'updated' => $updates);
+    $receivedResult = correo_resend_list_all('/emails/receiving');
+    if (empty($receivedResult['ok'])) {
+        return $receivedResult;
+    }
+
+    foreach (($receivedResult['items'] ?? array()) as $item) {
+        $toList = is_array($item['to'] ?? null) ? $item['to'] : array($item['to'] ?? '');
+        $matches = false;
+        foreach ($toList as $recipient) {
+            if (correo_norm_email($recipient) === $email) {
+                $matches = true;
+                break;
+            }
+        }
+        if (!$matches) {
+            continue;
+        }
+
+        $detail = correo_resend_get_received_email($item['id'] ?? '');
+        $detailItem = !empty($detail['ok']) ? ($detail['item'] ?? array()) : array();
+        $source = is_array($detailItem) && !empty($detailItem) ? $detailItem : $item;
+        $sender = correo_norm_email($source['from'] ?? '');
+        $recipient = is_array($source['to'] ?? null) ? implode(', ', $source['to']) : (string) ($source['to'] ?? '');
+        $html = (string) ($source['html'] ?? '');
+        $text = (string) ($source['text'] ?? '');
+        $payload = json_encode($source, JSON_UNESCAPED_UNICODE);
+        $saved = correo_db_save_message(array(
+            'direction' => 'received',
+            'resend_id' => (string) ($source['id'] ?? ($item['id'] ?? '')),
+            'message_id' => (string) ($source['message_id'] ?? ($item['message_id'] ?? ($item['id'] ?? ''))),
+            'sender_email' => $sender,
+            'recipient_email' => $recipient,
+            'subject' => $source['subject'] ?? '',
+            'html' => $html,
+            'text' => $text,
+            'status' => 'received',
+            'event_type' => 'import',
+            'payload_json' => $payload,
+        ));
+        $updated += $saved ? 1 : 0;
+    }
+
+    return array('ok' => true, 'imported' => $imported, 'updated' => $updated);
 }
