@@ -82,6 +82,83 @@ function correo_file_users()
     return is_array($json) ? $json : array();
 }
 
+function correo_config_users()
+{
+    $raw = trim((string) iqmaximo_config('IQMAXIMO_CORREO_USERS_JSON', ''));
+    if ($raw === '') {
+        return array();
+    }
+
+    $decoded = json_decode($raw, true);
+    if (!is_array($decoded)) {
+        return array();
+    }
+
+    $users = array();
+    foreach ($decoded as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $username = trim((string) ($item['username'] ?? ''));
+        $email = trim((string) ($item['email'] ?? ''));
+        if ($username === '' || $email === '') {
+            continue;
+        }
+        $users[] = array(
+            'id' => trim((string) ($item['id'] ?? '')),
+            'username' => $username,
+            'email' => $email,
+            'assigned_email' => trim((string) ($item['assigned_email'] ?? $email)),
+            'password' => (string) ($item['password'] ?? ''),
+            'role' => ($item['role'] ?? 'user') === 'admin' ? 'admin' : 'user',
+            'active' => !isset($item['active']) || (bool) $item['active'],
+        );
+    }
+
+    return $users;
+}
+
+function correo_upsert_user_record($record)
+{
+    correo_db_ready();
+    $link = ConectarBD();
+
+    $id = correo_db_escape($record['id'] !== '' ? $record['id'] : uniqid('user_', true));
+    $username = correo_db_escape($record['username']);
+    $email = correo_db_escape($record['email']);
+    $assignedEmail = correo_db_escape($record['assigned_email'] !== '' ? $record['assigned_email'] : $record['email']);
+    $password = correo_db_escape($record['password']);
+    $role = $record['role'] === 'admin' ? 'admin' : 'user';
+    $active = !empty($record['active']) ? 1 : 0;
+
+    if ($username === '' || $email === '' || $password === '') {
+        return false;
+    }
+
+    $sql = "INSERT INTO correo_users (id, username, email, assigned_email, password, role, active)
+            VALUES ('$id', '$username', '$email', '$assignedEmail', '$password', '$role', $active)
+            ON DUPLICATE KEY UPDATE
+                username=VALUES(username),
+                email=VALUES(email),
+                assigned_email=VALUES(assigned_email),
+                password=VALUES(password),
+                role=VALUES(role),
+                active=VALUES(active)";
+    return (bool) mysqli_query($link, $sql);
+}
+
+function correo_sync_config_users()
+{
+    $configUsers = correo_config_users();
+    if (!$configUsers) {
+        return;
+    }
+
+    foreach ($configUsers as $user) {
+        correo_upsert_user_record($user);
+    }
+}
+
 function correo_migrate_file_users_to_db()
 {
     static $migrated = false;
@@ -127,6 +204,7 @@ function correo_read_users()
 {
     correo_db_ready();
     correo_migrate_file_users_to_db();
+    correo_sync_config_users();
     $users = correo_db_fetch_users();
     if ($users) {
         return $users;
@@ -184,8 +262,7 @@ function correo_seed_admin()
         return;
     }
 
-    $users = correo_db_fetch_users();
-    $users[] = array(
+    $record = array(
         'id' => uniqid('user_', true),
         'username' => $adminUser,
         'email' => MAIL_WEBMASTER,
@@ -194,7 +271,7 @@ function correo_seed_admin()
         'role' => 'admin',
         'active' => true,
     );
-    correo_write_users($users);
+    correo_upsert_user_record($record);
 }
 
 function correo_find_user($username)
@@ -385,9 +462,13 @@ function correo_db_ready()
             KEY idx_role_active (role, active)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ";
+    $sqlUserLegacy = "ALTER TABLE correo_users ADD UNIQUE KEY uniq_username (username)";
+    $sqlUserLegacy2 = "ALTER TABLE correo_users ADD UNIQUE KEY uniq_email (email)";
     mysqli_query($link, $sqlMessages);
     mysqli_query($link, $sqlEvents);
     mysqli_query($link, $sqlUsers);
+    @mysqli_query($link, $sqlUserLegacy);
+    @mysqli_query($link, $sqlUserLegacy2);
     $ready = true;
     return true;
 }
