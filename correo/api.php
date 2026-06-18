@@ -54,6 +54,7 @@ switch ($action) {
             correo_json(false, array(), 'Acceso restringido.');
         }
 
+        $id = trim((string) ($input['id'] ?? ''));
         $username = trim((string) ($input['username'] ?? ''));
         $email = trim((string) ($input['email'] ?? ''));
         $assignedEmail = trim((string) ($input['assigned_email'] ?? $email));
@@ -66,6 +67,10 @@ switch ($action) {
         $users = correo_read_users();
         $existingIndex = null;
         foreach ($users as $index => $user) {
+            if ($id !== '' && ($user['id'] ?? '') === $id) {
+                $existingIndex = $index;
+                break;
+            }
             if (strcasecmp((string) ($user['username'] ?? ''), $username) === 0) {
                 $existingIndex = $index;
                 break;

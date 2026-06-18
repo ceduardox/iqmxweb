@@ -214,7 +214,7 @@ $user = correo_current_user();
       </div>
 
       <script>
-        const state = { inbox: [], sent: [], users: [] };
+        const state = { inbox: [], sent: [], users: [], editingUserId: '' };
         const $ = (id) => document.getElementById(id);
         const esc = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         async function api(action, payload = {}) {
@@ -315,6 +315,7 @@ $user = correo_current_user();
         $('saveUser').addEventListener('click', async () => {
           $('usersStatus').textContent = 'Guardando...';
           const data = await api('saveUser', {
+            id: state.editingUserId,
             username: $('newUsername').value.trim(),
             email: $('newUserEmail').value.trim(),
             assigned_email: $('newAssignedEmail') ? $('newAssignedEmail').value.trim() : '',
@@ -322,7 +323,11 @@ $user = correo_current_user();
             role: $('newUserRole').value,
           });
           $('usersStatus').textContent = data.ok ? 'Usuario guardado.' : (data.error || 'No se pudo guardar.');
-          if (data.ok) await loadUsers();
+          if (data.ok) {
+            state.editingUserId = '';
+            $('newUserPass').value = '';
+            await loadUsers();
+          }
         });
         $('importHistory').addEventListener('click', async () => {
           const email = ($('newAssignedEmail') && $('newAssignedEmail').value.trim()) || $('newUserEmail').value.trim();
@@ -345,6 +350,7 @@ $user = correo_current_user();
           if (edit !== null) {
             const u = state.users[Number(edit)];
             if (!u) return;
+            state.editingUserId = u.id || '';
             $('newUsername').value = u.username || '';
             $('newUserEmail').value = u.email || '';
             if ($('newAssignedEmail')) $('newAssignedEmail').value = u.assigned_email || u.email || '';

@@ -22,6 +22,88 @@ function correo_users_file()
     return correo_data_dir() . '/users.json';
 }
 
+function correo_user_row_to_array($row)
+{
+    return array(
+        'id' => $row['id'] ?? '',
+        'username' => $row['username'] ?? '',
+        'email' => $row['email'] ?? '',
+        'assigned_email' => $row['assigned_email'] ?? ($row['email'] ?? ''),
+        'password' => $row['password'] ?? '',
+        'role' => $row['role'] ?? 'user',
+        'active' => !empty($row['active']),
+    );
+}
+
+function correo_db_fetch_users()
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $sql = "SELECT id, username, email, assigned_email, password, role, active
+            FROM correo_users
+            ORDER BY role DESC, username ASC, id ASC";
+    $result = mysqli_query($link, $sql);
+    $users = array();
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $users[] = correo_user_row_to_array($row);
+        }
+    }
+    return $users;
+}
+
+function correo_db_count_users()
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $result = mysqli_query($link, "SELECT COUNT(*) AS total FROM correo_users");
+    if (!$result) {
+        return 0;
+    }
+    $row = mysqli_fetch_assoc($result);
+    return (int) ($row['total'] ?? 0);
+}
+
+function correo_db_has_admin()
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $result = mysqli_query($link, "SELECT 1 FROM correo_users WHERE role='admin' LIMIT 1");
+    return $result && mysqli_num_rows($result) > 0;
+}
+
+function correo_file_users()
+{
+    $file = correo_users_file();
+    if (!is_file($file)) {
+        return array();
+    }
+    $json = json_decode((string) file_get_contents($file), true);
+    return is_array($json) ? $json : array();
+}
+
+function correo_migrate_file_users_to_db()
+{
+    static $migrated = false;
+    if ($migrated) {
+        return;
+    }
+
+    if (correo_db_count_users() > 0) {
+        $migrated = true;
+        return;
+    }
+
+    $fileUsers = correo_file_users();
+    if (!$fileUsers) {
+        $migrated = true;
+        return;
+    }
+
+    correo_write_users($fileUsers);
+    $migrated = true;
+}
+
 function correo_current_user()
 {
     return $_SESSION['correo_user'] ?? null;
@@ -43,41 +125,57 @@ function correo_require_login()
 
 function correo_read_users()
 {
-    $file = correo_users_file();
-    if (!is_file($file)) {
-        return array();
+    correo_db_ready();
+    correo_migrate_file_users_to_db();
+    $users = correo_db_fetch_users();
+    if ($users) {
+        return $users;
     }
-    $json = json_decode((string) file_get_contents($file), true);
-    return is_array($json) ? $json : array();
+    correo_seed_admin();
+    return correo_db_fetch_users();
 }
 
 function correo_write_users($users)
 {
-    $dir = correo_data_dir();
-    if (!is_dir($dir)) {
-        mkdir($dir, 0775, true);
+    correo_db_ready();
+    $link = ConectarBD();
+    mysqli_begin_transaction($link);
+
+    $reset = mysqli_query($link, "DELETE FROM correo_users");
+    if (!$reset) {
+        mysqli_rollback($link);
+        throw new RuntimeException('No se pudo limpiar la tabla de usuarios.');
     }
-    $bytes = @file_put_contents(correo_users_file(), json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-    if ($bytes === false) {
-        $fallbackDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'iqmax-correo';
-        if (!is_dir($fallbackDir)) {
-            mkdir($fallbackDir, 0775, true);
+
+    foreach (array_values($users) as $user) {
+        $record = correo_user_row_to_array($user);
+        $id = correo_db_escape($record['id'] !== '' ? $record['id'] : uniqid('user_', true));
+        $username = correo_db_escape($record['username']);
+        $email = correo_db_escape($record['email']);
+        $assignedEmail = correo_db_escape($record['assigned_email'] !== '' ? $record['assigned_email'] : $record['email']);
+        $password = correo_db_escape($record['password']);
+        $role = $record['role'] === 'admin' ? 'admin' : 'user';
+        $active = !empty($record['active']) ? 1 : 0;
+
+        if ($username === '' || $email === '' || $password === '') {
+            continue;
         }
-        $fallbackFile = $fallbackDir . DIRECTORY_SEPARATOR . 'users.json';
-        $bytes = @file_put_contents($fallbackFile, json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-        if ($bytes === false) {
-            throw new RuntimeException('No se pudo guardar users.json en una ruta escribible.');
+
+        $sql = "INSERT INTO correo_users (id, username, email, assigned_email, password, role, active)
+                VALUES ('$id', '$username', '$email', '$assignedEmail', '$password', '$role', $active)";
+        if (!mysqli_query($link, $sql)) {
+            mysqli_rollback($link);
+            throw new RuntimeException('No se pudo guardar el usuario ' . $record['username'] . '.');
         }
     }
+
+    mysqli_commit($link);
 }
 
 function correo_seed_admin()
 {
-    $users = correo_read_users();
-    foreach ($users as $user) {
-        if (($user['role'] ?? '') === 'admin') {
-            return;
-        }
+    if (correo_db_has_admin()) {
+        return;
     }
 
     $adminUser = trim((string) iqmaximo_config('IQMAXIMO_CORREO_ADMIN_USER', 'admin'));
@@ -86,10 +184,12 @@ function correo_seed_admin()
         return;
     }
 
+    $users = correo_db_fetch_users();
     $users[] = array(
         'id' => uniqid('user_', true),
         'username' => $adminUser,
         'email' => MAIL_WEBMASTER,
+        'assigned_email' => MAIL_WEBMASTER,
         'password' => password_hash($adminPass, PASSWORD_DEFAULT),
         'role' => 'admin',
         'active' => true,
@@ -99,10 +199,16 @@ function correo_seed_admin()
 
 function correo_find_user($username)
 {
-    foreach (correo_read_users() as $user) {
-        if (strcasecmp((string) ($user['username'] ?? ''), (string) $username) === 0) {
-            return $user;
-        }
+    correo_db_ready();
+    $link = ConectarBD();
+    $username = correo_db_escape($username);
+    $sql = "SELECT id, username, email, assigned_email, password, role, active
+            FROM correo_users
+            WHERE LOWER(username)=LOWER('$username')
+            LIMIT 1";
+    $result = mysqli_query($link, $sql);
+    if ($result && ($row = mysqli_fetch_assoc($result))) {
+        return correo_user_row_to_array($row);
     }
     return null;
 }
@@ -263,8 +369,25 @@ function correo_db_ready()
             KEY idx_event_resend_id (resend_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ";
+    $sqlUsers = "
+        CREATE TABLE IF NOT EXISTS correo_users (
+            id VARCHAR(80) NOT NULL PRIMARY KEY,
+            username VARCHAR(120) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            assigned_email VARCHAR(255) NOT NULL DEFAULT '',
+            password VARCHAR(255) NOT NULL,
+            role VARCHAR(16) NOT NULL DEFAULT 'user',
+            active TINYINT(1) NOT NULL DEFAULT 1,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_username (username),
+            UNIQUE KEY uniq_email (email),
+            KEY idx_role_active (role, active)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    ";
     mysqli_query($link, $sqlMessages);
     mysqli_query($link, $sqlEvents);
+    mysqli_query($link, $sqlUsers);
     $ready = true;
     return true;
 }
