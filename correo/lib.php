@@ -360,32 +360,18 @@ function correo_db_list_messages($direction)
 
 function correo_resend_list_all($endpoint)
 {
+    $path = $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . 'limit=100';
+    $result = correo_call_resend('GET', $path);
+    if (empty($result['ok'])) {
+        return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar Resend.');
+    }
+
+    $payload = $result['data'] ?? array();
     $items = array();
-    $cursor = '';
-    for ($i = 0; $i < 20; $i++) {
-        $path = $endpoint;
-        $path .= (strpos($path, '?') === false ? '?' : '&') . 'limit=100';
-        if ($cursor !== '') {
-            $path .= '&cursor=' . rawurlencode($cursor);
-        }
-        $result = correo_call_resend('GET', $path);
-        if (empty($result['ok'])) {
-            return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar Resend.');
-        }
-
-        $payload = $result['data'] ?? array();
-        $batch = array();
-        if (isset($payload['data']) && is_array($payload['data'])) {
-            $batch = $payload['data'];
-        } elseif (is_array($payload)) {
-            $batch = $payload;
-        }
-        $items = array_merge($items, $batch);
-
-        $cursor = $payload['next_cursor'] ?? ($payload['nextCursor'] ?? '');
-        if ($cursor === '' || count($batch) < 100) {
-            break;
-        }
+    if (isset($payload['data']) && is_array($payload['data'])) {
+        $items = $payload['data'];
+    } elseif (is_array($payload)) {
+        $items = $payload;
     }
 
     return array('ok' => true, 'items' => $items);
