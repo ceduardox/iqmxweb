@@ -480,13 +480,21 @@ function correo_db_ready()
             KEY idx_role_active (role, active)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ";
-    $sqlUserLegacy = "ALTER TABLE correo_users ADD UNIQUE KEY uniq_username (username)";
-    $sqlUserLegacy2 = "ALTER TABLE correo_users ADD UNIQUE KEY uniq_email (email)";
     mysqli_query($link, $sqlMessages);
     mysqli_query($link, $sqlEvents);
     mysqli_query($link, $sqlUsers);
-    @mysqli_query($link, $sqlUserLegacy);
-    @mysqli_query($link, $sqlUserLegacy2);
+
+    $indexCheck = function ($name) use ($link) {
+        $name = mysqli_real_escape_string($link, $name);
+        $result = mysqli_query($link, "SHOW INDEX FROM correo_users WHERE Key_name='$name'");
+        return $result && mysqli_num_rows($result) > 0;
+    };
+    if (!$indexCheck('uniq_username')) {
+        mysqli_query($link, "ALTER TABLE correo_users ADD UNIQUE KEY uniq_username (username)");
+    }
+    if (!$indexCheck('uniq_email')) {
+        mysqli_query($link, "ALTER TABLE correo_users ADD UNIQUE KEY uniq_email (email)");
+    }
     $ready = true;
     return true;
 }
