@@ -55,11 +55,18 @@ switch ($action) {
             correo_json(false, array(), 'Acceso restringido.');
         }
         $email = trim((string) ($input['email'] ?? ''));
-        $result = correo_import_history_for_email($email);
+        $limit = (int) ($input['limit'] ?? 5);
+        $after = trim((string) ($input['after'] ?? ''));
+        $result = correo_import_history_for_email($email, $limit, $after);
         if (empty($result['ok'])) {
             correo_json(false, array(), $result['error'] ?? 'No se pudo importar el historial.');
         }
-        correo_json(true, array('imported' => $result['imported'] ?? 0, 'updated' => $result['updated'] ?? 0));
+        correo_json(true, array(
+            'imported' => $result['imported'] ?? 0,
+            'updated' => $result['updated'] ?? 0,
+            'has_more' => !empty($result['has_more']),
+            'next_after' => $result['next_after'] ?? '',
+        ));
         break;
 
     case 'listInbox':

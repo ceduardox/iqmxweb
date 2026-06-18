@@ -220,7 +220,7 @@ $user = correo_current_user();
       </div>
 
       <script>
-        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>' };
+        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>', importAfter: '' };
         const $ = (id) => document.getElementById(id);
         const esc = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         async function api(action, payload = {}) {
@@ -351,16 +351,20 @@ $user = correo_current_user();
           const mailbox = event.target.getAttribute('data-mailbox');
           const importEmail = event.target.getAttribute('data-import');
           if (mailbox) {
+            state.importAfter = '';
             await loadMailbox(mailbox);
             $('usersStatus').textContent = 'Buzón activo: ' + mailbox;
           }
           if (importEmail) {
             $('usersStatus').textContent = 'Importando historial...';
-            const data = await api('importHistory', { email: importEmail });
+            const data = await api('importHistory', { email: importEmail, after: state.importAfter || '', limit: 5 });
             $('usersStatus').textContent = data.ok
-              ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.`
+              ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan más, pulsa otra vez.' : ''}`
               : (data.error || 'No se pudo importar.');
-            if (data.ok) await loadMailbox(importEmail);
+            if (data.ok) {
+              state.importAfter = data.next_after || '';
+              await loadMailbox(importEmail);
+            }
           }
         });
         $('importHistory').addEventListener('click', async () => {
@@ -370,11 +374,12 @@ $user = correo_current_user();
             return;
           }
           $('usersStatus').textContent = 'Importando historial...';
-          const data = await api('importHistory', { email });
+          const data = await api('importHistory', { email, after: state.importAfter || '', limit: 5 });
           $('usersStatus').textContent = data.ok
-            ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.`
+            ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan más, pulsa otra vez.' : ''}`
             : (data.error || 'No se pudo importar.');
           if (data.ok) {
+            state.importAfter = data.next_after || '';
             await Promise.all([loadMailbox(email), loadUsers()]);
           }
         });

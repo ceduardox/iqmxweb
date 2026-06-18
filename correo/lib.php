@@ -643,38 +643,35 @@ function correo_db_find_message($id, $direction = '')
 
 function correo_resend_list_all($endpoint)
 {
+    return correo_resend_list_page($endpoint, 100, '');
+}
+
+function correo_resend_list_page($endpoint, $limit = 5, $after = '')
+{
+    $path = $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . 'limit=' . max(1, (int) $limit);
+    if ($after !== '') {
+        $path .= '&after=' . urlencode($after);
+    }
+    $result = correo_call_resend('GET', $path);
+    if (empty($result['ok'])) {
+        return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar Resend.');
+    }
+
+    $payload = $result['data'] ?? array();
     $items = array();
-    $after = '';
-    $guard = 0;
-    do {
-        $path = $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . 'limit=100';
-        if ($after !== '') {
-            $path .= '&after=' . urlencode($after);
-        }
-        $result = correo_call_resend('GET', $path);
-        if (empty($result['ok'])) {
-            return array('ok' => false, 'error' => $result['error'] ?? 'No se pudo consultar Resend.');
-        }
+    if (isset($payload['data']) && is_array($payload['data'])) {
+        $items = $payload['data'];
+    } elseif (is_array($payload)) {
+        $items = $payload;
+    }
 
-        $payload = $result['data'] ?? array();
-        $pageItems = array();
-        if (isset($payload['data']) && is_array($payload['data'])) {
-            $pageItems = $payload['data'];
-        } elseif (is_array($payload)) {
-            $pageItems = $payload;
-        }
+    $nextAfter = '';
+    if (!empty($payload['has_more']) && !empty($items)) {
+        $last = end($items);
+        $nextAfter = is_array($last) && !empty($last['id']) ? (string) $last['id'] : '';
+    }
 
-        $items = array_merge($items, $pageItems);
-        $hasMore = !empty($payload['has_more']);
-        $after = '';
-        if ($hasMore && !empty($pageItems)) {
-            $last = end($pageItems);
-            $after = is_array($last) && !empty($last['id']) ? (string) $last['id'] : '';
-        }
-        $guard++;
-    } while ($after !== '' && $guard < 20);
-
-    return array('ok' => true, 'items' => $items);
+    return array('ok' => true, 'items' => $items, 'has_more' => !empty($payload['has_more']), 'next_after' => $nextAfter);
 }
 
 function correo_resend_get_received_email($id)
@@ -690,7 +687,7 @@ function correo_resend_get_received_email($id)
     return array('ok' => true, 'item' => $result['data'] ?? array());
 }
 
-function correo_import_history_for_email($email)
+function correo_import_history_for_email($email, $limit = 5, $after = '')
 {
     $email = correo_norm_email($email);
     if ($email === '') {
@@ -700,7 +697,7 @@ function correo_import_history_for_email($email)
     $imported = 0;
     $updated = 0;
 
-    $sentResult = correo_resend_list_all('/emails');
+    $sentResult = correo_resend_list_page('/emails', 50, '');
     if (empty($sentResult['ok'])) {
         return $sentResult;
     }
@@ -731,12 +728,12 @@ function correo_import_history_for_email($email)
         $imported += $saved ? 1 : 0;
     }
 
-    $receivedResult = correo_resend_list_all('/emails/receiving');
+    $receivedResult = correo_resend_list_page('/emails/receiving', max(1, (int) $limit), $after);
     if (empty($receivedResult['ok'])) {
         return $receivedResult;
     }
 
-    foreach (($receivedResult['items'] ?? array()) as $item) {
+    foreach (($receivedResult['items'] ?? array()) as $index => $item) {
         $toList = is_array($item['to'] ?? null) ? $item['to'] : array($item['to'] ?? '');
         $matches = false;
         foreach ($toList as $recipient) {
@@ -749,6 +746,9 @@ function correo_import_history_for_email($email)
             continue;
         }
 
+        if ($index > 0) {
+            usleep(250000);
+        }
         $detail = correo_resend_get_received_email($item['id'] ?? '');
         $detailItem = !empty($detail['ok']) ? ($detail['item'] ?? array()) : array();
         $source = is_array($detailItem) && !empty($detailItem) ? $detailItem : $item;
@@ -773,5 +773,11 @@ function correo_import_history_for_email($email)
         $updated += $saved ? 1 : 0;
     }
 
-    return array('ok' => true, 'imported' => $imported, 'updated' => $updated);
+    return array(
+        'ok' => true,
+        'imported' => $imported,
+        'updated' => $updated,
+        'has_more' => !empty($receivedResult['has_more']),
+        'next_after' => $receivedResult['next_after'] ?? '',
+    );
 }
