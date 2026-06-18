@@ -20,6 +20,7 @@ correo_seed_admin();
 $GLOBALS['correo_bootstrap'] = correo_read_users();
 $input = correo_input();
 $action = $input['action'] ?? '';
+$GLOBALS['correo_boot_log'] = correo_log_boot(array('page' => 'api', 'action' => $action, 'default_mailbox' => correo_default_mailbox()));
 
 switch ($action) {
     case 'login':

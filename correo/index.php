@@ -2,6 +2,7 @@
 require_once __DIR__ . '/lib.php';
 
 correo_seed_admin();
+correo_log_boot(array('page' => 'index', 'default_mailbox' => correo_default_mailbox(), 'mailboxes' => array_map(function ($m) { return $m['assigned_email'] ?? ($m['email'] ?? ''); }, correo_mailboxes())));
 
 $user = correo_current_user();
 ?>
@@ -106,6 +107,7 @@ $user = correo_current_user();
         <div>
           <div class="badge">Panel de correo</div>
           <h1>Correo</h1>
+          <div class="status">Buzón activo: <strong id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></strong></div>
           <p>Panel simple para enviar, recibir y revisar historial por buzón. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
         <div class="actions">

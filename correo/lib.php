@@ -327,11 +327,26 @@ function correo_default_mailbox()
     }
 
     $mailboxes = correo_mailboxes();
+    foreach ($mailboxes as $mailbox) {
+        $email = strtolower(trim((string) ($mailbox['assigned_email'] ?? ($mailbox['email'] ?? ''))));
+        if ($email === 'fparedes@iqmaximo.com') {
+            return 'fparedes@iqmaximo.com';
+        }
+    }
     if (!empty($mailboxes[0])) {
         return $mailboxes[0]['assigned_email'] ?? ($mailboxes[0]['email'] ?? '');
     }
 
     return '';
+}
+
+function correo_log_boot($context = array())
+{
+    $parts = array();
+    foreach ((array) $context as $key => $value) {
+        $parts[] = $key . '=' . (is_scalar($value) ? (string) $value : json_encode($value, JSON_UNESCAPED_UNICODE));
+    }
+    error_log('[correo] ' . implode(' ', $parts));
 }
 
 function correo_db_ready()
