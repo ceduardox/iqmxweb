@@ -219,3 +219,140 @@ function correo_filter_by_user($items, $user)
     }
     return $filtered;
 }
+
+function correo_db_ready()
+{
+    static $ready = false;
+    if ($ready) {
+        return true;
+    }
+
+    $link = ConectarBD();
+    $sqlMessages = "
+        CREATE TABLE IF NOT EXISTS correo_messages (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            direction VARCHAR(16) NOT NULL,
+            resend_id VARCHAR(128) NULL,
+            message_id VARCHAR(128) NULL,
+            sender_email VARCHAR(255) NULL,
+            recipient_email VARCHAR(255) NULL,
+            subject VARCHAR(255) NULL,
+            html MEDIUMTEXT NULL,
+            text MEDIUMTEXT NULL,
+            status VARCHAR(32) NOT NULL DEFAULT 'stored',
+            event_type VARCHAR(64) NULL,
+            payload_json LONGTEXT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_direction_created (direction, created_at),
+            KEY idx_resend_id (resend_id),
+            KEY idx_message_id (message_id),
+            KEY idx_recipient (recipient_email),
+            KEY idx_sender (sender_email)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    ";
+    $sqlEvents = "
+        CREATE TABLE IF NOT EXISTS correo_events (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            event_type VARCHAR(64) NOT NULL,
+            resend_id VARCHAR(128) NULL,
+            payload_json LONGTEXT NOT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            KEY idx_event_type_created (event_type, created_at),
+            KEY idx_event_resend_id (resend_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    ";
+    mysqli_query($link, $sqlMessages);
+    mysqli_query($link, $sqlEvents);
+    $ready = true;
+    return true;
+}
+
+function correo_db_escape($value)
+{
+    $link = ConectarBD();
+    return mysqli_real_escape_string($link, (string) $value);
+}
+
+function correo_db_insert_message($data)
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $direction = correo_db_escape($data['direction'] ?? '');
+    $resendId = correo_db_escape($data['resend_id'] ?? '');
+    $messageId = correo_db_escape($data['message_id'] ?? '');
+    $sender = correo_db_escape($data['sender_email'] ?? '');
+    $recipient = correo_db_escape($data['recipient_email'] ?? '');
+    $subject = correo_db_escape($data['subject'] ?? '');
+    $html = correo_db_escape($data['html'] ?? '');
+    $text = correo_db_escape($data['text'] ?? '');
+    $status = correo_db_escape($data['status'] ?? 'stored');
+    $eventType = correo_db_escape($data['event_type'] ?? '');
+    $payload = correo_db_escape($data['payload_json'] ?? '');
+
+    $sql = "INSERT INTO correo_messages
+        (direction, resend_id, message_id, sender_email, recipient_email, subject, html, text, status, event_type, payload_json)
+        VALUES
+        ('$direction', " . ($resendId === '' ? 'NULL' : "'$resendId'") . ", " . ($messageId === '' ? 'NULL' : "'$messageId'") . ",
+         " . ($sender === '' ? 'NULL' : "'$sender'") . ", " . ($recipient === '' ? 'NULL' : "'$recipient'") . ",
+         " . ($subject === '' ? 'NULL' : "'$subject'") . ", " . ($html === '' ? 'NULL' : "'$html'") . ",
+         " . ($text === '' ? 'NULL' : "'$text'") . ", '$status', " . ($eventType === '' ? 'NULL' : "'$eventType'") . ",
+         " . ($payload === '' ? 'NULL' : "'$payload'") . ")";
+
+    mysqli_query($link, $sql);
+    return mysqli_insert_id($link);
+}
+
+function correo_db_insert_event($data)
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $eventType = correo_db_escape($data['event_type'] ?? '');
+    $resendId = correo_db_escape($data['resend_id'] ?? '');
+    $payload = correo_db_escape($data['payload_json'] ?? '');
+    $sql = "INSERT INTO correo_events (event_type, resend_id, payload_json) VALUES
+        (" . ($eventType === '' ? 'NULL' : "'$eventType'") . ",
+        " . ($resendId === '' ? 'NULL' : "'$resendId'") . ",
+        '$payload')";
+    mysqli_query($link, $sql);
+    return mysqli_insert_id($link);
+}
+
+function correo_db_update_message_status($resendId, $status, $eventType = '')
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $resendId = correo_db_escape($resendId);
+    $status = correo_db_escape($status);
+    $eventType = correo_db_escape($eventType);
+    $sql = "UPDATE correo_messages SET status='$status'" . ($eventType !== '' ? ", event_type='$eventType'" : '') . " WHERE resend_id='$resendId' OR message_id='$resendId'";
+    mysqli_query($link, $sql);
+    return mysqli_affected_rows($link);
+}
+
+function correo_db_list_messages($direction)
+{
+    correo_db_ready();
+    $link = ConectarBD();
+    $direction = correo_db_escape($direction);
+    $sql = "SELECT * FROM correo_messages WHERE direction='$direction' ORDER BY created_at DESC, id DESC LIMIT 300";
+    $result = mysqli_query($link, $sql);
+    $items = array();
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $items[] = array(
+                'id' => $row['resend_id'] ?: $row['message_id'] ?: (string) $row['id'],
+                'from' => $row['sender_email'] ?? '',
+                'to' => $row['recipient_email'] ?? '',
+                'subject' => $row['subject'] ?? '',
+                'text' => $row['text'] ?? '',
+                'html' => $row['html'] ?? '',
+                'preview' => $row['text'] ?? '',
+                'created_at' => $row['created_at'] ?? '',
+                'status' => $row['status'] ?? '',
+                'payload_json' => $row['payload_json'] ?? '',
+            );
+        }
+    }
+    return $items;
+}

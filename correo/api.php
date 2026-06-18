@@ -122,12 +122,7 @@ switch ($action) {
     case 'listSent':
         correo_require_login();
         $user = correo_current_user();
-        $endpoint = $action === 'listInbox' ? '/emails/received' : '/emails';
-        $result = correo_call_resend('GET', $endpoint);
-        if (empty($result['ok'])) {
-            correo_json(false, array(), $result['error'] ?? 'No se pudo consultar Resend.');
-        }
-        $items = correo_map_messages(correo_extract_items($result['data']), $action === 'listInbox' ? 'received' : 'sent');
+        $items = correo_db_list_messages($action === 'listInbox' ? 'received' : 'sent');
         correo_json(true, array('items' => correo_filter_by_user($items, $user)));
         break;
 
@@ -159,7 +154,21 @@ switch ($action) {
         if (empty($result['ok'])) {
             correo_json(false, array(), $result['error'] ?? 'No se pudo enviar.');
         }
-        correo_json(true, array('data' => $result['data']));
+        $resendData = $result['data'] ?? array();
+        $storedId = correo_db_insert_message(array(
+            'direction' => 'sent',
+            'resend_id' => $resendData['id'] ?? '',
+            'message_id' => $resendData['id'] ?? '',
+            'sender_email' => $from,
+            'recipient_email' => $to,
+            'subject' => $subject,
+            'html' => $html,
+            'text' => strip_tags($html),
+            'status' => 'sent',
+            'event_type' => 'email.sent',
+            'payload_json' => json_encode($resendData, JSON_UNESCAPED_UNICODE),
+        ));
+        correo_json(true, array('data' => $resendData, 'stored_id' => $storedId));
         break;
 
     case 'read':
