@@ -56,6 +56,7 @@ switch ($action) {
 
         $username = trim((string) ($input['username'] ?? ''));
         $email = trim((string) ($input['email'] ?? ''));
+        $assignedEmail = trim((string) ($input['assigned_email'] ?? $email));
         $password = (string) ($input['password'] ?? '');
         $role = trim((string) ($input['role'] ?? 'user'));
         if ($username === '' || $email === '') {
@@ -75,6 +76,7 @@ switch ($action) {
             'id' => $existingIndex !== null ? $users[$existingIndex]['id'] : uniqid('user_', true),
             'username' => $username,
             'email' => $email,
+            'assigned_email' => $assignedEmail !== '' ? $assignedEmail : $email,
             'password' => $existingIndex !== null ? ($users[$existingIndex]['password'] ?? '') : '',
             'role' => $role === 'admin' ? 'admin' : 'user',
             'active' => true,
@@ -94,6 +96,18 @@ switch ($action) {
 
         correo_write_users($users);
         correo_json(true, array('user' => correo_public_user($record)));
+        break;
+
+    case 'importHistory':
+        if (!correo_is_admin()) {
+            correo_json(false, array(), 'Acceso restringido.');
+        }
+        $email = trim((string) ($input['email'] ?? ''));
+        $result = correo_import_history_for_email($email);
+        if (empty($result['ok'])) {
+            correo_json(false, array(), $result['error'] ?? 'No se pudo importar el historial.');
+        }
+        correo_json(true, array('imported' => $result['imported'] ?? 0, 'updated' => $result['updated'] ?? 0));
         break;
 
     case 'deleteUser':

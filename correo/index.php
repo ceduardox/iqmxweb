@@ -170,6 +170,14 @@ $user = correo_current_user();
               <div style="height:10px"></div>
               <div class="row">
                 <div>
+                  <label class="small">Correo para historial</label>
+                  <input class="input" id="newAssignedEmail" placeholder="fparedes@iqmaximo.com">
+                </div>
+                <div></div>
+              </div>
+              <div style="height:10px"></div>
+              <div class="row">
+                <div>
                   <label class="small">Contraseña</label>
                   <input class="input" id="newUserPass" type="password" placeholder="********">
                 </div>
@@ -184,6 +192,7 @@ $user = correo_current_user();
               <div style="height:10px"></div>
               <div class="toolbar">
                 <button class="btn" id="saveUser">Guardar usuario</button>
+                <button class="btn secondary" id="importHistory">Importar historial</button>
               </div>
               <div class="status" id="usersStatus"></div>
               <div class="list" id="usersList" style="margin-top:12px"></div>
@@ -262,6 +271,7 @@ $user = correo_current_user();
             <div class="item">
               <div class="meta"><span><strong>${esc(user.username)}</strong> (${esc(user.role)})</span><span>${user.active ? 'activo' : 'inactivo'}</span></div>
               <div class="snippet">${esc(user.email || '')}</div>
+              <div class="snippet">Historial: ${esc(user.assigned_email || user.email || '')}</div>
               <div class="toolbar" style="margin-top:10px">
                 <button class="btn secondary" data-edit="${index}">Editar</button>
                 <button class="btn danger" data-del="${index}">Eliminar</button>
@@ -307,11 +317,27 @@ $user = correo_current_user();
           const data = await api('saveUser', {
             username: $('newUsername').value.trim(),
             email: $('newUserEmail').value.trim(),
+            assigned_email: $('newAssignedEmail') ? $('newAssignedEmail').value.trim() : '',
             password: $('newUserPass').value,
             role: $('newUserRole').value,
           });
           $('usersStatus').textContent = data.ok ? 'Usuario guardado.' : (data.error || 'No se pudo guardar.');
           if (data.ok) await loadUsers();
+        });
+        $('importHistory').addEventListener('click', async () => {
+          const email = ($('newAssignedEmail') && $('newAssignedEmail').value.trim()) || $('newUserEmail').value.trim();
+          if (!email) {
+            $('usersStatus').textContent = 'Ingresa el correo asignado para importar.';
+            return;
+          }
+          $('usersStatus').textContent = 'Importando historial...';
+          const data = await api('importHistory', { email });
+          $('usersStatus').textContent = data.ok
+            ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.`
+            : (data.error || 'No se pudo importar.');
+          if (data.ok) {
+            await Promise.all([loadInbox(), loadSent(), loadUsers()]);
+          }
         });
         $('usersList').addEventListener('click', async (event) => {
           const edit = event.target.getAttribute('data-edit');
@@ -321,6 +347,7 @@ $user = correo_current_user();
             if (!u) return;
             $('newUsername').value = u.username || '';
             $('newUserEmail').value = u.email || '';
+            if ($('newAssignedEmail')) $('newAssignedEmail').value = u.assigned_email || u.email || '';
             $('newUserRole').value = u.role || 'user';
             $('newUserPass').value = '';
             setActiveTab('users');
