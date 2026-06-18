@@ -17,6 +17,7 @@ function correo_input()
 }
 
 correo_seed_admin();
+$GLOBALS['correo_bootstrap'] = correo_read_users();
 $input = correo_input();
 $action = $input['action'] ?? '';
 

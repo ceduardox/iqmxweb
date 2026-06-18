@@ -277,11 +277,13 @@ function correo_seed_admin()
 function correo_find_user($username)
 {
     correo_db_ready();
+    correo_sync_config_users();
     $link = ConectarBD();
     $username = correo_db_escape($username);
     $sql = "SELECT id, username, email, assigned_email, password, role, active
             FROM correo_users
             WHERE LOWER(username)=LOWER('$username')
+               OR LOWER(email)=LOWER('$username')
             LIMIT 1";
     $result = mysqli_query($link, $sql);
     if ($result && ($row = mysqli_fetch_assoc($result))) {
