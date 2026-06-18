@@ -404,6 +404,24 @@ function correo_filter_by_user($items, $user)
     return $filtered;
 }
 
+function correo_filter_by_email($items, $email)
+{
+    $email = correo_norm_email($email);
+    if ($email === '') {
+        return array();
+    }
+
+    $filtered = array();
+    foreach ($items as $item) {
+        $from = correo_norm_email($item['from'] ?? '');
+        $to = correo_norm_email($item['to'] ?? '');
+        if (strpos($to, $email) !== false || strpos($from, $email) !== false) {
+            $filtered[] = $item;
+        }
+    }
+    return $filtered;
+}
+
 function correo_db_ready()
 {
     static $ready = false;

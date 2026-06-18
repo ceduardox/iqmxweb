@@ -53,6 +53,10 @@ $user = correo_current_user();
     .table{width:100%;border-collapse:collapse}
     .table th,.table td{padding:10px 8px;border-bottom:1px solid #22354e;text-align:left;font-size:13px;vertical-align:top}
     .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .mailbox{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:14px}
+    .mailbox.active{border-color:#5dd6c0;box-shadow:0 0 0 1px rgba(93,214,192,.18) inset}
+    #tab-users .row{display:none}
+    #tab-users #saveUser{display:none}
     @media (max-width:980px){.grid{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.row{grid-template-columns:1fr}}
   </style>
 </head>
@@ -102,7 +106,7 @@ $user = correo_current_user();
         <div>
           <div class="badge">Panel de correo</div>
           <h1>Correo</h1>
-          <p>Panel simple para enviar, recibir y administrar accesos. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
+          <p>Panel simple para enviar, recibir y revisar historial por buzón. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
         <div class="actions">
           <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
@@ -118,7 +122,7 @@ $user = correo_current_user();
               <button class="tab active" data-tab="inbox">Recibidos</button>
               <button class="tab" data-tab="sent">Enviados</button>
               <button class="tab" data-tab="compose">Nuevo</button>
-              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Usuarios</button><?php endif; ?>
+              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
             </div>
 
             <div id="tab-inbox">
@@ -155,7 +159,7 @@ $user = correo_current_user();
             <?php if (correo_is_admin()): ?>
             <div id="tab-users" style="display:none">
               <div class="toolbar">
-                <button class="btn secondary" id="reloadUsers">Actualizar usuarios</button>
+                <button class="btn secondary" id="reloadUsers">Actualizar buzones</button>
               </div>
               <div class="row">
                 <div>
@@ -214,7 +218,7 @@ $user = correo_current_user();
       </div>
 
       <script>
-        const state = { inbox: [], sent: [], users: [], editingUserId: '' };
+        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '' };
         const $ = (id) => document.getElementById(id);
         const esc = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         async function api(action, payload = {}) {
@@ -251,15 +255,37 @@ $user = correo_current_user();
         }
         async function loadInbox() {
           $('inboxStatus').textContent = 'Cargando...';
+          if (<?php echo correo_is_admin() ? 'true' : 'false'; ?> && state.activeMailboxEmail) {
+            await loadMailbox(state.activeMailboxEmail);
+            return;
+          }
           const data = await api('listInbox');
           if (!data.ok) { $('inboxStatus').textContent = data.error || 'No se pudo cargar.'; return; }
           state.inbox = data.items || []; renderList('inbox');
         }
         async function loadSent() {
           $('sentStatus').textContent = 'Cargando...';
+          if (<?php echo correo_is_admin() ? 'true' : 'false'; ?> && state.activeMailboxEmail) {
+            const data = await api('listMailbox', { kind: 'sent', email: state.activeMailboxEmail });
+            if (!data.ok) { $('sentStatus').textContent = data.error || 'No se pudo cargar.'; return; }
+            state.sent = data.items || []; renderList('sent');
+            return;
+          }
           const data = await api('listSent');
           if (!data.ok) { $('sentStatus').textContent = data.error || 'No se pudo cargar.'; return; }
           state.sent = data.items || []; renderList('sent');
+        }
+        async function loadMailbox(email) {
+          if (!email) return;
+          state.activeMailboxEmail = email;
+          $('inboxStatus').textContent = 'Cargando buzón...';
+          $('sentStatus').textContent = 'Cargando buzón...';
+          const received = await api('listMailbox', { kind: 'received', email });
+          if (!received.ok) { $('inboxStatus').textContent = received.error || 'No se pudo cargar.'; return; }
+          state.inbox = received.items || []; renderList('inbox');
+          const sent = await api('listMailbox', { kind: 'sent', email });
+          if (!sent.ok) { $('sentStatus').textContent = sent.error || 'No se pudo cargar.'; return; }
+          state.sent = sent.items || []; renderList('sent');
         }
         async function loadUsers() {
           if (!$('usersList')) return;
@@ -267,18 +293,25 @@ $user = correo_current_user();
           const data = await api('listUsers');
           if (!data.ok) { $('usersStatus').textContent = data.error || 'No se pudo cargar.'; return; }
           state.users = data.items || [];
-          $('usersList').innerHTML = state.users.map((user, index) => `
-            <div class="item">
-              <div class="meta"><span><strong>${esc(user.username)}</strong> (${esc(user.role)})</span><span>${user.active ? 'activo' : 'inactivo'}</span></div>
-              <div class="snippet">${esc(user.email || '')}</div>
-              <div class="snippet">Historial: ${esc(user.assigned_email || user.email || '')}</div>
-              <div class="toolbar" style="margin-top:10px">
-                <button class="btn secondary" data-edit="${index}">Editar</button>
-                <button class="btn danger" data-del="${index}">Eliminar</button>
+          if (!state.activeMailboxEmail && state.users[0]) {
+            state.activeMailboxEmail = state.users[0].assigned_email || state.users[0].email || '';
+          }
+          $('usersList').innerHTML = state.users.map((user) => {
+            const mailbox = user.assigned_email || user.email || '';
+            const active = String(mailbox).toLowerCase() === String(state.activeMailboxEmail || '').toLowerCase();
+            return `
+              <div class="mailbox ${active ? 'active' : ''}">
+                <div class="meta"><span><strong>${esc(user.username)}</strong> (${esc(user.role)})</span><span>${user.active ? 'activo' : 'inactivo'}</span></div>
+                <div class="snippet">${esc(user.email || '')}</div>
+                <div class="snippet">Historial: ${esc(mailbox)}</div>
+                <div class="toolbar" style="margin-top:10px">
+                  <button class="btn secondary" data-mailbox="${esc(mailbox)}">Ver historial</button>
+                  <button class="btn secondary" data-import="${esc(mailbox)}">Importar historial</button>
+                </div>
               </div>
-            </div>
-          `).join('');
-          $('usersStatus').textContent = `${state.users.length} usuario(s).`;
+            `;
+          }).join('');
+          $('usersStatus').textContent = `${state.users.length} buzón(es).`;
         }
         async function sendEmail() {
           $('sendStatus').textContent = 'Enviando...';
@@ -312,27 +345,26 @@ $user = correo_current_user();
         $('sentList').addEventListener('click', listClick('sent'));
         <?php if (correo_is_admin()): ?>
         $('reloadUsers').addEventListener('click', loadUsers);
-        $('saveUser').addEventListener('click', async () => {
-          $('usersStatus').textContent = 'Guardando...';
-          const data = await api('saveUser', {
-            id: state.editingUserId,
-            username: $('newUsername').value.trim(),
-            email: $('newUserEmail').value.trim(),
-            assigned_email: $('newAssignedEmail') ? $('newAssignedEmail').value.trim() : '',
-            password: $('newUserPass').value,
-            role: $('newUserRole').value,
-          });
-          $('usersStatus').textContent = data.ok ? 'Usuario guardado.' : (data.error || 'No se pudo guardar.');
-          if (data.ok) {
-            state.editingUserId = '';
-            $('newUserPass').value = '';
-            await loadUsers();
+        $('usersList').addEventListener('click', async (event) => {
+          const mailbox = event.target.getAttribute('data-mailbox');
+          const importEmail = event.target.getAttribute('data-import');
+          if (mailbox) {
+            await loadMailbox(mailbox);
+            $('usersStatus').textContent = 'Buzón activo: ' + mailbox;
+          }
+          if (importEmail) {
+            $('usersStatus').textContent = 'Importando historial...';
+            const data = await api('importHistory', { email: importEmail });
+            $('usersStatus').textContent = data.ok
+              ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.`
+              : (data.error || 'No se pudo importar.');
+            if (data.ok) await loadMailbox(importEmail);
           }
         });
         $('importHistory').addEventListener('click', async () => {
-          const email = ($('newAssignedEmail') && $('newAssignedEmail').value.trim()) || $('newUserEmail').value.trim();
+          const email = state.activeMailboxEmail || (($('newAssignedEmail') && $('newAssignedEmail').value.trim()) || $('newUserEmail').value.trim());
           if (!email) {
-            $('usersStatus').textContent = 'Ingresa el correo asignado para importar.';
+            $('usersStatus').textContent = 'Selecciona un buzón primero.';
             return;
           }
           $('usersStatus').textContent = 'Importando historial...';
@@ -341,30 +373,7 @@ $user = correo_current_user();
             ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.`
             : (data.error || 'No se pudo importar.');
           if (data.ok) {
-            await Promise.all([loadInbox(), loadSent(), loadUsers()]);
-          }
-        });
-        $('usersList').addEventListener('click', async (event) => {
-          const edit = event.target.getAttribute('data-edit');
-          const del = event.target.getAttribute('data-del');
-          if (edit !== null) {
-            const u = state.users[Number(edit)];
-            if (!u) return;
-            state.editingUserId = u.id || '';
-            $('newUsername').value = u.username || '';
-            $('newUserEmail').value = u.email || '';
-            if ($('newAssignedEmail')) $('newAssignedEmail').value = u.assigned_email || u.email || '';
-            $('newUserRole').value = u.role || 'user';
-            $('newUserPass').value = '';
-            setActiveTab('users');
-          }
-          if (del !== null) {
-            const u = state.users[Number(del)];
-            if (!u) return;
-            if (!confirm('Eliminar usuario ' + u.username + '?')) return;
-            const data = await api('deleteUser', { id: u.id });
-            $('usersStatus').textContent = data.ok ? 'Usuario eliminado.' : (data.error || 'No se pudo eliminar.');
-            if (data.ok) await loadUsers();
+            await Promise.all([loadMailbox(email), loadUsers()]);
           }
         });
         <?php endif; ?>

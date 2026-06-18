@@ -49,60 +49,6 @@ switch ($action) {
         correo_json(true, array('items' => $users));
         break;
 
-    case 'saveUser':
-        if (!correo_is_admin()) {
-            correo_json(false, array(), 'Acceso restringido.');
-        }
-
-        $id = trim((string) ($input['id'] ?? ''));
-        $username = trim((string) ($input['username'] ?? ''));
-        $email = trim((string) ($input['email'] ?? ''));
-        $assignedEmail = trim((string) ($input['assigned_email'] ?? $email));
-        $password = (string) ($input['password'] ?? '');
-        $role = trim((string) ($input['role'] ?? 'user'));
-        if ($username === '' || $email === '') {
-            correo_json(false, array(), 'Usuario y email son obligatorios.');
-        }
-
-        $users = correo_read_users();
-        $existingIndex = null;
-        foreach ($users as $index => $user) {
-            if ($id !== '' && ($user['id'] ?? '') === $id) {
-                $existingIndex = $index;
-                break;
-            }
-            if (strcasecmp((string) ($user['username'] ?? ''), $username) === 0) {
-                $existingIndex = $index;
-                break;
-            }
-        }
-
-        $record = array(
-            'id' => $existingIndex !== null ? $users[$existingIndex]['id'] : uniqid('user_', true),
-            'username' => $username,
-            'email' => $email,
-            'assigned_email' => $assignedEmail !== '' ? $assignedEmail : $email,
-            'password' => $existingIndex !== null ? ($users[$existingIndex]['password'] ?? '') : '',
-            'role' => $role === 'admin' ? 'admin' : 'user',
-            'active' => true,
-        );
-
-        if ($password !== '') {
-            $record['password'] = password_hash($password, PASSWORD_DEFAULT);
-        } elseif ($existingIndex === null || $record['password'] === '') {
-            correo_json(false, array(), 'Debes definir una contraseña para el nuevo usuario.');
-        }
-
-        if ($existingIndex !== null) {
-            $users[$existingIndex] = $record;
-        } else {
-            $users[] = $record;
-        }
-
-        correo_write_users($users);
-        correo_json(true, array('user' => correo_public_user($record)));
-        break;
-
     case 'importHistory':
         if (!correo_is_admin()) {
             correo_json(false, array(), 'Acceso restringido.');
@@ -115,34 +61,23 @@ switch ($action) {
         correo_json(true, array('imported' => $result['imported'] ?? 0, 'updated' => $result['updated'] ?? 0));
         break;
 
-    case 'deleteUser':
-        if (!correo_is_admin()) {
-            correo_json(false, array(), 'Acceso restringido.');
-        }
-        $id = trim((string) ($input['id'] ?? ''));
-        $users = correo_read_users();
-        $filtered = array();
-        $removed = false;
-        foreach ($users as $user) {
-            if (($user['id'] ?? '') === $id) {
-                $removed = true;
-                continue;
-            }
-            $filtered[] = $user;
-        }
-        if (!$removed) {
-            correo_json(false, array(), 'Usuario no encontrado.');
-        }
-        correo_write_users($filtered);
-        correo_json(true);
-        break;
-
     case 'listInbox':
     case 'listSent':
         correo_require_login();
         $user = correo_current_user();
         $items = correo_db_list_messages($action === 'listInbox' ? 'received' : 'sent');
         correo_json(true, array('items' => correo_filter_by_user($items, $user)));
+        break;
+
+    case 'listMailbox':
+        correo_require_login();
+        $email = trim((string) ($input['email'] ?? ''));
+        if ($email === '') {
+            correo_json(false, array(), 'Falta el correo.');
+        }
+        $kind = trim((string) ($input['kind'] ?? 'received'));
+        $items = correo_db_list_messages($kind === 'sent' ? 'sent' : 'received');
+        correo_json(true, array('items' => correo_filter_by_email($items, $email)));
         break;
 
     case 'send':
