@@ -46,8 +46,7 @@ switch ($action) {
         if (!correo_is_admin()) {
             correo_json(false, array(), 'Acceso restringido.');
         }
-        $users = array_map('correo_public_user', correo_read_users());
-        correo_json(true, array('items' => $users));
+        correo_json(true, array('items' => correo_mailboxes()));
         break;
 
     case 'importHistory':

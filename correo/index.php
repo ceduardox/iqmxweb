@@ -301,7 +301,7 @@ $user = correo_current_user();
             const active = String(mailbox).toLowerCase() === String(state.activeMailboxEmail || '').toLowerCase();
             return `
               <div class="mailbox ${active ? 'active' : ''}">
-                <div class="meta"><span><strong>${esc(user.username)}</strong> (${esc(user.role)})</span><span>${user.active ? 'activo' : 'inactivo'}</span></div>
+                <div class="meta"><span><strong>${esc(user.username || mailbox)}</strong></span><span>${user.active ? 'activo' : 'inactivo'}</span></div>
                 <div class="snippet">${esc(user.email || '')}</div>
                 <div class="snippet">Historial: ${esc(mailbox)}</div>
                 <div class="toolbar" style="margin-top:10px">
