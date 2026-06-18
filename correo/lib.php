@@ -8,7 +8,13 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 function correo_data_dir()
 {
-    return __DIR__ . '/data';
+    $envDir = trim((string) getenv('IQMAXIMO_CORREO_STORAGE_DIR'));
+    if ($envDir !== '') {
+        return rtrim($envDir, DIRECTORY_SEPARATOR);
+    }
+
+    $tmpDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'iqmax-correo';
+    return $tmpDir;
 }
 
 function correo_users_file()
@@ -51,7 +57,18 @@ function correo_write_users($users)
     if (!is_dir($dir)) {
         mkdir($dir, 0775, true);
     }
-    file_put_contents(correo_users_file(), json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    $bytes = @file_put_contents(correo_users_file(), json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    if ($bytes === false) {
+        $fallbackDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'iqmax-correo';
+        if (!is_dir($fallbackDir)) {
+            mkdir($fallbackDir, 0775, true);
+        }
+        $fallbackFile = $fallbackDir . DIRECTORY_SEPARATOR . 'users.json';
+        $bytes = @file_put_contents($fallbackFile, json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        if ($bytes === false) {
+            throw new RuntimeException('No se pudo guardar users.json en una ruta escribible.');
+        }
+    }
 }
 
 function correo_seed_admin()
