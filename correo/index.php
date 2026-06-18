@@ -218,7 +218,7 @@ $user = correo_current_user();
       </div>
 
       <script>
-        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '' };
+        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>' };
         const $ = (id) => document.getElementById(id);
         const esc = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         async function api(action, payload = {}) {
@@ -294,7 +294,7 @@ $user = correo_current_user();
           if (!data.ok) { $('usersStatus').textContent = data.error || 'No se pudo cargar.'; return; }
           state.users = data.items || [];
           if (!state.activeMailboxEmail && state.users[0]) {
-            state.activeMailboxEmail = state.users[0].assigned_email || state.users[0].email || '';
+            state.activeMailboxEmail = '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>' || state.users[0].assigned_email || state.users[0].email || '';
           }
           $('usersList').innerHTML = state.users.map((user) => {
             const mailbox = user.assigned_email || user.email || '';

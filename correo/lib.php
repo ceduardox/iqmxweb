@@ -319,6 +319,21 @@ function correo_mailboxes()
     return $mailboxes;
 }
 
+function correo_default_mailbox()
+{
+    $default = trim((string) iqmaximo_config('IQMAXIMO_CORREO_DEFAULT_MAILBOX', ''));
+    if ($default !== '') {
+        return $default;
+    }
+
+    $mailboxes = correo_mailboxes();
+    if (!empty($mailboxes[0])) {
+        return $mailboxes[0]['assigned_email'] ?? ($mailboxes[0]['email'] ?? '');
+    }
+
+    return '';
+}
+
 function correo_db_ready()
 {
     static $ready = false;

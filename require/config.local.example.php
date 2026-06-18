@@ -13,6 +13,7 @@ $GLOBALS["IQMAXIMO_CONFIG"] = array(
 	"IQMAXIMO_CORREO_ADMIN_USER" => "admin",
 	"IQMAXIMO_CORREO_ADMIN_PASS" => "",
 	"IQMAXIMO_CORREO_MAILBOXES_JSON" => "[{\"username\":\"info\",\"email\":\"info@iqmaximo.com\",\"assigned_email\":\"info@iqmaximo.com\",\"active\":true},{\"username\":\"fparedes\",\"email\":\"fparedes@iqmaximo.com\",\"assigned_email\":\"fparedes@iqmaximo.com\",\"active\":true}]",
+	"IQMAXIMO_CORREO_DEFAULT_MAILBOX" => "fparedes@iqmaximo.com",
 	"IQMAXIMO_CORREO_STORAGE_DIR" => "",
 	"IQMAXIMO_MAILJET_API_KEY" => "",
 	"IQMAXIMO_MAILJET_SECRET_KEY" => "",
