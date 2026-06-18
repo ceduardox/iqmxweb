@@ -126,6 +126,17 @@ $user = correo_current_user();
               <button class="tab" data-tab="compose">Nuevo</button>
               <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
             </div>
+            <div class="toolbar">
+              <input class="input" id="searchBox" placeholder="Buscar por remitente, destinatario o asunto" style="flex:1;min-width:220px">
+              <select class="input" id="daysFilter" style="max-width:220px">
+                <option value="15">Ultimos 15 dias</option>
+                <option value="7">Ultimos 7 dias</option>
+                <option value="30">Ultimos 30 dias</option>
+                <option value="90">Ultimos 90 dias</option>
+                <option value="0">Todo</option>
+              </select>
+              <button class="btn secondary" id="clearFilters">Limpiar</button>
+            </div>
 
             <div id="tab-inbox">
               <div class="toolbar"><button class="btn secondary" id="reloadInbox">Actualizar recibidos</button></div>
@@ -213,6 +224,10 @@ $user = correo_current_user();
             <div class="detail">
               <h3 id="detailTitle">Selecciona un correo</h3>
               <div class="small" id="detailMeta">Aquí verás el contenido completo del mensaje.</div>
+              <div class="toolbar" style="margin-top:12px">
+                <button class="btn" id="replyBtn" disabled>Responder</button>
+                <button class="btn secondary" id="openComposeBtn" disabled>Editar respuesta</button>
+              </div>
               <div class="preview" id="detailBody"></div>
             </div>
           </div>
@@ -220,9 +235,38 @@ $user = correo_current_user();
       </div>
 
       <script>
-        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>', importAfter: '' };
+        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>', importAfter: '', query: '', days: 15, currentDetail: null, currentDetailKind: 'received' };
         const $ = (id) => document.getElementById(id);
         const esc = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        const parseDate = (value) => {
+          if (!value) return null;
+          const parsed = new Date(String(value).replace(' ', 'T'));
+          return Number.isNaN(parsed.getTime()) ? null : parsed;
+        };
+        const subjectForReply = (subject) => {
+          const clean = String(subject || '').trim();
+          if (!clean) return 'Re:';
+          if (/^(re|fw)\s*:/i.test(clean)) return clean;
+          return 'Re: ' + clean;
+        };
+        const replyHtml = (item) => {
+          const from = esc(item.from || '');
+          const to = esc(item.to || '');
+          const subject = esc(item.subject || '');
+          const body = item.html || item.text || '<p>Sin contenido original.</p>';
+          return `
+            <div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#111">
+              <p>Hola,</p>
+              <p></p>
+              <p>---</p>
+              <p><strong>Mensaje original</strong></p>
+              <p><strong>De:</strong> ${from}</p>
+              <p><strong>Para:</strong> ${to}</p>
+              <p><strong>Asunto:</strong> ${subject}</p>
+              <div style="border-left:3px solid #ccc;padding-left:12px;margin-top:12px">${body}</div>
+            </div>
+          `;
+        };
         async function api(action, payload = {}) {
           const response = await fetch('./api.php', {
             method: 'POST',
@@ -235,8 +279,30 @@ $user = correo_current_user();
           document.querySelectorAll('.tab').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
           ['inbox','sent','compose','users'].forEach((tab) => { const el = $('tab-' + tab); if (el) el.style.display = tab === name ? 'block' : 'none'; });
         }
+        function filteredItems(type) {
+          const query = String(state.query || '').trim().toLowerCase();
+          const days = Number(state.days || 0);
+          const cutoff = new Date();
+          if (days > 0) {
+            cutoff.setDate(cutoff.getDate() - days);
+          }
+          return (state[type] || []).filter((item) => {
+            const haystack = `${item.from || ''} ${item.to || ''} ${item.subject || ''} ${item.preview || item.text || item.html || ''}`.toLowerCase();
+            if (query && !haystack.includes(query)) {
+              return false;
+            }
+            if (!days) {
+              return true;
+            }
+            const created = parseDate(item.created_at || '');
+            if (!created) {
+              return true;
+            }
+            return created >= cutoff;
+          });
+        }
         function renderList(type) {
-          const list = state[type] || [];
+          const list = filteredItems(type);
           const target = $(type + 'List');
           const status = $(type + 'Status');
           if (!list.length) { target.innerHTML = '<div class="item"><div class="snippet">Sin datos.</div></div>'; status.textContent = 'Sin datos.'; return; }
@@ -250,10 +316,14 @@ $user = correo_current_user();
           `).join('');
           status.textContent = `${list.length} correo(s) cargado(s).`;
         }
-        function showDetail(item) {
+        function showDetail(item, kind = 'received') {
+          state.currentDetail = item;
+          state.currentDetailKind = kind;
           $('detailTitle').textContent = item.subject || '(sin asunto)';
           $('detailMeta').textContent = `${item.from || '-'} -> ${item.to || '-'}`.trim();
           $('detailBody').innerHTML = `<iframe sandbox="allow-popups" srcdoc="${String(item.html || item.text || '<p>Sin contenido.</p>').replace(/"/g,'&quot;')}"></iframe>`;
+          $('replyBtn').disabled = !item;
+          $('openComposeBtn').disabled = !item;
         }
         async function loadInbox() {
           $('inboxStatus').textContent = 'Cargando...';
@@ -330,6 +400,24 @@ $user = correo_current_user();
         $('reloadInbox').addEventListener('click', loadInbox);
         $('reloadSent').addEventListener('click', loadSent);
         $('sendEmail').addEventListener('click', sendEmail);
+        $('searchBox').addEventListener('input', (event) => {
+          state.query = event.target.value || '';
+          renderList('inbox');
+          renderList('sent');
+        });
+        $('daysFilter').addEventListener('change', (event) => {
+          state.days = Number(event.target.value || 0);
+          renderList('inbox');
+          renderList('sent');
+        });
+        $('clearFilters').addEventListener('click', () => {
+          $('searchBox').value = '';
+          $('daysFilter').value = '15';
+          state.query = '';
+          state.days = 15;
+          renderList('inbox');
+          renderList('sent');
+        });
         $('fillSample').addEventListener('click', () => {
           $('fromEmail').value = '<?php echo htmlspecialchars(MAIL_WEBMASTER, ENT_QUOTES, "UTF-8"); ?>';
           $('toEmail').value = '<?php echo htmlspecialchars(MAIL_INFO, ENT_QUOTES, "UTF-8"); ?>';
@@ -339,12 +427,32 @@ $user = correo_current_user();
         const listClick = (type) => async (event) => {
           const card = event.target.closest('.item');
           if (!card) return;
-          const item = state[type][Number(card.dataset.index)];
+          const item = filteredItems(type)[Number(card.dataset.index)];
           if (!item) return;
-          showDetail(item);
+          showDetail(item, type === 'inbox' ? 'received' : 'sent');
         };
         $('inboxList').addEventListener('click', listClick('inbox'));
         $('sentList').addEventListener('click', listClick('sent'));
+        $('replyBtn').addEventListener('click', () => {
+          const item = state.currentDetail;
+          if (!item) return;
+          const target = state.currentDetailKind === 'sent' ? (item.to || '') : (item.from || '');
+          $('fromEmail').value = '<?php echo htmlspecialchars(MAIL_WEBMASTER, ENT_QUOTES, "UTF-8"); ?>';
+          $('toEmail').value = target;
+          $('subject').value = subjectForReply(item.subject || '');
+          $('html').value = replyHtml(item);
+          setActiveTab('compose');
+        });
+        $('openComposeBtn').addEventListener('click', () => {
+          const item = state.currentDetail;
+          if (!item) return;
+          const target = state.currentDetailKind === 'sent' ? (item.to || '') : (item.from || '');
+          $('fromEmail').value = '<?php echo htmlspecialchars(MAIL_WEBMASTER, ENT_QUOTES, "UTF-8"); ?>';
+          $('toEmail').value = target;
+          $('subject').value = subjectForReply(item.subject || '');
+          $('html').value = replyHtml(item);
+          setActiveTab('compose');
+        });
         <?php if (correo_is_admin()): ?>
         $('reloadUsers').addEventListener('click', loadUsers);
         $('usersList').addEventListener('click', async (event) => {

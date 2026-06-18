@@ -170,6 +170,65 @@ function correo_resend_key()
     return trim((string) iqmaximo_config('IQMAXIMO_RESEND_API_KEY', ''));
 }
 
+function correo_webhook_secret()
+{
+    return trim((string) iqmaximo_config('IQMAXIMO_CORREO_WEBHOOK_SECRET', ''));
+}
+
+function correo_request_header($name)
+{
+    $name = strtoupper(trim((string) $name));
+    if ($name === '') {
+        return '';
+    }
+
+    $serverKey = 'HTTP_' . str_replace('-', '_', $name);
+    if (isset($_SERVER[$serverKey])) {
+        return trim((string) $_SERVER[$serverKey]);
+    }
+
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        if (is_array($headers)) {
+            foreach ($headers as $key => $value) {
+                if (strtoupper(str_replace('-', '_', $key)) === str_replace('-', '_', $name)) {
+                    return trim((string) $value);
+                }
+            }
+        }
+    }
+
+    return '';
+}
+
+function correo_webhook_secret_matches()
+{
+    $expected = correo_webhook_secret();
+    if ($expected === '') {
+        return true;
+    }
+
+    $provided = trim((string) ($_GET['secret'] ?? ''));
+    if ($provided === '') {
+        $provided = correo_request_header('X-IQMAXIMO-CORREO-SECRET');
+    }
+    if ($provided === '') {
+        $provided = correo_request_header('X-IQMAXIMO-WEBHOOK-SECRET');
+    }
+    if ($provided === '') {
+        $auth = correo_request_header('Authorization');
+        if (stripos($auth, 'Bearer ') === 0) {
+            $provided = trim(substr($auth, 7));
+        }
+    }
+
+    if ($provided === '') {
+        return false;
+    }
+
+    return hash_equals($expected, $provided);
+}
+
 function correo_call_resend($method, $path, $body = null)
 {
     $key = correo_resend_key();
@@ -209,6 +268,75 @@ function correo_call_resend($method, $path, $body = null)
 function correo_norm_email($value)
 {
     return strtolower(trim((string) $value));
+}
+
+function correo_normalize_subject($subject)
+{
+    $subject = trim((string) $subject);
+    if ($subject === '') {
+        return '';
+    }
+
+    $prefix = strtolower(substr($subject, 0, 3));
+    if ($prefix === 're:' || $prefix === 'fw:') {
+        return $subject;
+    }
+
+    return 'Re: ' . $subject;
+}
+
+function correo_quote_html($source)
+{
+    $from = htmlspecialchars((string) ($source['from'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $to = htmlspecialchars((string) ($source['to'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $subject = htmlspecialchars((string) ($source['subject'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $body = (string) ($source['html'] ?? ($source['text'] ?? ''));
+    if (trim($body) === '') {
+        $body = '<p>Sin contenido original.</p>';
+    }
+
+    return '<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#111">'
+        . '<p>Hola,</p>'
+        . '<p></p>'
+        . '<p>---</p>'
+        . '<p><strong>Mensaje original</strong></p>'
+        . '<p><strong>De:</strong> ' . $from . '</p>'
+        . '<p><strong>Para:</strong> ' . $to . '</p>'
+        . '<p><strong>Asunto:</strong> ' . $subject . '</p>'
+        . '<div style="border-left:3px solid #ccc;padding-left:12px;margin-top:12px">' . $body . '</div>'
+        . '</div>';
+}
+
+function correo_store_received_message($source, $fallback = array())
+{
+    $source = is_array($source) ? $source : array();
+    $fallback = is_array($fallback) ? $fallback : array();
+    $merged = array_merge($fallback, $source);
+
+    $sender = correo_norm_email($merged['from'] ?? '');
+    $recipient = is_array($merged['to'] ?? null) ? implode(', ', $merged['to']) : (string) ($merged['to'] ?? '');
+    $html = (string) ($merged['html'] ?? '');
+    $text = (string) ($merged['text'] ?? '');
+    $payload = json_encode($merged, JSON_UNESCAPED_UNICODE);
+
+    if (trim($html) === '' && trim($text) === '') {
+        $html = correo_payload_text($payload, true);
+        $text = correo_payload_text($payload, false);
+    }
+
+    return correo_db_save_message(array(
+        'direction' => 'received',
+        'resend_id' => (string) ($merged['id'] ?? ($fallback['id'] ?? '')),
+        'message_id' => (string) ($merged['message_id'] ?? ($fallback['message_id'] ?? ($fallback['id'] ?? ''))),
+        'sender_email' => $sender,
+        'recipient_email' => $recipient,
+        'subject' => $merged['subject'] ?? '',
+        'html' => $html,
+        'text' => $text,
+        'status' => 'received',
+        'event_type' => $merged['event_type'] ?? 'received',
+        'payload_json' => $payload,
+    ));
 }
 
 function correo_payload_text($payloadJson, $preferHtml = true)

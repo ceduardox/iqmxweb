@@ -11,6 +11,12 @@ if (!is_array($payload)) {
     exit;
 }
 
+if (!correo_webhook_secret_matches()) {
+    http_response_code(401);
+    echo json_encode(array('ok' => false, 'error' => 'Webhook no autorizado'), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $eventType = $payload['type'] ?? ($payload['event'] ?? '');
 $data = $payload['data'] ?? $payload;
 $resendId = $data['id'] ?? ($data['email_id'] ?? ($data['message_id'] ?? ''));
@@ -35,18 +41,32 @@ correo_db_insert_event(array(
 ));
 
 if ($eventType === 'email.received' || $status === 'received') {
-    correo_db_insert_message(array(
-        'direction' => 'received',
-        'resend_id' => (string) $resendId,
-        'message_id' => (string) $resendId,
-        'sender_email' => is_array($from) ? json_encode($from) : (string) $from,
-        'recipient_email' => is_array($to) ? json_encode($to) : (string) $to,
+    $source = array(
+        'id' => (string) $resendId,
+        'message_id' => (string) ($data['message_id'] ?? $resendId),
+        'from' => is_array($from) ? json_encode($from) : (string) $from,
+        'to' => is_array($to) ? $to : (string) $to,
         'subject' => (string) $subject,
         'html' => (string) $html,
         'text' => (string) $text,
-        'status' => 'received',
         'event_type' => (string) $eventType,
-        'payload_json' => $raw,
+    );
+    $detail = correo_resend_get_received_email((string) $resendId);
+    if (!empty($detail['ok'])) {
+        $detailItem = $detail['item'] ?? array();
+        if (is_array($detailItem) && !empty($detailItem)) {
+            $source = array_merge($source, $detailItem);
+        }
+    }
+    correo_store_received_message($source, array(
+        'id' => (string) $resendId,
+        'message_id' => (string) $resendId,
+        'from' => is_array($from) ? json_encode($from) : (string) $from,
+        'to' => is_array($to) ? $to : (string) $to,
+        'subject' => (string) $subject,
+        'html' => (string) $html,
+        'text' => (string) $text,
+        'event_type' => (string) $eventType,
     ));
 } else {
     if ($resendId !== '') {

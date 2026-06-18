@@ -147,6 +147,88 @@ switch ($action) {
         correo_json(true, array('data' => $result));
         break;
 
+    case 'replyDraft':
+        correo_require_login();
+        $id = trim((string) ($input['id'] ?? ''));
+        if ($id === '') {
+            correo_json(false, array(), 'Falta el id.');
+        }
+        $kind = trim((string) ($input['kind'] ?? 'received'));
+        $result = correo_db_find_message($id, $kind === 'sent' ? 'sent' : 'received');
+        if (!$result) {
+            correo_json(false, array(), 'No se encontro el correo.');
+        }
+        $subject = correo_normalize_subject($result['subject'] ?? '');
+        correo_json(true, array('draft' => array(
+            'to' => trim((string) ($result['from'] ?? '')),
+            'subject' => $subject,
+            'html' => correo_quote_html($result),
+            'original' => $result,
+        )));
+        break;
+
+    case 'reply':
+        correo_require_login();
+        $user = correo_current_user();
+        $id = trim((string) ($input['id'] ?? ''));
+        if ($id === '') {
+            correo_json(false, array(), 'Falta el id.');
+        }
+        $kind = trim((string) ($input['kind'] ?? 'received'));
+        $original = correo_db_find_message($id, $kind === 'sent' ? 'sent' : 'received');
+        if (!$original) {
+            correo_json(false, array(), 'No se encontro el correo.');
+        }
+        $to = trim((string) ($input['to'] ?? ($original['from'] ?? '')));
+        $from = trim((string) ($input['from'] ?? ''));
+        $subject = trim((string) ($input['subject'] ?? ''));
+        $html = trim((string) ($input['html'] ?? ''));
+        if ($to === '') {
+            correo_json(false, array(), 'Falta destinatario.');
+        }
+        if ($from === '') {
+            $from = $user['email'] ?? MAIL_WEBMASTER;
+        }
+        if ($subject === '') {
+            $subject = correo_normalize_subject($original['subject'] ?? '');
+        }
+        if ($html === '') {
+            $html = correo_quote_html($original);
+        }
+
+        $fromName = iqmaximo_config('IQMAXIMO_RESEND_FROM_NAME', 'iQmaximo.com');
+        $payload = array(
+            'from' => $fromName . ' <' . $from . '>',
+            'to' => array($to),
+            'subject' => $subject,
+            'html' => $html,
+        );
+
+        $result = correo_call_resend('POST', '/emails', $payload);
+        if (empty($result['ok'])) {
+            correo_json(false, array(), $result['error'] ?? 'No se pudo enviar.');
+        }
+
+        $resendData = $result['data'] ?? array();
+        $storedId = correo_db_insert_message(array(
+            'direction' => 'sent',
+            'resend_id' => $resendData['id'] ?? '',
+            'message_id' => $resendData['id'] ?? '',
+            'sender_email' => $from,
+            'recipient_email' => $to,
+            'subject' => $subject,
+            'html' => $html,
+            'text' => strip_tags($html),
+            'status' => 'sent',
+            'event_type' => 'email.sent',
+            'payload_json' => json_encode(array(
+                'data' => $resendData,
+                'reply_to' => $original,
+            ), JSON_UNESCAPED_UNICODE),
+        ));
+        correo_json(true, array('data' => $resendData, 'stored_id' => $storedId));
+        break;
+
     default:
         correo_json(false, array(), 'Accion invalida.');
 }
