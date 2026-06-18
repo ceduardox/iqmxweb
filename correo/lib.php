@@ -135,6 +135,11 @@ function correo_upsert_user_record($record)
         return false;
     }
 
+    $passwordInfo = password_get_info((string) $record['password']);
+    if (empty($passwordInfo['algo'])) {
+        $password = correo_db_escape(password_hash((string) $record['password'], PASSWORD_DEFAULT));
+    }
+
     $sql = "INSERT INTO correo_users (id, username, email, assigned_email, password, role, active)
             VALUES ('$id', '$username', '$email', '$assignedEmail', '$password', '$role', $active)
             ON DUPLICATE KEY UPDATE
