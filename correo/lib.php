@@ -211,6 +211,45 @@ function correo_norm_email($value)
     return strtolower(trim((string) $value));
 }
 
+function correo_payload_text($payloadJson, $preferHtml = true)
+{
+    $payloadJson = trim((string) $payloadJson);
+    if ($payloadJson === '') {
+        return '';
+    }
+
+    $decoded = json_decode($payloadJson, true);
+    if (!is_array($decoded)) {
+        return '';
+    }
+
+    $candidates = array();
+    if ($preferHtml) {
+        $candidates = array('html', 'text', 'body', 'content', 'preview');
+    } else {
+        $candidates = array('text', 'html', 'body', 'content', 'preview');
+    }
+
+    foreach ($candidates as $key) {
+        if (isset($decoded[$key]) && is_string($decoded[$key]) && trim($decoded[$key]) !== '') {
+            return (string) $decoded[$key];
+        }
+    }
+
+    foreach (array('data', 'email', 'message') as $containerKey) {
+        if (!isset($decoded[$containerKey]) || !is_array($decoded[$containerKey])) {
+            continue;
+        }
+        foreach ($candidates as $key) {
+            if (isset($decoded[$containerKey][$key]) && is_string($decoded[$containerKey][$key]) && trim($decoded[$containerKey][$key]) !== '') {
+                return (string) $decoded[$containerKey][$key];
+            }
+        }
+    }
+
+    return '';
+}
+
 function correo_extract_items($payload)
 {
     if (!is_array($payload)) {
@@ -492,17 +531,24 @@ function correo_db_list_messages($direction)
     $items = array();
     if ($result) {
         while ($row = mysqli_fetch_assoc($result)) {
+            $html = $row['html'] ?? '';
+            $text = $row['text'] ?? '';
+            $payloadJson = $row['payload_json'] ?? '';
+            if ($html === '' && $text === '') {
+                $html = correo_payload_text($payloadJson, true);
+                $text = correo_payload_text($payloadJson, false);
+            }
             $items[] = array(
                 'id' => $row['resend_id'] ?: $row['message_id'] ?: (string) $row['id'],
                 'from' => $row['sender_email'] ?? '',
                 'to' => $row['recipient_email'] ?? '',
                 'subject' => $row['subject'] ?? '',
-                'text' => $row['text'] ?? '',
-                'html' => $row['html'] ?? '',
-                'preview' => $row['text'] ?? '',
+                'text' => $text,
+                'html' => $html,
+                'preview' => $text !== '' ? $text : $html,
                 'created_at' => $row['created_at'] ?? '',
                 'status' => $row['status'] ?? '',
-                'payload_json' => $row['payload_json'] ?? '',
+                'payload_json' => $payloadJson,
             );
         }
     }
@@ -522,17 +568,24 @@ function correo_db_find_message($id, $direction = '')
     $sql = "SELECT * FROM correo_messages WHERE $where ORDER BY id DESC LIMIT 1";
     $result = mysqli_query($link, $sql);
     if ($result && ($row = mysqli_fetch_assoc($result))) {
+        $html = $row['html'] ?? '';
+        $text = $row['text'] ?? '';
+        $payloadJson = $row['payload_json'] ?? '';
+        if ($html === '' && $text === '') {
+            $html = correo_payload_text($payloadJson, true);
+            $text = correo_payload_text($payloadJson, false);
+        }
         return array(
             'id' => $row['resend_id'] ?: $row['message_id'] ?: (string) $row['id'],
             'from' => $row['sender_email'] ?? '',
             'to' => $row['recipient_email'] ?? '',
             'subject' => $row['subject'] ?? '',
-            'text' => $row['text'] ?? '',
-            'html' => $row['html'] ?? '',
-            'preview' => $row['text'] ?? '',
+            'text' => $text,
+            'html' => $html,
+            'preview' => $text !== '' ? $text : $html,
             'created_at' => $row['created_at'] ?? '',
             'status' => $row['status'] ?? '',
-            'payload_json' => $row['payload_json'] ?? '',
+            'payload_json' => $payloadJson,
         );
     }
     return null;
