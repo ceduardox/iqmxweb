@@ -1,10 +1,72 @@
 <?php
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
-
 require_once __DIR__ . '/../require/configuracion.php';
 require_once __DIR__ . '/../require/util.php';
+
+// Custom database session handler to survive container deployments
+class CorreoDbSessionHandler implements SessionHandlerInterface
+{
+    public function open($savePath, $sessionName): bool
+    {
+        return true;
+    }
+
+    public function close(): bool
+    {
+        return true;
+    }
+
+    public function read($id): string
+    {
+        $link = ConectarBD();
+        $id = mysqli_real_escape_string($link, $id);
+        $res = mysqli_query($link, "SELECT data FROM correo_sessions WHERE id = '$id'");
+        if ($res && $row = mysqli_fetch_assoc($res)) {
+            return (string) $row['data'];
+        }
+        return '';
+    }
+
+    public function write($id, $data): bool
+    {
+        $link = ConectarBD();
+        $id = mysqli_real_escape_string($link, $id);
+        $data = mysqli_real_escape_string($link, $data);
+        $time = time();
+        $sql = "INSERT INTO correo_sessions (id, data, access) VALUES ('$id', '$data', $time) 
+                ON DUPLICATE KEY UPDATE data = '$data', access = $time";
+        return (bool) mysqli_query($link, $sql);
+    }
+
+    public function destroy($id): bool
+    {
+        $link = ConectarBD();
+        $id = mysqli_real_escape_string($link, $id);
+        return (bool) mysqli_query($link, "DELETE FROM correo_sessions WHERE id = '$id'");
+    }
+
+    public function gc($maxLifetime): int|false
+    {
+        $link = ConectarBD();
+        $cutoff = time() - (int) $maxLifetime;
+        $sql = "DELETE FROM correo_sessions WHERE access < $cutoff";
+        return mysqli_query($link, $sql) ? mysqli_affected_rows($link) : false;
+    }
+}
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    $link = ConectarBD();
+    mysqli_query($link, "
+        CREATE TABLE IF NOT EXISTS correo_sessions (
+            id VARCHAR(128) NOT NULL PRIMARY KEY,
+            data LONGTEXT NOT NULL,
+            access INT UNSIGNED NOT NULL,
+            KEY idx_access (access)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    ");
+    session_set_save_handler(new CorreoDbSessionHandler(), true);
+    session_name('IQMAXIMO_CORREO_SESS');
+    session_start();
+}
 
 function correo_data_dir()
 {
