@@ -1715,6 +1715,10 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
                   <span class="dropdown-role"><?php echo htmlspecialchars($user['role'] ?? 'Administrador', ENT_QUOTES, 'UTF-8'); ?></span>
                 </div>
                 <div class="dropdown-divider"></div>
+                <button class="dropdown-item" id="dropdownNotificationsBtn" type="button" style="display:none">
+                  <i class="fa-regular fa-bell"></i>
+                  <span>Activar notificaciones</span>
+                </button>
                 <button class="dropdown-item" id="dropdownLogoutBtn" type="button">
                   <i class="fa-solid fa-arrow-right-from-bracket"></i>
                   <span>Cerrar sesión</span>
@@ -2821,6 +2825,26 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
               },
             });
           });
+
+          // Activar el prompt de suscripción al hacer clic en el botón del perfil
+          const notifBtn = $('dropdownNotificationsBtn');
+          if (notifBtn) {
+            notifBtn.style.display = 'flex';
+            notifBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              OneSignal.push(function() {
+                try {
+                  OneSignal.showSlidedownPrompt();
+                } catch(err) {
+                  try {
+                    OneSignal.registerForPushNotifications();
+                  } catch(e2) {
+                    console.error('Error al solicitar suscripción de OneSignal:', e2);
+                  }
+                }
+              });
+            });
+          }
         }
       </script>
     <?php endif; ?>
