@@ -5,6 +5,7 @@ correo_seed_admin();
 correo_log_boot(array('page' => 'index', 'default_mailbox' => correo_default_mailbox(), 'mailboxes' => array_map(function ($m) { return $m['assigned_email'] ?? ($m['email'] ?? ''); }, correo_mailboxes())));
 
 $user = correo_current_user();
+$oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
 ?>
 <!doctype html>
 <html lang="es">
@@ -18,6 +19,9 @@ $user = correo_current_user();
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Correo IQ">
   <link rel="apple-touch-icon" href="/assets/images/favicon.png">
+  <?php if ($oneSignalAppId !== ''): ?>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <?php endif; ?>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -2801,6 +2805,21 @@ $user = correo_current_user();
             navigator.serviceWorker.register('sw.js')
               .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
               .catch(err => console.warn('[PWA] Fallo al registrar Service Worker:', err));
+          });
+        }
+
+        // Inicializar OneSignal si el App ID está configurado
+        const oneSignalAppId = '<?php echo htmlspecialchars($oneSignalAppId, ENT_QUOTES, "UTF-8"); ?>';
+        if (oneSignalAppId) {
+          window.OneSignal = window.OneSignal || [];
+          OneSignal.push(function() {
+            OneSignal.init({
+              appId: oneSignalAppId,
+              allowLocalhostAsSecureOrigin: true,
+              notifyButton: {
+                enable: true,
+              },
+            });
           });
         }
       </script>

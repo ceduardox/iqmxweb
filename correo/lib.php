@@ -750,6 +750,15 @@ function correo_db_save_message($data)
         return true;
     }
     correo_db_insert_message($data);
+
+    // Si es un correo recibido nuevo, enviar notificacion push con OneSignal
+    if ($direction === 'received') {
+        $sender = trim((string) ($data['sender_email'] ?? ''));
+        $subject = trim((string) ($data['subject'] ?? '(sin asunto)'));
+        $recipient = trim((string) ($data['recipient_email'] ?? ''));
+        correo_onesignal_notify_new_email($recipient, $subject, $sender);
+    }
+
     return true;
 }
 
@@ -1065,4 +1074,48 @@ function correo_import_history_for_email($email, $limit = 5, $after = '')
         'has_more' => $nextAfter !== '',
         'next_after' => $nextAfter,
     );
+}
+
+function correo_onesignal_notify_new_email($recipient, $subject, $sender)
+{
+    $appId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
+    $apiKey = iqmaximo_config('IQMAXIMO_ONESIGNAL_API_KEY', '');
+    if ($appId === '' || $apiKey === '') {
+        return false;
+    }
+
+    $content = array(
+        "en" => "Nuevo correo de " . $sender . ": " . $subject,
+        "es" => "Nuevo correo de " . $sender . ": " . $subject,
+    );
+
+    $fields = array(
+        'app_id' => $appId,
+        'included_segments' => array('Total Subscriptions'),
+        'contents' => $content,
+        'headings' => array(
+            'en' => 'Nuevo Mensaje',
+            'es' => 'Nuevo Mensaje'
+        ),
+        'url' => 'https://' . ($_SERVER['HTTP_HOST'] ?? 'iqmaximo.com') . '/correo/index.php'
+    );
+
+    $fieldsJson = json_encode($fields, JSON_UNESCAPED_UNICODE);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json; charset=utf-8',
+        'Authorization: Basic ' . $apiKey
+    ));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsJson);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return $response;
 }
