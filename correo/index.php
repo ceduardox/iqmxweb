@@ -26,9 +26,31 @@ $user = correo_current_user();
     .sidebar{position:sticky;top:20px;padding:24px 16px;height:auto;overflow:visible;background:#0b0f19;border:1px solid #1e293b;border-radius:12px;display:flex;flex-direction:column;justify-content:space-between;align-self:start;scrollbar-width:none;-ms-overflow-style:none}
     .sidebar::-webkit-scrollbar{width:0;height:0}
     .main{min-width:0;display:flex;flex-direction:column;gap:18px}
-    .hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;padding:22px}
-    .hero h1{margin:0;font-size:28px}
-    .hero p{margin:8px 0 0;color:var(--muted);max-width:760px;line-height:1.45}
+    .hero{background:#0b0f19;border:1px solid #1e293b;border-radius:12px;height:70px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .header-left{display:flex;align-items:center;gap:16px;min-width:0}
+    .menu-toggle{background:#1e293b;border:none;color:#94a3b8;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s}
+    .menu-toggle:hover{background:#334155;color:#f8fafc}
+    .brand-wrapper{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-icon{background:#1e3a8a;color:#3b82f6;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+    .brand-text{display:flex;flex-direction:column;min-width:0}
+    .brand-title{color:#fff;font-size:15px;font-weight:600;line-height:1.2}
+    .brand-subtitle{color:#475569;font-size:11px;font-weight:500;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .header-center{flex:1;max-width:500px;margin:0 30px}
+    .search-container{position:relative;display:flex;align-items:center}
+    .search-icon-left{position:absolute;left:14px;color:#475569;font-size:14px;pointer-events:none}
+    .global-search-input{width:100%;background:#070a13;border:1px solid #1e293b;border-radius:8px;padding:10px 45px 10px 38px;color:#f8fafc;font-size:13px;outline:none;transition:border-color .2s}
+    .global-search-input:focus{border-color:#3b82f6}
+    .global-search-input::placeholder{color:#475569}
+    .search-shortcut{position:absolute;right:14px;background:#1e293b;color:#64748b;border:1px solid #334155;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;pointer-events:none}
+    .header-right{display:flex;align-items:center;gap:20px}
+    .action-icon-btn{background:none;border:none;color:#64748b;font-size:16px;cursor:pointer;transition:color .2s;position:relative}
+    .action-icon-btn:hover{color:#cbd5e1}
+    .notification-dot{position:absolute;top:-2px;right:-2px;width:6px;height:6px;background:#3b82f6;border-radius:50%}
+    .user-profile-wrapper{display:flex;align-items:center;gap:12px;border-left:1px solid #1e293b;padding-left:20px}
+    .user-info{display:flex;flex-direction:column;text-align:right}
+    .user-name{color:#fff;font-size:13px;font-weight:600;line-height:1.2}
+    .user-role{color:#475569;font-size:11px;margin-top:2px}
+    .user-avatar{width:36px;height:36px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;box-shadow:0 0 0 2px #0b0f19,0 0 0 4px rgba(124,58,237,.2)}
     .badge,.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(93,214,192,.12);color:var(--accent);font-size:13px;font-weight:700;border:1px solid rgba(93,214,192,.25)}
     .pill{background:#16263a;color:#cfe0ff;border-color:var(--line)}
     .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
@@ -262,18 +284,48 @@ $user = correo_current_user();
           </div>
         </aside>
         <main class="main">
-      <div class="hero">
-        <div>
-          <div class="badge">Panel de correo</div>
-          <h1>Correo</h1>
-          <div class="status">Buzón activo: <strong id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></strong></div>
-          <p>Panel simple para enviar, recibir y revisar historial por buzón. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
+      <header class="hero">
+        <div class="header-left">
+          <button class="menu-toggle" type="button" aria-label="Abrir men&uacute;">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="brand-wrapper">
+            <div class="brand-icon" aria-hidden="true">
+              <i class="fa-regular fa-envelope"></i>
+            </div>
+            <div class="brand-text">
+              <span class="brand-title">Correo</span>
+              <span class="brand-subtitle">Panel de correo electr&oacute;nico</span>
+            </div>
+          </div>
         </div>
-        <div class="actions">
-          <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
-          <button class="btn secondary" id="logoutBtn">Salir</button>
+
+        <div class="header-center">
+          <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
+            <input type="text" class="global-search-input" id="searchBox" placeholder="Buscar correos...">
+            <span class="search-shortcut">Ctrl K</span>
+          </div>
         </div>
-      </div>
+
+        <div class="header-right">
+          <button class="action-icon-btn" type="button" aria-label="Notificaciones">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notification-dot"></span>
+          </button>
+          <button class="action-icon-btn" type="button" aria-label="Tema">
+            <i class="fa-regular fa-moon"></i>
+          </button>
+          <div class="user-profile-wrapper">
+            <div class="user-info">
+              <span class="user-name"><?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?></span>
+              <span class="user-role"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
+            </div>
+            <div class="user-avatar" aria-hidden="true"><?php echo strtoupper(substr((string)($user['username'] ?? 'A'), 0, 1)); ?></div>
+            <button class="btn secondary" id="logoutBtn">Salir</button>
+          </div>
+        </div>
+      </header>
 
       <div class="grid">
         <div class="card">
@@ -286,7 +338,6 @@ $user = correo_current_user();
               <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
             </div>
             <div class="toolbar">
-              <input class="input" id="searchBox" placeholder="Buscar por remitente, destinatario o asunto" style="flex:1;min-width:220px">
               <select class="input" id="daysFilter" style="max-width:220px">
                 <option value="15">Ultimos 15 dias</option>
                 <option value="7">Ultimos 7 dias</option>
@@ -819,3 +870,4 @@ $user = correo_current_user();
   </div>
 </body>
 </html>
+
