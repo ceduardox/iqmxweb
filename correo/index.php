@@ -2730,27 +2730,58 @@ $user = correo_current_user();
         setActiveMailbox(state.activeMailboxEmail || defaultMailbox);
         setComposeMode('text');
 
-        // 1. Auto-refresh local en segundo plano (0 peticiones a Resend API)
-        // Consulta la base de datos local cada 15 segundos para ver si llegaron nuevos correos
-        setInterval(async () => {
+        // Refresco silencioso de la base de datos local (0 peticiones a Resend API)
+        async function silentRefreshLocal() {
           try {
-            if (!document.hidden) {
-              await Promise.all([loadInbox(), loadSent()]);
+            if (document.hidden) return;
+            const email = state.activeMailboxEmail || defaultMailbox;
+            if (!email) return;
+
+            const received = await api('listMailbox', { kind: 'received', email });
+            if (received.ok) {
+              state.inbox = received.items || [];
+              renderList('inbox');
+            }
+            const sent = await api('listMailbox', { kind: 'sent', email });
+            if (sent.ok) {
+              state.sent = sent.items || [];
+              renderList('sent');
             }
           } catch (e) {
-            console.error('Error en refresco automático:', e);
+            console.error('Error en refresco silencioso local:', e);
           }
-        }, 15000);
+        }
 
-        // 2. Sincronización/importación inicial automática al cargar la página
-        // Hace una única petición a Resend para traer los últimos 5 correos en segundo plano al iniciar
+        // Sincronización silenciosa desde Resend API (1 petición por minuto como fallback por si no hay webhooks)
+        async function silentSyncResend() {
+          try {
+            if (document.hidden) return;
+            const email = state.activeMailboxEmail || defaultMailbox;
+            if (!email) return;
+
+            const data = await api('importHistory', { email, limit: 5 });
+            if (data.ok && (data.imported > 0 || data.updated > 0)) {
+              await silentRefreshLocal();
+            }
+          } catch (e) {
+            console.warn('Error en importación silenciosa de Resend:', e);
+          }
+        }
+
+        // 1. Refresco local cada 15 segundos para recibir instantáneamente por Webhook (0 llamadas a Resend)
+        setInterval(silentRefreshLocal, 15000);
+
+        // 2. Sincronización automática de Resend cada 60 segundos por si no hay webhooks (1 llamada por minuto)
+        setInterval(silentSyncResend, 60000);
+
+        // 3. Sincronización inicial silenciosa de Resend al cargar la página
         <?php if (correo_is_admin()): ?>
         setTimeout(async () => {
           try {
             const email = state.activeMailboxEmail || defaultMailbox;
             if (email) {
               await api('importHistory', { email, limit: 5 });
-              await Promise.all([loadInbox(), loadSent()]);
+              await silentRefreshLocal();
             }
           } catch (e) {
             console.warn('Error en sincronización inicial:', e);
