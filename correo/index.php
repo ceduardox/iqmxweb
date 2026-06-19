@@ -14,8 +14,9 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel de Correo</title>
   <!-- PWA & Apple iOS Support -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/correo/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Correo IQ">
   <link rel="apple-touch-icon" href="/assets/images/favicon.png">
@@ -2806,7 +2807,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
         // Registrar Service Worker para soporte PWA (Mac & iPhone)
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
+            navigator.serviceWorker.register('/correo/sw.js', { scope: '/correo/' })
               .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
               .catch(err => console.warn('[PWA] Fallo al registrar Service Worker:', err));
           });
@@ -2820,7 +2821,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             OneSignal.init({
               appId: oneSignalAppId,
               allowLocalhostAsSecureOrigin: true,
-              serviceWorkerPath: 'correo/OneSignalSDKWorker.js',
+              serviceWorkerPath: '/correo/sw.js',
               serviceWorkerParam: {
                 scope: '/correo/'
               },

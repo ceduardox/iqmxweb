@@ -1,3 +1,5 @@
+importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
+
 const CACHE_NAME = 'iqmax-correo-pwa-v1';
 const ASSETS = [
   '/correo/index.php',
@@ -29,6 +31,10 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+  // Solo interceptar peticiones GET locales
+  if (e.request.method !== 'GET') {
+    return;
+  }
   if (e.request.url.startsWith(self.location.origin)) {
     e.respondWith(
       caches.match(e.request).then((cachedResponse) => {
