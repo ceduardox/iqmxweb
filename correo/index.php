@@ -2848,14 +2848,16 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
               window.OneSignalDeferred.push(async function(OneSignal) {
                 console.log('OneSignalDeferred push callback ejecutado.');
                 try {
+                  const nativeBrowserPermission = window.Notification ? window.Notification.permission : 'no-soportado';
                   const permission = OneSignal.Notifications.permissionNative; // 'default', 'granted', 'denied'
-                  console.log('Estado de permiso nativo:', permission);
+                  console.log('Estado de permiso nativo (OneSignal):', permission);
+                  console.log('Estado de permiso nativo (Navegador):', nativeBrowserPermission);
                   
-                  if (permission === 'granted') {
+                  if (permission === 'granted' || nativeBrowserPermission === 'granted') {
                     alert('¡Las notificaciones ya están activas en este navegador!');
                     return;
                   }
-                  if (permission === 'denied') {
+                  if (permission === 'denied' || nativeBrowserPermission === 'denied') {
                     alert('Has bloqueado las notificaciones de este sitio. Por favor, actívalas haciendo clic en el candado al lado de la dirección de la página en tu navegador.');
                     return;
                   }
@@ -2863,6 +2865,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
                   console.log('Solicitando permiso nativo de OneSignal...');
                   await OneSignal.Notifications.requestPermission();
                   console.log('Permiso nativo solicitado. Estado final:', OneSignal.Notifications.permissionNative);
+                  console.log('Estado final (Navegador):', window.Notification ? window.Notification.permission : 'no-soportado');
                 } catch(err) {
                   console.error('Error al solicitar permiso nativo, intentando Slidedown:', err);
                   try {
