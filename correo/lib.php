@@ -236,33 +236,52 @@ function correo_call_resend($method, $path, $body = null)
         return array('ok' => false, 'error' => 'Falta configurar IQMAXIMO_RESEND_API_KEY.');
     }
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api.resend.com' . $path);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'Authorization: Bearer ' . $key,
-        'Content-Type: application/json',
-    ));
-    if ($body !== null) {
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
-    }
-    $response = curl_exec($ch);
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-    curl_close($ch);
+    static $lastCallAt = 0.0;
+    $minInterval = 0.22;
 
-    if ($error) {
-        return array('ok' => false, 'error' => $error);
+    for ($attempt = 0; $attempt < 2; $attempt++) {
+        $elapsed = microtime(true) - $lastCallAt;
+        if ($elapsed < $minInterval) {
+            usleep((int) (($minInterval - $elapsed) * 1000000));
+        }
+
+        $lastCallAt = microtime(true);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.resend.com' . $path);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $key,
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ));
+        if ($body !== null) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        }
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            return array('ok' => false, 'error' => $error);
+        }
+
+        $decoded = json_decode((string) $response, true);
+        if ($status === 429 && $attempt === 0) {
+            usleep(800000);
+            continue;
+        }
+
+        if ($status < 200 || $status >= 300) {
+            $message = is_array($decoded) && isset($decoded['message']) ? $decoded['message'] : ('Resend HTTP ' . $status);
+            return array('ok' => false, 'error' => $message, 'raw' => $decoded);
+        }
+
+        return array('ok' => true, 'data' => $decoded);
     }
 
-    $decoded = json_decode((string) $response, true);
-    if ($status < 200 || $status >= 300) {
-        $message = is_array($decoded) && isset($decoded['message']) ? $decoded['message'] : ('Resend HTTP ' . $status);
-        return array('ok' => false, 'error' => $message, 'raw' => $decoded);
-    }
-
-    return array('ok' => true, 'data' => $decoded);
+    return array('ok' => false, 'error' => 'Resend rate limited. Intenta de nuevo en unos segundos.');
 }
 
 function correo_norm_email($value)
