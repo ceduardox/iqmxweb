@@ -2319,6 +2319,15 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
 
             $('inboxCountLabel').textContent = `${list.length} correos electrónicos`;
             if ($('inboxBadgeCount')) $('inboxBadgeCount').textContent = list.length;
+            
+            // Actualizar el Badge rojo en el icono de la PWA (Mac Dock / Windows Taskbar)
+            if ('setAppBadge' in navigator) {
+              if (list.length > 0) {
+                navigator.setAppBadge(list.length).catch((err) => console.log('Error setAppBadge:', err));
+              } else {
+                navigator.clearAppBadge().catch((err) => console.log('Error clearAppBadge:', err));
+              }
+            }
           } else if (type === 'sent' && $('sentCountLabel')) {
             $('sentCountLabel').textContent = `${list.length} correos electrónicos`;
           }
