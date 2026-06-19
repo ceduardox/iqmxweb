@@ -843,53 +843,17 @@ function correo_import_history_for_email($email, $limit = 5, $after = '')
 
     $imported = 0;
     $updated = 0;
-    $scannedPages = 0;
-    $maxPages = 10;
-
-    $sentAfter = '';
-    do {
-        $sentResult = correo_resend_list_page('/emails', 50, $sentAfter);
-        if (empty($sentResult['ok'])) {
-            return $sentResult;
-        }
-        $scannedPages++;
-
-        foreach (($sentResult['items'] ?? array()) as $item) {
-            $from = correo_norm_email($item['from'] ?? '');
-            $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
-            if ($from !== $email && strpos($to, $email) === false) {
-                continue;
-            }
-
-            $direction = strpos($from, $email) !== false ? 'sent' : 'received';
-            $resendId = (string) ($item['id'] ?? '');
-            $payload = json_encode($item, JSON_UNESCAPED_UNICODE);
-            $saved = correo_db_save_message(array(
-                'direction' => $direction,
-                'resend_id' => $resendId,
-                'message_id' => $resendId,
-                'sender_email' => $from,
-                'recipient_email' => $to,
-                'subject' => $item['subject'] ?? '',
-                'html' => $item['html'] ?? '',
-                'text' => $item['text'] ?? '',
-                'status' => $direction,
-                'event_type' => 'import',
-                'payload_json' => $payload,
-            ));
-            $imported += $saved ? 1 : 0;
-        }
-
-        $sentAfter = !empty($sentResult['next_after']) ? (string) $sentResult['next_after'] : '';
-    } while (!empty($sentResult['has_more']) && $sentAfter !== '' && $scannedPages < $maxPages);
+    $maxReceivedPages = 12;
+    $maxSentPages = 4;
 
     $receivedAfter = $after;
+    $receivedPages = 0;
     do {
         $receivedResult = correo_resend_list_page('/emails/receiving', max(1, (int) $limit), $receivedAfter);
         if (empty($receivedResult['ok'])) {
             return $receivedResult;
         }
-        $scannedPages++;
+        $receivedPages++;
 
         foreach (($receivedResult['items'] ?? array()) as $index => $item) {
             $toList = is_array($item['to'] ?? null) ? $item['to'] : array($item['to'] ?? '');
@@ -932,7 +896,45 @@ function correo_import_history_for_email($email, $limit = 5, $after = '')
         }
 
         $receivedAfter = !empty($receivedResult['next_after']) ? (string) $receivedResult['next_after'] : '';
-    } while (!empty($receivedResult['has_more']) && $receivedAfter !== '' && $scannedPages < $maxPages);
+    } while (!empty($receivedResult['has_more']) && $receivedAfter !== '' && $receivedPages < $maxReceivedPages);
+
+    $sentAfter = '';
+    $sentPages = 0;
+    do {
+        $sentResult = correo_resend_list_page('/emails', 30, $sentAfter);
+        if (empty($sentResult['ok'])) {
+            return $sentResult;
+        }
+        $sentPages++;
+
+        foreach (($sentResult['items'] ?? array()) as $item) {
+            $from = correo_norm_email($item['from'] ?? '');
+            $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
+            if ($from !== $email && strpos($to, $email) === false) {
+                continue;
+            }
+
+            $direction = strpos($from, $email) !== false ? 'sent' : 'received';
+            $resendId = (string) ($item['id'] ?? '');
+            $payload = json_encode($item, JSON_UNESCAPED_UNICODE);
+            $saved = correo_db_save_message(array(
+                'direction' => $direction,
+                'resend_id' => $resendId,
+                'message_id' => $resendId,
+                'sender_email' => $from,
+                'recipient_email' => $to,
+                'subject' => $item['subject'] ?? '',
+                'html' => $item['html'] ?? '',
+                'text' => $item['text'] ?? '',
+                'status' => $direction,
+                'event_type' => 'import',
+                'payload_json' => $payload,
+            ));
+            $imported += $saved ? 1 : 0;
+        }
+
+        $sentAfter = !empty($sentResult['next_after']) ? (string) $sentResult['next_after'] : '';
+    } while (!empty($sentResult['has_more']) && $sentAfter !== '' && $sentPages < $maxSentPages);
 
     return array(
         'ok' => true,
