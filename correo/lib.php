@@ -824,88 +824,102 @@ function correo_import_history_for_email($email, $limit = 5, $after = '')
 
     $imported = 0;
     $updated = 0;
+    $scannedPages = 0;
+    $maxPages = 10;
 
-    $sentResult = correo_resend_list_page('/emails', 50, '');
-    if (empty($sentResult['ok'])) {
-        return $sentResult;
-    }
-
-    foreach (($sentResult['items'] ?? array()) as $item) {
-        $from = correo_norm_email($item['from'] ?? '');
-        $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
-        if ($from !== $email && strpos($to, $email) === false) {
-            continue;
+    $sentAfter = '';
+    do {
+        $sentResult = correo_resend_list_page('/emails', 50, $sentAfter);
+        if (empty($sentResult['ok'])) {
+            return $sentResult;
         }
+        $scannedPages++;
 
-        $direction = strpos($from, $email) !== false ? 'sent' : 'received';
-        $resendId = (string) ($item['id'] ?? '');
-        $payload = json_encode($item, JSON_UNESCAPED_UNICODE);
-        $saved = correo_db_save_message(array(
-            'direction' => $direction,
-            'resend_id' => $resendId,
-            'message_id' => $resendId,
-            'sender_email' => $from,
-            'recipient_email' => $to,
-            'subject' => $item['subject'] ?? '',
-            'html' => $item['html'] ?? '',
-            'text' => $item['text'] ?? '',
-            'status' => $direction,
-            'event_type' => 'import',
-            'payload_json' => $payload,
-        ));
-        $imported += $saved ? 1 : 0;
-    }
-
-    $receivedResult = correo_resend_list_page('/emails/receiving', max(1, (int) $limit), $after);
-    if (empty($receivedResult['ok'])) {
-        return $receivedResult;
-    }
-
-    foreach (($receivedResult['items'] ?? array()) as $index => $item) {
-        $toList = is_array($item['to'] ?? null) ? $item['to'] : array($item['to'] ?? '');
-        $matches = false;
-        foreach ($toList as $recipient) {
-            if (correo_norm_email($recipient) === $email) {
-                $matches = true;
-                break;
+        foreach (($sentResult['items'] ?? array()) as $item) {
+            $from = correo_norm_email($item['from'] ?? '');
+            $to = correo_norm_email(is_array($item['to'] ?? null) ? implode(', ', $item['to']) : ($item['to'] ?? ''));
+            if ($from !== $email && strpos($to, $email) === false) {
+                continue;
             }
-        }
-        if (!$matches) {
-            continue;
+
+            $direction = strpos($from, $email) !== false ? 'sent' : 'received';
+            $resendId = (string) ($item['id'] ?? '');
+            $payload = json_encode($item, JSON_UNESCAPED_UNICODE);
+            $saved = correo_db_save_message(array(
+                'direction' => $direction,
+                'resend_id' => $resendId,
+                'message_id' => $resendId,
+                'sender_email' => $from,
+                'recipient_email' => $to,
+                'subject' => $item['subject'] ?? '',
+                'html' => $item['html'] ?? '',
+                'text' => $item['text'] ?? '',
+                'status' => $direction,
+                'event_type' => 'import',
+                'payload_json' => $payload,
+            ));
+            $imported += $saved ? 1 : 0;
         }
 
-        if ($index > 0) {
-            usleep(250000);
+        $sentAfter = !empty($sentResult['next_after']) ? (string) $sentResult['next_after'] : '';
+    } while (!empty($sentResult['has_more']) && $sentAfter !== '' && $scannedPages < $maxPages);
+
+    $receivedAfter = $after;
+    do {
+        $receivedResult = correo_resend_list_page('/emails/receiving', max(1, (int) $limit), $receivedAfter);
+        if (empty($receivedResult['ok'])) {
+            return $receivedResult;
         }
-        $detail = correo_resend_get_received_email($item['id'] ?? '');
-        $detailItem = !empty($detail['ok']) ? ($detail['item'] ?? array()) : array();
-        $source = is_array($detailItem) && !empty($detailItem) ? $detailItem : $item;
-        $sender = correo_norm_email($source['from'] ?? '');
-        $recipient = is_array($source['to'] ?? null) ? implode(', ', $source['to']) : (string) ($source['to'] ?? '');
-        $html = (string) ($source['html'] ?? '');
-        $text = (string) ($source['text'] ?? '');
-        $payload = json_encode($source, JSON_UNESCAPED_UNICODE);
-        $saved = correo_db_save_message(array(
-            'direction' => 'received',
-            'resend_id' => (string) ($source['id'] ?? ($item['id'] ?? '')),
-            'message_id' => (string) ($source['message_id'] ?? ($item['message_id'] ?? ($item['id'] ?? ''))),
-            'sender_email' => $sender,
-            'recipient_email' => $recipient,
-            'subject' => $source['subject'] ?? '',
-            'html' => $html,
-            'text' => $text,
-            'status' => 'received',
-            'event_type' => 'import',
-            'payload_json' => $payload,
-        ));
-        $updated += $saved ? 1 : 0;
-    }
+        $scannedPages++;
+
+        foreach (($receivedResult['items'] ?? array()) as $index => $item) {
+            $toList = is_array($item['to'] ?? null) ? $item['to'] : array($item['to'] ?? '');
+            $matches = false;
+            foreach ($toList as $recipient) {
+                if (correo_norm_email($recipient) === $email) {
+                    $matches = true;
+                    break;
+                }
+            }
+            if (!$matches) {
+                continue;
+            }
+
+            if ($index > 0) {
+                usleep(250000);
+            }
+            $detail = correo_resend_get_received_email($item['id'] ?? '');
+            $detailItem = !empty($detail['ok']) ? ($detail['item'] ?? array()) : array();
+            $source = is_array($detailItem) && !empty($detailItem) ? $detailItem : $item;
+            $sender = correo_norm_email($source['from'] ?? '');
+            $recipient = is_array($source['to'] ?? null) ? implode(', ', $source['to']) : (string) ($source['to'] ?? '');
+            $html = (string) ($source['html'] ?? '');
+            $text = (string) ($source['text'] ?? '');
+            $payload = json_encode($source, JSON_UNESCAPED_UNICODE);
+            $saved = correo_db_save_message(array(
+                'direction' => 'received',
+                'resend_id' => (string) ($source['id'] ?? ($item['id'] ?? '')),
+                'message_id' => (string) ($source['message_id'] ?? ($item['message_id'] ?? ($item['id'] ?? ''))),
+                'sender_email' => $sender,
+                'recipient_email' => $recipient,
+                'subject' => $source['subject'] ?? '',
+                'html' => $html,
+                'text' => $text,
+                'status' => 'received',
+                'event_type' => 'import',
+                'payload_json' => $payload,
+            ));
+            $updated += $saved ? 1 : 0;
+        }
+
+        $receivedAfter = !empty($receivedResult['next_after']) ? (string) $receivedResult['next_after'] : '';
+    } while (!empty($receivedResult['has_more']) && $receivedAfter !== '' && $scannedPages < $maxPages);
 
     return array(
         'ok' => true,
         'imported' => $imported,
         'updated' => $updated,
-        'has_more' => !empty($receivedResult['has_more']),
-        'next_after' => $receivedResult['next_after'] ?? '',
+        'has_more' => false,
+        'next_after' => '',
     );
 }

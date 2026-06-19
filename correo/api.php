@@ -85,7 +85,25 @@ switch ($action) {
         }
         $kind = trim((string) ($input['kind'] ?? 'received'));
         $items = correo_db_list_messages($kind === 'sent' ? 'sent' : 'received');
-        correo_json(true, array('items' => correo_filter_by_email($items, $email)));
+        $filtered = correo_filter_by_email($items, $email);
+
+        if ($kind !== 'sent' && empty($filtered) && correo_is_admin()) {
+            $import = correo_import_history_for_email($email, 5, '');
+            if (!empty($import['ok'])) {
+                $items = correo_db_list_messages('received');
+                $filtered = correo_filter_by_email($items, $email);
+            }
+        }
+
+        if ($kind === 'sent' && empty($filtered) && correo_is_admin()) {
+            $import = correo_import_history_for_email($email, 5, '');
+            if (!empty($import['ok'])) {
+                $items = correo_db_list_messages('sent');
+                $filtered = correo_filter_by_email($items, $email);
+            }
+        }
+
+        correo_json(true, array('items' => $filtered));
         break;
 
     case 'send':
