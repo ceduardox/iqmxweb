@@ -15,9 +15,12 @@ $user = correo_current_user();
   <style>
     :root{--bg:#07111d;--panel:#0d1724;--panel-2:#111f31;--line:#20324b;--text:#e8eef7;--muted:#9ab0c9;--accent:#5dd6c0;--accent-2:#7aa7ff;--danger:#ff6b6b;--shadow:0 18px 48px rgba(0,0,0,.28)}
     *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left, rgba(122,167,255,.22), transparent 26%),radial-gradient(circle at right 20%, rgba(93,214,192,.12), transparent 30%),linear-gradient(180deg,#08101b 0%,#0c1725 100%);color:var(--text)}
-    .wrap{max-width:1280px;margin:0 auto;padding:24px}
-    .hero,.card{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-    .hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:20px;padding:22px}
+    .wrap{max-width:1540px;margin:0 auto;padding:20px}
+    .app-shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+    .hero,.card,.sidebar{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+    .sidebar{position:sticky;top:20px;padding:16px;height:calc(100vh - 40px);overflow:auto}
+    .main{min-width:0;display:flex;flex-direction:column;gap:18px}
+    .hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;padding:22px}
     .hero h1{margin:0;font-size:28px}
     .hero p{margin:8px 0 0;color:var(--muted);max-width:760px;line-height:1.45}
     .badge,.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(93,214,192,.12);color:var(--accent);font-size:13px;font-weight:700;border:1px solid rgba(93,214,192,.25)}
@@ -56,9 +59,25 @@ $user = correo_current_user();
     .actions{display:flex;gap:8px;flex-wrap:wrap}
     .mailbox{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:14px}
     .mailbox.active{border-color:#5dd6c0;box-shadow:0 0 0 1px rgba(93,214,192,.18) inset}
+    .sidebar .section{padding:14px 0;border-top:1px solid rgba(32,50,75,.8);margin-top:14px}
+    .sidebar .section:first-of-type{border-top:0;margin-top:0;padding-top:0}
+    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .sidebar .brand h2{margin:0;font-size:22px}
+    .sidebar .brand .small{margin:6px 0 0}
+    .nav{display:grid;gap:8px}
+    .nav .tab{width:100%;text-align:left}
+    .sidebar-list{display:flex;flex-direction:column;gap:10px}
+    .sidebar-card{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:12px}
+    .sidebar-card.active{border-color:#5dd6c0}
+    .sidebar-card .title{font-weight:800;margin:0 0 4px}
+    .sidebar-card .meta{display:flex;justify-content:space-between;gap:10px}
+    .sidebar .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .sidebar .quick-actions .btn{padding:10px 12px}
+    .sidebar .search-inline{display:grid;gap:10px}
     #tab-users .row{display:none}
     #tab-users #saveUser{display:none}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}.row{grid-template-columns:1fr}}
+    @media (max-width:1180px){.app-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto}.grid{grid-template-columns:1fr}}
+    @media (max-width:980px){.hero{flex-direction:column;align-items:flex-start}.row{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -103,6 +122,63 @@ $user = correo_current_user();
         });
       </script>
     <?php else: ?>
+      <div class="app-shell">
+        <aside class="sidebar">
+          <div class="brand">
+            <div>
+              <div class="badge">Panel de correo</div>
+              <h2>Correo</h2>
+              <div class="small">Buz&oacute;n activo</div>
+              <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
+            </div>
+            <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
+          </div>
+
+          <div class="section">
+            <div class="small">Navegaci&oacute;n</div>
+            <div class="nav">
+              <button class="tab active" data-tab="inbox">Recibidos</button>
+              <button class="tab" data-tab="sent">Enviados</button>
+              <button class="tab" data-tab="compose">Nuevo</button>
+              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="small">Buscar</div>
+            <div class="search-inline">
+              <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
+              <select class="input" id="sidebarDaysFilter">
+                <option value="15">Ultimos 15 dias</option>
+                <option value="7">Ultimos 7 dias</option>
+                <option value="30">Ultimos 30 dias</option>
+                <option value="90">Ultimos 90 dias</option>
+                <option value="0">Todo</option>
+              </select>
+              <button class="btn secondary" id="sidebarClearFilters">Limpiar filtros</button>
+            </div>
+          </div>
+
+          <?php if (correo_is_admin()): ?>
+          <div class="section">
+            <div class="small">Buzones</div>
+            <div class="sidebar-list" id="sidebarUsers">
+              <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
+            </div>
+          </div>
+          <?php endif; ?>
+
+          <div class="section">
+            <div class="small">Acciones</div>
+            <div class="quick-actions">
+              <button class="btn secondary" id="sidebarReloadInbox">Recibidos</button>
+              <button class="btn secondary" id="sidebarReloadSent">Enviados</button>
+              <button class="btn secondary" id="sidebarImportHistory">Importar</button>
+              <button class="btn secondary" id="sidebarLogout">Salir</button>
+            </div>
+          </div>
+        </aside>
+        <main class="main">
       <div class="hero">
         <div>
           <div class="badge">Panel de correo</div>
@@ -236,6 +312,8 @@ $user = correo_current_user();
             </div>
           </div>
         </div>
+      </div>
+        </main>
       </div>
 
       <script>
@@ -451,6 +529,22 @@ $user = correo_current_user();
               </div>
             `;
           }).join('');
+          if ($('sidebarUsers')) {
+            $('sidebarUsers').innerHTML = state.users.map((user) => {
+              const mailbox = user.assigned_email || user.email || '';
+              const active = String(mailbox).toLowerCase() === String(state.activeMailboxEmail || '').toLowerCase();
+              return `
+                <div class="sidebar-card ${active ? 'active' : ''}">
+                  <div class="meta"><span><strong>${esc(user.username || mailbox)}</strong></span><span>${user.active ? 'activo' : 'inactivo'}</span></div>
+                  <div class="snippet">${esc(mailbox || user.email || '')}</div>
+                  <div class="toolbar" style="margin-top:10px">
+                    <button class="btn secondary" data-mailbox="${esc(mailbox)}">Ver</button>
+                    <button class="btn secondary" data-import="${esc(mailbox)}">Importar</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
           $('usersStatus').textContent = `${state.users.length} buzón(es).`;
         }
         async function sendEmail() {
@@ -468,9 +562,20 @@ $user = correo_current_user();
         document.querySelectorAll('.tab').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
         $('reloadInbox').addEventListener('click', loadInbox);
         $('reloadSent').addEventListener('click', loadSent);
+        if ($('sidebarReloadInbox')) $('sidebarReloadInbox').addEventListener('click', loadInbox);
+        if ($('sidebarReloadSent')) $('sidebarReloadSent').addEventListener('click', loadSent);
+        if ($('sidebarImportHistory')) $('sidebarImportHistory').addEventListener('click', () => { if ($('importHistory')) $('importHistory').click(); });
+        if ($('sidebarLogout')) $('sidebarLogout').addEventListener('click', () => { if ($('logoutBtn')) $('logoutBtn').click(); });
         $('sendEmail').addEventListener('click', sendEmail);
         $('searchBox').addEventListener('input', (event) => {
           state.query = event.target.value || '';
+          renderList('inbox');
+          renderList('sent');
+        });
+        if ($('sidebarSearchBox')) $('sidebarSearchBox').addEventListener('input', (event) => {
+          const value = event.target.value || '';
+          if ($('searchBox')) $('searchBox').value = value;
+          state.query = value;
           renderList('inbox');
           renderList('sent');
         });
@@ -479,9 +584,26 @@ $user = correo_current_user();
           renderList('inbox');
           renderList('sent');
         });
+        if ($('sidebarDaysFilter')) $('sidebarDaysFilter').addEventListener('change', (event) => {
+          const value = Number(event.target.value || 0);
+          if ($('daysFilter')) $('daysFilter').value = String(value);
+          state.days = value;
+          renderList('inbox');
+          renderList('sent');
+        });
         $('clearFilters').addEventListener('click', () => {
           $('searchBox').value = '';
           $('daysFilter').value = '15';
+          state.query = '';
+          state.days = 15;
+          renderList('inbox');
+          renderList('sent');
+        });
+        if ($('sidebarClearFilters')) $('sidebarClearFilters').addEventListener('click', () => {
+          if ($('searchBox')) $('searchBox').value = '';
+          if ($('sidebarSearchBox')) $('sidebarSearchBox').value = '';
+          if ($('daysFilter')) $('daysFilter').value = '15';
+          if ($('sidebarDaysFilter')) $('sidebarDaysFilter').value = '15';
           state.query = '';
           state.days = 15;
           renderList('inbox');
@@ -557,6 +679,30 @@ $user = correo_current_user();
             }
           }
         });
+        if ($('sidebarUsers')) {
+          $('sidebarUsers').addEventListener('click', async (event) => {
+            const mailbox = event.target.getAttribute('data-mailbox');
+            const importEmail = event.target.getAttribute('data-import');
+            if (mailbox) {
+              state.importAfter = '';
+              await loadMailbox(mailbox);
+              if ($('usersStatus')) $('usersStatus').textContent = 'Buzón activo: ' + mailbox;
+            }
+            if (importEmail) {
+              if ($('usersStatus')) $('usersStatus').textContent = 'Importando historial...';
+              const data = await api('importHistory', { email: importEmail, after: state.importAfter || '', limit: 5 });
+              if ($('usersStatus')) {
+                $('usersStatus').textContent = data.ok
+                  ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan más, pulsa otra vez.' : ''}`
+                  : (data.error || 'No se pudo importar.');
+              }
+              if (data.ok) {
+                state.importAfter = data.next_after || '';
+                await loadMailbox(importEmail);
+              }
+            }
+          });
+        }
         $('importHistory').addEventListener('click', async () => {
           const email = state.activeMailboxEmail || (($('newAssignedEmail') && $('newAssignedEmail').value.trim()) || $('newUserEmail').value.trim());
           if (!email) {
