@@ -4,7 +4,10 @@ require_once __DIR__ . '/lib.php';
 correo_seed_admin();
 correo_log_boot(array('page' => 'index', 'default_mailbox' => correo_default_mailbox(), 'mailboxes' => array_map(function ($m) { return $m['assigned_email'] ?? ($m['email'] ?? ''); }, correo_mailboxes())));
 
-$user = correo_current_user();
+$currentUser = correo_current_user();
+$user = is_array($currentUser)
+  ? array_merge(array('role' => 'guest', 'username' => '', 'email' => ''), $currentUser)
+  : null;
 ?>
 <!doctype html>
 <html lang="es">
@@ -103,7 +106,7 @@ $user = correo_current_user();
             <label class="small">Usuario</label>
             <input class="input" id="loginUser" autocomplete="username">
             <div style="height:10px"></div>
-            <label class="small">ContraseÃ±a</label>
+            <label class="small">Contrase&ntilde;a</label>
             <input class="input" id="loginPass" type="password" autocomplete="current-password">
             <div style="height:14px"></div>
             <div class="toolbar">
@@ -350,175 +353,7 @@ $user = correo_current_user();
         </main>
       </div>
     <?php endif; ?>
-
-
-            <div class="section">
-              <div class="small">Acciones</div>
-              <div class="quick-actions">
-                <button class="btn secondary" id="sidebarReloadInbox" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path></svg></span>Recibidos</button>
-                <button class="btn secondary" id="sidebarReloadSent" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h12"></path><path d="M12 6l6 6-6 6"></path></svg></span>Enviados</button>
-                <button class="btn secondary" id="sidebarImportHistory" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M8 11l4 4 4-4"></path><path d="M5 19h14"></path></svg></span>Importar</button>
-                <button class="btn secondary" id="sidebarLogout" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5"></path><path d="M15 12H4"></path><path d="M20 4v16"></path></svg></span>Salir</button>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div class="storage-box">
-              <div class="storage-header"><span>Administrador</span><span><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span></div>
-              <p style="margin-bottom:5px;color:#64748b;"><?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
-              <div class="storage-bar-bg"><div class="storage-bar-fill"></div></div>
-            </div>
-            <div class="sidebar-footer">
-              <div class="small" style="margin:0">Panel activo</div>
-              <button class="btn secondary" id="sidebarLogoutFooter" type="button">Cerrar sesi&oacute;n</button>
-            </div>
-          </div>
-        </aside>
-        <main class="main">
-      <div class="topbar">
-        <div class="topbar-left">
-          <button class="menu-btn" id="menuToggle" type="button" aria-label="Abrir menu">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-          <div class="topbar-title">
-            <div class="badge">Panel de correo</div>
-            <h1>Correo</h1>
-            <div class="status">BuzÃ³n activo: <strong id="activeMailboxLabelMain"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></strong></div>
-            <p>Panel simple para enviar, recibir y revisar historial por buzÃ³n. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
-          </div>
-        </div>
-        <div class="topbar-actions">
-          <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
-          <button class="btn secondary" id="logoutBtn">Salir</button>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <h2>Correo</h2>
-          <div class="body">
-            <div class="tabs">
-              <button class="tab active" data-tab="inbox">Recibidos</button>
-              <button class="tab" data-tab="sent">Enviados</button>
-              <button class="tab" data-tab="compose">Nuevo</button>
-              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
-            </div>
-            <div class="toolbar">
-              <input class="input" id="searchBox" placeholder="Buscar por remitente, destinatario o asunto" style="flex:1;min-width:220px">
-              <select class="input" id="daysFilter" style="max-width:220px">
-                <option value="15">Ultimos 15 dias</option>
-                <option value="7">Ultimos 7 dias</option>
-                <option value="30">Ultimos 30 dias</option>
-                <option value="90">Ultimos 90 dias</option>
-                <option value="0">Todo</option>
-              </select>
-              <button class="btn secondary" id="clearFilters">Limpiar</button>
-            </div>
-
-            <div id="tab-inbox">
-              <div class="toolbar"><button class="btn secondary" id="reloadInbox">Actualizar recibidos</button></div>
-              <div class="list" id="inboxList"></div>
-              <div class="status" id="inboxStatus"></div>
-            </div>
-
-            <div id="tab-sent" style="display:none">
-              <div class="toolbar"><button class="btn secondary" id="reloadSent">Actualizar enviados</button></div>
-              <div class="list" id="sentList"></div>
-              <div class="status" id="sentStatus"></div>
-            </div>
-
-            <div id="tab-compose" style="display:none">
-              <div class="row">
-                <div><label class="small">Desde</label><input class="input" id="fromEmail" placeholder="no-reply@iqmaximo.com"></div>
-                <div><label class="small">Para</label><input class="input" id="toEmail" placeholder="destino@dominio.com"></div>
-              </div>
-              <div style="height:10px"></div>
-              <label class="small">Asunto</label>
-              <input class="input" id="subject" placeholder="Asunto del correo">
-              <div style="height:10px"></div>
-              <div class="toolbar" style="margin-bottom:8px">
-                <label class="small" id="composeLabel" style="margin:0">Mensaje</label>
-                <button class="btn secondary" id="toggleComposeMode" type="button">Ver HTML</button>
-              </div>
-              <textarea class="textarea" id="html" placeholder="<p>Hola...</p>"></textarea>
-              <div style="height:10px"></div>
-              <div class="toolbar">
-                <button class="btn" id="sendEmail">Enviar correo</button>
-                <button class="btn secondary" id="fillSample">Cargar ejemplo</button>
-              </div>
-              <div class="status" id="sendStatus"></div>
-            </div>
-
-            <?php if (correo_is_admin()): ?>
-            <div id="tab-users" style="display:none">
-              <div class="toolbar">
-                <button class="btn secondary" id="reloadUsers">Actualizar buzones</button>
-              </div>
-              <div class="row">
-                <div>
-                  <label class="small">Usuario</label>
-                  <input class="input" id="newUsername" placeholder="usuario.panel">
-                </div>
-                <div>
-                  <label class="small">Email asignado</label>
-                  <input class="input" id="newUserEmail" placeholder="correo@iqmaximo.com">
-                </div>
-              </div>
-              <div style="height:10px"></div>
-              <div class="row">
-                <div>
-                  <label class="small">Correo para historial</label>
-                  <input class="input" id="newAssignedEmail" placeholder="fparedes@iqmaximo.com">
-                </div>
-                <div></div>
-              </div>
-              <div style="height:10px"></div>
-              <div class="row">
-                <div>
-                  <label class="small">Contrase&ntilde;a</label>
-                  <input class="input" id="newUserPass" type="password" placeholder="********">
-                </div>
-                <div>
-                  <label class="small">Rol</label>
-                  <select class="input" id="newUserRole">
-                    <option value="user">user</option>
-                    <option value="admin">admin</option>
-                  </select>
-                </div>
-              </div>
-              <div style="height:10px"></div>
-              <div class="toolbar">
-                <button class="btn" id="saveUser">Guardar usuario</button>
-                <button class="btn secondary" id="importHistory">Importar historial</button>
-              </div>
-              <div class="status" id="usersStatus"></div>
-              <div class="list" id="usersList" style="margin-top:12px"></div>
-            </div>
-            <?php endif; ?>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Detalle</h2>
-          <div class="body">
-            <div class="detail">
-              <h3 id="detailTitle">Selecciona un correo</h3>
-              <div class="small" id="detailMeta">Aqu&iacute; ver&aacute;s el contenido completo del mensaje.</div>
-              <div class="toolbar" style="margin-top:12px">
-                <button class="btn" id="replyBtn" disabled>Responder</button>
-                <button class="btn secondary" id="openComposeBtn" disabled>Editar respuesta</button>
-                <button class="btn secondary" id="toggleDetailView" disabled>Ver HTML</button>
-              </div>
-              <div class="preview" id="detailBody"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      </main>
-      </div>
+    <?php if ($user): ?>
       <script>
         const defaultMailbox = '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>';
         const state = { inbox: [], sent: [], users: [], activeMailboxEmail: defaultMailbox, importAfter: '', query: '', days: 15, currentDetail: null, currentDetailKind: 'received', currentDetailView: 'text', composeMode: 'text' };
@@ -702,8 +537,8 @@ $user = correo_current_user();
         async function loadMailbox(email) {
           if (!email) return;
           setActiveMailbox(email);
-          $('inboxStatus').textContent = 'Cargando buzÃ³n...';
-          $('sentStatus').textContent = 'Cargando buzÃ³n...';
+          $('inboxStatus').textContent = 'Cargando buz\u00f3n...';
+          $('sentStatus').textContent = 'Cargando buz\u00f3n...';
           const received = await api('listMailbox', { kind: 'received', email });
           if (!received.ok) { $('inboxStatus').textContent = received.error || 'No se pudo cargar.'; return; }
           state.inbox = received.items || []; renderList('inbox');
@@ -753,7 +588,7 @@ $user = correo_current_user();
               `;
             }).join('');
           }
-          $('usersStatus').textContent = `${state.users.length} buzÃ³n(es).`;
+          $('usersStatus').textContent = `${state.users.length} buz\u00f3n(es).`;
         }
         async function sendEmail() {
           $('sendStatus').textContent = 'Enviando...';
@@ -881,13 +716,13 @@ $user = correo_current_user();
           if (mailbox) {
             state.importAfter = '';
             await loadMailbox(mailbox);
-            $('usersStatus').textContent = 'BuzÃ³n activo: ' + mailbox;
+            $('usersStatus').textContent = 'Buz\u00f3n activo: ' + mailbox;
           }
           if (importEmail) {
             $('usersStatus').textContent = 'Importando historial...';
             const data = await api('importHistory', { email: importEmail, after: state.importAfter || '', limit: 5 });
             $('usersStatus').textContent = data.ok
-              ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan mÃ¡s, pulsa otra vez.' : ''}`
+              ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan m\u00e1s, pulsa otra vez.' : ''}`
               : (data.error || 'No se pudo importar.');
             if (data.ok) {
               state.importAfter = data.next_after || '';
@@ -902,14 +737,14 @@ $user = correo_current_user();
             if (mailbox) {
               state.importAfter = '';
               await loadMailbox(mailbox);
-              if ($('usersStatus')) $('usersStatus').textContent = 'BuzÃ³n activo: ' + mailbox;
+              if ($('usersStatus')) $('usersStatus').textContent = 'Buz\u00f3n activo: ' + mailbox;
             }
             if (importEmail) {
               if ($('usersStatus')) $('usersStatus').textContent = 'Importando historial...';
               const data = await api('importHistory', { email: importEmail, after: state.importAfter || '', limit: 5 });
               if ($('usersStatus')) {
                 $('usersStatus').textContent = data.ok
-                  ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan mÃ¡s, pulsa otra vez.' : ''}`
+                  ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan m\u00e1s, pulsa otra vez.' : ''}`
                   : (data.error || 'No se pudo importar.');
               }
               if (data.ok) {
@@ -922,13 +757,13 @@ $user = correo_current_user();
         $('importHistory').addEventListener('click', async () => {
           const email = state.activeMailboxEmail || (($('newAssignedEmail') && $('newAssignedEmail').value.trim()) || $('newUserEmail').value.trim());
           if (!email) {
-            $('usersStatus').textContent = 'Selecciona un buzÃ³n primero.';
+            $('usersStatus').textContent = 'Selecciona un buz\u00f3n primero.';
             return;
           }
           $('usersStatus').textContent = 'Importando historial...';
           const data = await api('importHistory', { email, after: state.importAfter || '', limit: 5 });
           $('usersStatus').textContent = data.ok
-            ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan mÃ¡s, pulsa otra vez.' : ''}`
+            ? `Historial importado. Nuevos: ${data.imported || 0}, actualizados: ${data.updated || 0}.${data.has_more ? ' Quedan m\u00e1s, pulsa otra vez.' : ''}`
             : (data.error || 'No se pudo importar.');
           if (data.ok) {
             state.importAfter = data.next_after || '';
@@ -947,6 +782,7 @@ $user = correo_current_user();
         setActiveMailbox(state.activeMailboxEmail || defaultMailbox);
         setComposeMode('text');
       </script>
+    <?php endif; ?>
   </div>
 </body>
 </html>
