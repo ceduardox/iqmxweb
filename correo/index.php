@@ -2676,6 +2676,9 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
           if (type === 'inbox' && (item.status === 'received' || item.status === 'stored')) {
             item.status = 'read';
             renderList('inbox');
+            api('read', { id: item.id, kind: 'received' }).catch(err => {
+              console.error('Error al actualizar el estado de leído en el servidor:', err);
+            });
           }
 
           showDetail(item, type === 'inbox' ? 'received' : 'sent');
