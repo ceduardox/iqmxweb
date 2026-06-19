@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/../require/configuracion.php';
-require_once __DIR__ . '/../require/util.php';
-
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
+
+require_once __DIR__ . '/../require/configuracion.php';
+require_once __DIR__ . '/../require/util.php';
 
 function correo_data_dir()
 {
