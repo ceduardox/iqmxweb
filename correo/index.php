@@ -23,7 +23,8 @@ $user = correo_current_user();
     .wrap{max-width:1540px;margin:0 auto;padding:20px}
     .app-shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
     .hero,.card,.sidebar{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-    .sidebar{position:sticky;top:20px;padding:24px 16px;height:calc(100vh - 40px);overflow:auto;background:#0b0f19;border:1px solid #1e293b;border-radius:12px;display:flex;flex-direction:column;justify-content:space-between}
+    .sidebar{position:sticky;top:20px;padding:24px 16px;height:auto;overflow:visible;background:#0b0f19;border:1px solid #1e293b;border-radius:12px;display:flex;flex-direction:column;justify-content:space-between;align-self:start;scrollbar-width:none;-ms-overflow-style:none}
+    .sidebar::-webkit-scrollbar{width:0;height:0}
     .main{min-width:0;display:flex;flex-direction:column;gap:18px}
     .hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;padding:22px}
     .hero h1{margin:0;font-size:28px}
@@ -84,9 +85,10 @@ $user = correo_current_user();
     .sidebar-top-content,.sidebar-bottom-content{display:flex;flex-direction:column}
     .sidebar-top-content{gap:22px}
     .sidebar-bottom-content{gap:16px;margin-top:18px}
-    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:18px;border-bottom:1px solid #1e293b}
-    .sidebar .brand h2{margin:4px 0 0;font-size:20px}
-    .sidebar .brand .small{margin:4px 0 6px}
+    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:14px 14px 18px;border:1px solid #16263a;border-radius:14px;background:linear-gradient(180deg,rgba(11,15,25,.96),rgba(17,24,39,.78));box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+    .sidebar .brand h2{margin:4px 0 2px;font-size:22px;line-height:1.05}
+    .sidebar .brand .small{margin:4px 0 8px}
+    .sidebar .brand .pill{font-size:12px;padding:8px 12px}
     .sidebar .section{display:flex;flex-direction:column;gap:12px}
     .sidebar .section-title{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:#475569;font-weight:700;margin:0}
     .nav{display:grid;gap:6px}
@@ -100,7 +102,7 @@ $user = correo_current_user();
     .sidebar .tab[data-tab="sent"]::before{content:"\f1d8";font-weight:400}
     .sidebar .tab[data-tab="compose"]::before{content:"\f304";font-weight:900}
     .sidebar .tab[data-tab="users"]::before{content:"\f233";font-weight:900}
-    .sidebar .tab span{margin-left:auto}
+    .sidebar .tab span{margin-left:0}
     .sidebar-list{display:flex;flex-direction:column;gap:10px}
     .sidebar-card{border:1px solid #1e293b;border-radius:10px;background:#070a13;padding:14px}
     .sidebar-card.active{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.15) inset}
@@ -214,15 +216,6 @@ $user = correo_current_user();
                 <button class="tab" data-tab="sent" type="button"><span>Enviados</span></button>
                 <button class="tab" data-tab="compose" type="button"><span>Nuevo</span></button>
                 <?php if (correo_is_admin()): ?><button class="tab" data-tab="users" type="button"><span>Buzones</span></button><?php endif; ?>
-              </div>
-            </div>
-
-            <div class="section">
-              <div class="section-title">Filtros</div>
-              <div class="nav">
-                <button class="tab" type="button"><span>Marcados</span></button>
-                <button class="tab" type="button"><span>Importantes</span></button>
-                <button class="tab" type="button"><span>Archivos</span></button>
               </div>
             </div>
 
