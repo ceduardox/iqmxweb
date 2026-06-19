@@ -31,8 +31,8 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // Solo interceptar peticiones GET locales
-  if (e.request.method !== 'GET') {
+  // Solo interceptar peticiones GET locales y que no sean de navegación (páginas)
+  if (e.request.method !== 'GET' || e.request.mode === 'navigate') {
     return;
   }
   if (e.request.url.startsWith(self.location.origin)) {
