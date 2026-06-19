@@ -23,34 +23,11 @@ $user = correo_current_user();
     .wrap{max-width:1540px;margin:0 auto;padding:20px}
     .app-shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
     .hero,.card,.sidebar{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-    .sidebar{position:sticky;top:20px;padding:24px 16px;height:auto;overflow:visible;background:#0b0f19;border:1px solid #1e293b;border-radius:12px;display:flex;flex-direction:column;justify-content:space-between;align-self:start;scrollbar-width:none;-ms-overflow-style:none}
-    .sidebar::-webkit-scrollbar{width:0;height:0}
+    .sidebar{position:sticky;top:20px;padding:16px;height:calc(100vh - 40px);overflow:auto}
     .main{min-width:0;display:flex;flex-direction:column;gap:18px}
-    .hero{background:#0b0f19;border:1px solid #1e293b;border-radius:12px;height:70px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .header-left{display:flex;align-items:center;gap:16px;min-width:0}
-    .menu-toggle{background:#1e293b;border:none;color:#94a3b8;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s}
-    .menu-toggle:hover{background:#334155;color:#f8fafc}
-    .brand-wrapper{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-icon{background:#1e3a8a;color:#3b82f6;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
-    .brand-text{display:flex;flex-direction:column;min-width:0}
-    .brand-title{color:#fff;font-size:15px;font-weight:600;line-height:1.2}
-    .brand-subtitle{color:#475569;font-size:11px;font-weight:500;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .header-center{flex:1;max-width:500px;margin:0 30px}
-    .search-container{position:relative;display:flex;align-items:center}
-    .search-icon-left{position:absolute;left:14px;color:#475569;font-size:14px;pointer-events:none}
-    .global-search-input{width:100%;background:#070a13;border:1px solid #1e293b;border-radius:8px;padding:10px 45px 10px 38px;color:#f8fafc;font-size:13px;outline:none;transition:border-color .2s}
-    .global-search-input:focus{border-color:#3b82f6}
-    .global-search-input::placeholder{color:#475569}
-    .search-shortcut{position:absolute;right:14px;background:#1e293b;color:#64748b;border:1px solid #334155;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;pointer-events:none}
-    .header-right{display:flex;align-items:center;gap:20px}
-    .action-icon-btn{background:none;border:none;color:#64748b;font-size:16px;cursor:pointer;transition:color .2s;position:relative}
-    .action-icon-btn:hover{color:#cbd5e1}
-    .notification-dot{position:absolute;top:-2px;right:-2px;width:6px;height:6px;background:#3b82f6;border-radius:50%}
-    .user-profile-wrapper{display:flex;align-items:center;gap:12px;border-left:1px solid #1e293b;padding-left:20px}
-    .user-info{display:flex;flex-direction:column;text-align:right}
-    .user-name{color:#fff;font-size:13px;font-weight:600;line-height:1.2}
-    .user-role{color:#475569;font-size:11px;margin-top:2px}
-    .user-avatar{width:36px;height:36px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;box-shadow:0 0 0 2px #0b0f19,0 0 0 4px rgba(124,58,237,.2)}
+    .hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;padding:22px}
+    .hero h1{margin:0;font-size:28px}
+    .hero p{margin:8px 0 0;color:var(--muted);max-width:760px;line-height:1.45}
     .badge,.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(93,214,192,.12);color:var(--accent);font-size:13px;font-weight:700;border:1px solid rgba(93,214,192,.25)}
     .pill{background:#16263a;color:#cfe0ff;border-color:var(--line)}
     .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
@@ -69,20 +46,11 @@ $user = correo_current_user();
     .textarea{min-height:152px;resize:vertical}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .list{display:flex;flex-direction:column;gap:10px}
-    .item{border:1px solid #1e293b;border-radius:16px;background:#09111b;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .2s,transform .2s,background .2s,box-shadow .2s}
-    .item:hover{border-color:#39577f;background:#0b1220;transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,0,0,.18)}
-    .item.selected{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.15) inset}
-    .item-row{display:flex;gap:12px;align-items:flex-start}
-    .avatar-circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex:0 0 auto;background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 0 0 2px #09111b}
-    .item-main{flex:1;min-width:0}
-    .item-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:4px}
-    .sender-name{font-size:13px;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .email-date{font-size:12px;color:#64748b;flex:0 0 auto}
-    .subject{font-size:15px;font-weight:800;margin:0 0 6px;color:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .snippet{color:#9ab0c9;font-size:13px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .item-badges{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
-    .item-badges .pill{padding:6px 10px;font-size:11px;border-radius:999px}
-    .star-icon{color:#64748b;font-size:14px;flex:0 0 auto}
+    .item{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:14px;cursor:pointer}
+    .item:hover{border-color:#39577f}
+    .meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;margin-bottom:8px}
+    .subject{font-size:15px;font-weight:800;margin:0 0 8px}
+    .snippet{color:#c7d3e2;font-size:13px;line-height:1.45;white-space:pre-wrap}
     .detail{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:16px;min-height:240px}
     .detail h3{margin:0 0 10px;font-size:18px}
     .detail .small,.status{color:var(--muted);font-size:13px}
@@ -113,48 +81,21 @@ $user = correo_current_user();
     .actions{display:flex;gap:8px;flex-wrap:wrap}
     .mailbox{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:14px}
     .mailbox.active{border-color:#5dd6c0;box-shadow:0 0 0 1px rgba(93,214,192,.18) inset}
-    .sidebar-top-content,.sidebar-bottom-content{display:flex;flex-direction:column}
-    .sidebar-top-content{gap:22px}
-    .sidebar-bottom-content{gap:16px;margin-top:18px}
-    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:14px 14px 18px;border:1px solid #16263a;border-radius:14px;background:linear-gradient(180deg,rgba(11,15,25,.96),rgba(17,24,39,.78));box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
-    .sidebar .brand h2{margin:4px 0 2px;font-size:22px;line-height:1.05}
-    .sidebar .brand .small{margin:4px 0 8px}
-    .sidebar .brand .pill{font-size:12px;padding:8px 12px}
-    .sidebar .section{display:flex;flex-direction:column;gap:12px}
-    .sidebar .section-title{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:#475569;font-weight:700;margin:0}
-    .nav{display:grid;gap:6px}
-    .sidebar .tab{width:100%;text-align:left;background:transparent;border:0;border-radius:8px;padding:10px 12px;color:#94a3b8;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;transition:all .2s}
-    .sidebar .tab:hover{background:#111827;color:#cbd5e1}
-    .sidebar .tab.active{background:#1e293b;color:#f8fafc}
-    .sidebar .tab[data-tab="compose"]{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700}
-    .sidebar .tab[data-tab="compose"]:hover{opacity:.92}
-    .sidebar .tab::before{font-family:"Font Awesome 6 Free";font-weight:900;content:"";display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-right:10px;flex:0 0 auto}
-    .sidebar .tab[data-tab="inbox"]::before{content:"\f01c"}
-    .sidebar .tab[data-tab="sent"]::before{content:"\f1d8";font-weight:400}
-    .sidebar .tab[data-tab="compose"]::before{content:"\f304";font-weight:900}
-    .sidebar .tab[data-tab="users"]::before{content:"\f233";font-weight:900}
-    .sidebar .tab span{margin-left:0}
+    .sidebar .section{padding:14px 0;border-top:1px solid rgba(32,50,75,.8);margin-top:14px}
+    .sidebar .section:first-of-type{border-top:0;margin-top:0;padding-top:0}
+    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .sidebar .brand h2{margin:0;font-size:22px}
+    .sidebar .brand .small{margin:6px 0 0}
+    .nav{display:grid;gap:8px}
+    .nav .tab{width:100%;text-align:left}
     .sidebar-list{display:flex;flex-direction:column;gap:10px}
-    .sidebar-card{border:1px solid #1e293b;border-radius:10px;background:#070a13;padding:14px}
-    .sidebar-card.active{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.15) inset}
-    #tab-inbox .toolbar,#tab-sent .toolbar{margin-bottom:14px}
-    #tab-inbox .status,#tab-sent .status{margin-top:10px}
-    .sidebar-card .title{font-weight:800;margin:0 0 4px;color:#cbd5e1}
+    .sidebar-card{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:12px}
+    .sidebar-card.active{border-color:#5dd6c0}
+    .sidebar-card .title{font-weight:800;margin:0 0 4px}
     .sidebar-card .meta{display:flex;justify-content:space-between;gap:10px}
     .sidebar .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .sidebar .quick-actions .btn{padding:10px 12px;border-radius:8px}
+    .sidebar .quick-actions .btn{padding:10px 12px}
     .sidebar .search-inline{display:grid;gap:10px}
-    .sidebar .input{background:#070a13;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:12px}
-    .sidebar .btn.secondary{background:none;border:1px solid #1e293b;color:#94a3b8;border-radius:8px}
-    .sidebar .btn.secondary:hover{background:#111827;color:#f8fafc}
-    .storage-box{background:#070a13;border:1px solid #1e293b;border-radius:10px;padding:14px;font-size:12px}
-    .storage-header{display:flex;justify-content:space-between;margin-bottom:6px;font-weight:500;color:#cbd5e1}
-    .storage-text{color:#64748b;font-size:11px;margin-bottom:12px}
-    .storage-bar-bg{background:#1e293b;height:6px;border-radius:3px;width:100%;overflow:hidden}
-    .storage-bar-fill{background:linear-gradient(90deg,#a855f7,#3b82f6);height:100%;width:24%}
-    .sidebar-footer{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#64748b;padding-top:14px;border-top:1px solid #1e293b}
-    .footer-icon-btn,.logout-btn{cursor:pointer;transition:color .2s}
-    .footer-icon-btn:hover,.logout-btn:hover{color:#f8fafc}
     #tab-users .row{display:none}
     #tab-users #saveUser{display:none}
     @media (max-width:1180px){.app-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto}.grid{grid-template-columns:1fr}}
@@ -182,7 +123,10 @@ $user = correo_current_user();
             <div class="login-input-wrap">
               <input type="password" id="loginPass" class="login-input" placeholder="Introduce tu contraseña privada" autocomplete="current-password" required>
               <span class="login-icon" aria-hidden="true">
-                <i class="fa-solid fa-lock"></i>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                  <path d="M7 11V8a5 5 0 0 1 10 0v3"></path>
+                </svg>
               </span>
             </div>
           </div>
@@ -226,95 +170,73 @@ $user = correo_current_user();
     <?php else: ?>
       <div class="app-shell">
         <aside class="sidebar">
-          <div class="sidebar-top-content">
-            <div class="brand">
-              <div>
-                <div class="badge">Panel de correo</div>
-                <h2>Correo</h2>
-                <div class="small">Buz&oacute;n activo</div>
-                <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
-              </div>
-              <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
+          <div class="brand">
+            <div>
+              <div class="badge">Panel de correo</div>
+              <h2>Correo</h2>
+              <div class="small">Buz&oacute;n activo</div>
+              <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
             </div>
-
-            <button class="tab" data-tab="compose" type="button"><span>Redactar</span></button>
-
-            <div class="section">
-              <div class="section-title">Navegaci&oacute;n</div>
-              <div class="nav">
-                <button class="tab active" data-tab="inbox" type="button"><span>Recibidos</span><span class="badge-count">12</span></button>
-                <button class="tab" data-tab="sent" type="button"><span>Enviados</span></button>
-                <button class="tab" data-tab="compose" type="button"><span>Nuevo</span></button>
-                <?php if (correo_is_admin()): ?><button class="tab" data-tab="users" type="button"><span>Buzones</span></button><?php endif; ?>
-              </div>
-            </div>
-
-            <div class="section">
-              <div class="section-title">Buscar</div>
-              <div class="search-inline">
-                <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
-                <p class="section-title" style="margin-top:12px;font-size:10px;"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i> Rango de fechas</p>
-                <select class="input" id="sidebarDaysFilter">
-                  <option value="15">Ultimos 15 dias</option>
-                  <option value="7">Ultimos 7 dias</option>
-                  <option value="30">Ultimos 30 dias</option>
-                  <option value="90">Ultimos 90 dias</option>
-                  <option value="0">Todo</option>
-                </select>
-                <button class="btn secondary" id="sidebarClearFilters">Limpiar filtros</button>
-              </div>
-            </div>
-
-            <?php if (correo_is_admin()): ?>
-            <div class="section">
-              <div class="section-title">Buzones</div>
-              <div class="sidebar-list" id="sidebarUsers">
-                <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
-              </div>
-            </div>
-            <?php endif; ?>
+            <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
           </div>
 
-          <div class="sidebar-bottom-content">
-            <div class="storage-box">
-              <div class="storage-header">
-                <span>Almacenamiento</span>
-                <span style="color:#94a3b8;">24%</span>
-              </div>
-              <div class="storage-text">2.4 GB de 10 GB usados</div>
-              <div class="storage-bar-bg"><div class="storage-bar-fill"></div></div>
+          <div class="section">
+            <div class="small">Navegaci&oacute;n</div>
+            <div class="nav">
+              <button class="tab active" data-tab="inbox">Recibidos</button>
+              <button class="tab" data-tab="sent">Enviados</button>
+              <button class="tab" data-tab="compose">Nuevo</button>
+              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
             </div>
+          </div>
 
-            <div class="sidebar-footer">
-              <div class="footer-icon-btn"><i class="fa-solid fa-gear"></i></div>
-              <div class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesi&oacute;n</div>
+          <div class="section">
+            <div class="small">Buscar</div>
+            <div class="search-inline">
+              <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
+              <select class="input" id="sidebarDaysFilter">
+                <option value="15">Ultimos 15 dias</option>
+                <option value="7">Ultimos 7 dias</option>
+                <option value="30">Ultimos 30 dias</option>
+                <option value="90">Ultimos 90 dias</option>
+                <option value="0">Todo</option>
+              </select>
+              <button class="btn secondary" id="sidebarClearFilters">Limpiar filtros</button>
+            </div>
+          </div>
+
+          <?php if (correo_is_admin()): ?>
+          <div class="section">
+            <div class="small">Buzones</div>
+            <div class="sidebar-list" id="sidebarUsers">
+              <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
+            </div>
+          </div>
+          <?php endif; ?>
+
+          <div class="section">
+            <div class="small">Acciones</div>
+            <div class="quick-actions">
+              <button class="btn secondary" id="sidebarReloadInbox">Recibidos</button>
+              <button class="btn secondary" id="sidebarReloadSent">Enviados</button>
+              <button class="btn secondary" id="sidebarImportHistory">Importar</button>
+              <button class="btn secondary" id="sidebarLogout">Salir</button>
             </div>
           </div>
         </aside>
         <main class="main">
-      <header class="hero">
-        <div class="header-left">
-          <div class="brand-wrapper">
-            <div class="brand-icon" aria-hidden="true">
-              <i class="fa-regular fa-envelope"></i>
-            </div>
-            <div class="brand-text">
-              <span class="brand-title">Correo</span>
-              <span class="brand-subtitle">Panel de correo electrónico</span>
-            </div>
-          </div>
+      <div class="hero">
+        <div>
+          <div class="badge">Panel de correo</div>
+          <h1>Correo</h1>
+          <div class="status">Buzón activo: <strong id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></strong></div>
+          <p>Panel simple para enviar, recibir y revisar historial por buzón. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
-
-        <div class="header-right">
-          <div class="user-profile-wrapper">
-            <div class="user-info">
-              <span class="user-name"><?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?></span>
-              <span class="user-role"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
-            </div>
-            <button class="btn secondary" id="logoutBtn">Salir</button>
-          </div>
+        <div class="actions">
+          <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
+          <button class="btn secondary" id="logoutBtn">Salir</button>
         </div>
-      </header>
+      </div>
 
       <div class="grid">
         <div class="card">
@@ -327,6 +249,7 @@ $user = correo_current_user();
               <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
             </div>
             <div class="toolbar">
+              <input class="input" id="searchBox" placeholder="Buscar por remitente, destinatario o asunto" style="flex:1;min-width:220px">
               <select class="input" id="daysFilter" style="max-width:220px">
                 <option value="15">Ultimos 15 dias</option>
                 <option value="7">Ultimos 7 dias</option>
@@ -540,7 +463,6 @@ $user = correo_current_user();
           return response.json();
         }
         function setActiveTab(name) {
-          if (!name) return;
           document.querySelectorAll('.tab').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
           ['inbox','sent','compose','users'].forEach((tab) => { const el = $('tab-' + tab); if (el) el.style.display = tab === name ? 'block' : 'none'; });
         }
@@ -572,22 +494,11 @@ $user = correo_current_user();
           const status = $(type + 'Status');
           if (!list.length) { target.innerHTML = '<div class="item"><div class="snippet">Sin datos.</div></div>'; status.textContent = 'Sin datos.'; return; }
           target.innerHTML = list.map((item, index) => `
-            <div class="item${state.currentDetail === item ? ' selected' : ''}" data-index="${index}">
-              <div class="item-row">
-                <div class="avatar-circle">${esc(String((item.from || item.to || '?').trim().charAt(0) || '?').toUpperCase())}</div>
-                <div class="item-main">
-                  <div class="item-head">
-                    <div class="sender-name">${esc(item.from || '-')}</div>
-                    <div class="email-date">${esc(item.created_at || '')}</div>
-                  </div>
-                  <div class="subject">${esc(item.subject || '(sin asunto)')}</div>
-                  <div class="snippet">${esc((item.preview || item.text || item.html || '').slice(0, 220))}</div>
-                  <div class="item-badges">
-                    <div class="pill">${esc(item.status || type)}</div>
-                    <div class="star-icon">☆</div>
-                  </div>
-                </div>
-              </div>
+            <div class="item" data-index="${index}">
+              <div class="meta"><span><strong>De:</strong> ${esc(item.from || '-')}</span><span>${esc(item.created_at || '')}</span></div>
+              <div class="meta"><span><strong>Para:</strong> ${esc(item.to || '-')}</span><span class="pill">${esc(item.status || type)}</span></div>
+              <div class="subject">${esc(item.subject || '(sin asunto)')}</div>
+              <div class="snippet">${esc((item.preview || item.text || item.html || '').slice(0, 220))}</div>
             </div>
           `).join('');
           status.textContent = `${list.length} correo(s) cargado(s).`;
@@ -694,7 +605,7 @@ $user = correo_current_user();
           $('sendStatus').textContent = data.ok ? 'Correo enviado.' : (data.error || 'No se pudo enviar.');
           if (data.ok) { await Promise.all([loadInbox(), loadSent()]); }
         }
-        document.querySelectorAll('.tab[data-tab]').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
+        document.querySelectorAll('.tab').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
         $('reloadInbox').addEventListener('click', loadInbox);
         $('reloadSent').addEventListener('click', loadSent);
         if ($('sidebarReloadInbox')) $('sidebarReloadInbox').addEventListener('click', loadInbox);
@@ -702,7 +613,7 @@ $user = correo_current_user();
         if ($('sidebarImportHistory')) $('sidebarImportHistory').addEventListener('click', () => { if ($('importHistory')) $('importHistory').click(); });
         if ($('sidebarLogout')) $('sidebarLogout').addEventListener('click', () => { if ($('logoutBtn')) $('logoutBtn').click(); });
         $('sendEmail').addEventListener('click', sendEmail);
-        if ($('searchBox')) $('searchBox').addEventListener('input', (event) => {
+        $('searchBox').addEventListener('input', (event) => {
           state.query = event.target.value || '';
           renderList('inbox');
           renderList('sent');
@@ -727,7 +638,7 @@ $user = correo_current_user();
           renderList('sent');
         });
         $('clearFilters').addEventListener('click', () => {
-          if ($('searchBox')) $('searchBox').value = '';
+          $('searchBox').value = '';
           $('daysFilter').value = '15';
           state.query = '';
           state.days = 15;
@@ -870,4 +781,3 @@ $user = correo_current_user();
   </div>
 </body>
 </html>
-
