@@ -2094,7 +2094,7 @@ $user = correo_current_user();
           document.querySelectorAll('.tab').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
           ['inbox','sent','compose','users'].forEach((tab) => { 
             const el = $('tab-' + tab); 
-            if (el) el.style.display = tab === name ? 'block' : 'none'; 
+            if (el) el.style.display = tab === name ? 'flex' : 'none'; 
           });
 
           // Flex layout toggle
@@ -2197,7 +2197,7 @@ $user = correo_current_user();
           state.currentDetailView = 'text';
           
           if ($('detailEmptyState')) $('detailEmptyState').style.display = item ? 'none' : 'flex';
-          if ($('detailActiveState')) $('detailActiveState').style.display = item ? 'block' : 'none';
+          if ($('detailActiveState')) $('detailActiveState').style.display = item ? 'flex' : 'none';
 
           if (item) {
             $('detailTitle').textContent = item.subject || '(sin asunto)';
