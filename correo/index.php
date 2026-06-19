@@ -167,30 +167,52 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
       opacity: 0.9;
     }
 
-    .login-note {
-      margin-top: 24px;
-      font-size: 12px;
-      color: var(--text-secondary);
-      border-top: 1px solid var(--border-color);
-      padding-top: 16px;
+    .login-remember {
+      margin-top: 16px;
+      margin-bottom: 20px;
       display: flex;
-      gap: 10px;
-      line-height: 1.5;
-    }
-
-    .login-note svg {
-      flex-shrink: 0;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
       color: var(--text-secondary);
-      margin-top: 2px;
+      user-select: none;
+      cursor: pointer;
+      width: fit-content;
     }
 
-    .login-note code {
-      background-color: var(--bg-main);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: var(--text-primary);
-      font-family: monospace;
+    .login-remember input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
       border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-main);
+      cursor: pointer;
+      display: inline-grid;
+      place-content: center;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .login-remember input[type="checkbox"]::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      box-shadow: inset 1em 1em var(--text-white);
+      transform-origin: center;
+      clip-path: polygon(14% 44%, 0 58%, 38% 96%, 100% 23%, 86% 9%, 38% 70%);
+      background-color: var(--text-white);
+    }
+
+    .login-remember input[type="checkbox"]:checked {
+      background: var(--accent-gradient);
+      border-color: transparent;
+    }
+
+    .login-remember input[type="checkbox"]:checked::before {
+      transform: scale(1.1);
     }
 
     .login-error {
@@ -1623,7 +1645,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
           <div class="login-group">
             <label for="loginUser" class="login-label">Usuario</label>
             <div class="login-input-wrap">
-              <input type="email" id="loginUser" class="login-input" placeholder="ejemplo@iqmaximo.com" autocomplete="username" value="iqmaximo@gmail.com" required>
+              <input type="email" id="loginUser" class="login-input" placeholder="ejemplo@iqmaximo.com" autocomplete="username" required>
               <span class="login-icon" aria-hidden="true">
                 <i class="fa-regular fa-envelope"></i>
               </span>
@@ -1643,20 +1665,14 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             </div>
           </div>
 
+          <label class="login-remember">
+            <input type="checkbox" id="loginRemember">
+            <span>Guardar datos de acceso</span>
+          </label>
+
           <button type="button" class="login-submit" id="loginBtn">Entrar</button>
           <div class="status login-error" id="loginStatus"></div>
         </form>
-
-        <div class="login-note">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 16v-4"></path>
-            <path d="M12 8h.01"></path>
-          </svg>
-          <span>
-            Admin inicial: se crea con <code>IQMAXIMO_CORREO_ADMIN_USER</code> y <code>IQMAXIMO_CORREO_ADMIN_PASS</code>.
-          </span>
-        </div>
       </div>
       <script>
         const loginApi = async (action, payload = {}) => {
@@ -1667,16 +1683,34 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
           });
           return response.json();
         };
+
+        // Cargar usuario guardado si existe
+        const savedUser = localStorage.getItem('correo_saved_user');
+        if (savedUser) {
+          document.getElementById('loginUser').value = savedUser;
+          document.getElementById('loginRemember').checked = true;
+        }
+
         document.getElementById('loginBtn').addEventListener('click', async () => {
           const loginStatus = document.getElementById('loginStatus');
           loginStatus.style.display = 'block';
           loginStatus.textContent = 'Validando...';
-          const data = await loginApi('login', {
-            username: document.getElementById('loginUser').value,
-            password: document.getElementById('loginPass').value
-          });
+          
+          const username = document.getElementById('loginUser').value;
+          const password = document.getElementById('loginPass').value;
+          const remember = document.getElementById('loginRemember').checked;
+
+          const data = await loginApi('login', { username, password });
           loginStatus.textContent = data.ok ? 'Acceso concedido. Recargando...' : (data.error || 'No se pudo ingresar.');
-          if (data.ok) location.reload();
+          
+          if (data.ok) {
+            if (remember) {
+              localStorage.setItem('correo_saved_user', username);
+            } else {
+              localStorage.removeItem('correo_saved_user');
+            }
+            location.reload();
+          }
         });
       </script>
     <?php else: ?>
