@@ -361,6 +361,7 @@ $user = correo_current_user();
     .main-container {
       display: flex;
       flex: 1;
+      height: calc(100vh - 70px);
       overflow: hidden;
       position: relative;
     }
@@ -374,6 +375,7 @@ $user = correo_current_user();
       flex-shrink: 0;
       padding: 20px 12px;
       overflow-y: auto;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .sidebar-top {
@@ -395,7 +397,9 @@ $user = correo_current_user();
       justify-content: center;
       gap: 10px;
       box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
-      transition: transform 0.2s ease;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .btn-compose:hover {
@@ -413,6 +417,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       gap: 4px;
+      transition: all 0.2s ease;
     }
 
     .section-title {
@@ -423,6 +428,7 @@ $user = correo_current_user();
       margin-bottom: 6px;
       padding-left: 12px;
       text-transform: uppercase;
+      transition: opacity 0.2s ease;
     }
 
     .nav-item {
@@ -440,12 +446,15 @@ $user = correo_current_user();
       text-align: left;
       transition: all 0.2s ease;
       width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .nav-item i {
       font-size: 15px;
       width: 18px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     .nav-item:hover {
@@ -458,6 +467,10 @@ $user = correo_current_user();
       color: var(--accent-color);
     }
 
+    .nav-label {
+      transition: opacity 0.2s ease;
+    }
+
     .nav-badge {
       margin-left: auto;
       background-color: #1e293b;
@@ -466,6 +479,7 @@ $user = correo_current_user();
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 99px;
+      transition: opacity 0.2s ease;
     }
 
     .nav-item.active .nav-badge {
@@ -477,6 +491,7 @@ $user = correo_current_user();
     .sidebar-search-box {
       margin-bottom: 8px;
       padding: 0 4px;
+      transition: opacity 0.2s ease;
     }
 
     .sidebar-input {
@@ -495,6 +510,7 @@ $user = correo_current_user();
       flex-direction: column;
       gap: 10px;
       padding: 0 4px;
+      transition: opacity 0.2s ease;
     }
 
     .checkbox-container {
@@ -609,6 +625,7 @@ $user = correo_current_user();
       border-radius: 12px;
       padding: 12px;
       margin-top: 10px;
+      transition: all 0.2s ease;
     }
 
     .storage-info {
@@ -647,6 +664,8 @@ $user = correo_current_user();
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
+      overflow: hidden;
     }
 
     .footer-btn {
@@ -659,6 +678,7 @@ $user = correo_current_user();
       align-items: center;
       gap: 8px;
       transition: color 0.2s ease;
+      white-space: nowrap;
     }
 
     .footer-btn:hover {
@@ -670,14 +690,81 @@ $user = correo_current_user();
       font-weight: 500;
     }
 
+    /* Sidebar Colapsada en Escritorio */
+    .main-container.sidebar-collapsed .sidebar-new {
+      width: 70px;
+      padding: 20px 8px;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .btn-compose {
+      padding: 12px 0;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto;
+      border-radius: 50%;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .btn-compose i {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .btn-compose span {
+      display: none;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .section-title,
+    .main-container.sidebar-collapsed .sidebar-new .nav-label,
+    .main-container.sidebar-collapsed .sidebar-new .nav-badge,
+    .main-container.sidebar-collapsed .sidebar-new .sidebar-search-box,
+    .main-container.sidebar-collapsed .sidebar-new .sidebar-date-filter,
+    .main-container.sidebar-collapsed .sidebar-new .storage-section {
+      display: none;
+      opacity: 0;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .nav-item {
+      justify-content: center;
+      padding: 12px 0;
+      width: 44px;
+      height: 44px;
+      margin: 2px auto;
+      border-radius: 50%;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .sidebar-footer {
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 12px;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .logout-trigger {
+      width: 44px;
+      height: 44px;
+      justify-content: center;
+      border-radius: 50%;
+      padding: 0;
+    }
+
+    .main-container.sidebar-collapsed .sidebar-new .logout-trigger span {
+      display: none;
+    }
+
     /* Center Pane */
     .center-pane {
       background-color: var(--bg-panel);
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden; /* Elimina scroll externo de pane */
       transition: width 0.3s ease;
+    }
+
+    #tab-inbox, #tab-sent, #tab-compose, #tab-users {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Mantener fijo y usar scroll interno */
     }
 
     .pane-header {
@@ -686,6 +773,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       gap: 12px;
+      flex-shrink: 0;
     }
 
     .pane-header h2 {
@@ -760,7 +848,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       flex: 1;
-      overflow-y: auto;
+      overflow-y: auto; /* Solo la lista de correos hace scroll */
     }
 
     /* Email cards */
@@ -923,6 +1011,7 @@ $user = correo_current_user();
       color: var(--text-secondary);
       border-top: 1px solid var(--border-color);
       background-color: rgba(255, 255, 255, 0.005);
+      flex-shrink: 0;
     }
 
     /* Compose Form */
@@ -934,6 +1023,8 @@ $user = correo_current_user();
       max-width: 900px;
       margin: 0 auto;
       width: 100%;
+      overflow-y: auto; /* Scroll interno para el formulario */
+      flex: 1;
     }
 
     .form-row {
@@ -992,7 +1083,7 @@ $user = correo_current_user();
       padding: 14px;
       border-radius: 8px;
       font-size: 13px;
-      min-height: 320px;
+      min-height: 260px;
       resize: vertical;
       outline: none;
     }
@@ -1005,6 +1096,7 @@ $user = correo_current_user();
       display: flex;
       gap: 12px;
       margin-top: 8px;
+      flex-shrink: 0;
     }
 
     .btn-send {
@@ -1039,6 +1131,8 @@ $user = correo_current_user();
       max-width: 1000px;
       margin: 0 auto;
       width: 100%;
+      overflow-y: auto;
+      flex: 1;
     }
 
     .users-list-container {
@@ -1104,7 +1198,7 @@ $user = correo_current_user();
       background-color: var(--bg-main);
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden; /* Scroll interno en cuerpo del mensaje */
     }
 
     .detail-container {
@@ -1112,6 +1206,7 @@ $user = correo_current_user();
       height: 100%;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .detail-empty {
@@ -1140,6 +1235,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       height: 100%;
+      overflow: hidden;
     }
 
     .detail-header {
@@ -1149,6 +1245,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       gap: 12px;
+      flex-shrink: 0;
     }
 
     .subject-row {
@@ -1173,6 +1270,7 @@ $user = correo_current_user();
       cursor: pointer;
       padding: 4px;
       transition: color 0.2s ease;
+      flex-shrink: 0;
     }
 
     .btn-close-detail:hover {
@@ -1240,6 +1338,7 @@ $user = correo_current_user();
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 20px;
+      flex-shrink: 0;
     }
 
     .sender-avatar {
@@ -1289,7 +1388,7 @@ $user = correo_current_user();
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 24px;
-      overflow-y: auto;
+      overflow-y: auto; /* Solo el cuerpo del mensaje hace scroll */
     }
 
     .message-body {
@@ -1300,7 +1399,7 @@ $user = correo_current_user();
 
     .message-body iframe {
       width: 100%;
-      min-height: 460px;
+      min-height: 440px;
       border: 0;
       border-radius: 8px;
       background-color: #ffffff;
@@ -1335,27 +1434,64 @@ $user = correo_current_user();
       display: none;
     }
 
+    /* Mobile & Responsive behavior */
     @media (max-width: 1100px) {
       .app-shell-new {
-        height: auto;
-        overflow: auto;
+        height: 100vh;
+        overflow: hidden;
       }
       .main-container {
-        flex-direction: column;
-        height: auto;
-        overflow: visible;
+        flex-direction: row;
+        height: calc(100vh - 70px);
+        overflow: hidden;
+        position: relative;
       }
       .sidebar-new {
-        width: 100%;
-        height: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+      }
+      .main-container.sidebar-mobile-open .sidebar-new {
+        transform: translateX(0);
+      }
+      /* Overlay en móvil */
+      .sidebar-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 99;
+      }
+      .main-container.sidebar-mobile-open .sidebar-overlay {
+        display: block;
       }
       .center-pane {
         width: 100% !important;
-        height: auto;
+        flex: 1;
+        height: 100%;
       }
       .detail-pane {
-        width: 100%;
-        height: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 80;
+        background-color: var(--bg-main);
+        transform: translateX(100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .main-container.layout-list-active .detail-pane.detail-open {
+        transform: translateX(0);
       }
     }
   </style>
@@ -1432,7 +1568,7 @@ $user = correo_current_user();
         <!-- Cabecera Superior -->
         <header class="top-bar">
           <div class="left-section">
-            <button class="icon-btn" type="button"><i class="fa-solid fa-bars"></i></button>
+            <button class="icon-btn" id="toggleSidebarBtn" type="button"><i class="fa-solid fa-bars"></i></button>
             <div class="brand">
               <div class="brand-icon-box"><i class="fa-solid fa-envelope"></i></div>
               <div class="brand-text">
@@ -1465,11 +1601,14 @@ $user = correo_current_user();
 
         <!-- Contenedor Principal (Tres Columnas) -->
         <div class="main-container layout-list-active">
+          <!-- Overlay en móvil -->
+          <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
           <!-- Sidebar Izquierda -->
           <aside class="sidebar-new">
             <div class="sidebar-top">
               <button class="btn-compose tab" data-tab="compose" type="button">
-                <i class="fa-solid fa-pen-fancy"></i> Redactar
+                <i class="fa-solid fa-pen-fancy"></i> <span>Redactar</span>
               </button>
             </div>
 
@@ -1500,9 +1639,9 @@ $user = correo_current_user();
 
               <div class="nav-section">
                 <span class="section-title">FILTROS</span>
-                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-star"></i> Marcados</button>
-                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-bookmark"></i> Importantes</button>
-                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-folder-open"></i> Archivos</button>
+                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-star"></i> <span class="nav-label">Marcados</span></button>
+                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-bookmark"></i> <span class="nav-label">Importantes</span></button>
+                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-folder-open"></i> <span class="nav-label">Archivos</span></button>
               </div>
 
               <div class="nav-section">
@@ -1556,7 +1695,7 @@ $user = correo_current_user();
             <div class="sidebar-footer">
               <button class="footer-btn" type="button"><i class="fa-solid fa-gear"></i></button>
               <button class="footer-btn logout-trigger" id="logoutBtn" type="button">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Cerrar sesión</span>
               </button>
             </div>
           </aside>
@@ -1971,6 +2110,18 @@ $user = correo_current_user();
             }
             
             renderDetailBody(item, state.currentDetailView);
+            
+            // En móvil, cuando hay detalle cargado, deslizar el panel de detalle hacia la vista
+            const detailPane = document.querySelector('.detail-pane');
+            if (detailPane) {
+              detailPane.classList.add('detail-open');
+            }
+          } else {
+            // Quitar clase abierta en móvil si no hay item
+            const detailPane = document.querySelector('.detail-pane');
+            if (detailPane) {
+              detailPane.classList.remove('detail-open');
+            }
           }
 
           $('replyBtn').disabled = !item;
@@ -2190,6 +2341,30 @@ $user = correo_current_user();
           });
         }
 
+        // Toggle Sidebar click handler
+        if ($('toggleSidebarBtn')) {
+          $('toggleSidebarBtn').addEventListener('click', () => {
+            const container = document.querySelector('.main-container');
+            if (container) {
+              if (window.innerWidth > 1100) {
+                container.classList.toggle('sidebar-collapsed');
+              } else {
+                container.classList.toggle('sidebar-mobile-open');
+              }
+            }
+          });
+        }
+
+        // Close sidebar in mobile by overlay click
+        if ($('sidebarOverlay')) {
+          $('sidebarOverlay').addEventListener('click', () => {
+            const container = document.querySelector('.main-container');
+            if (container) {
+              container.classList.remove('sidebar-mobile-open');
+            }
+          });
+        }
+
         <?php if (correo_is_admin()): ?>
         $('reloadUsers').addEventListener('click', loadUsers);
         
@@ -2200,6 +2375,9 @@ $user = correo_current_user();
             state.importAfter = '';
             await loadMailbox(mailbox);
             $('usersStatus').textContent = 'Buzón activo: ' + mailbox;
+            // Close mobile sidebar if clicked on mailbox ver/import
+            const container = document.querySelector('.main-container');
+            if (container) container.classList.remove('sidebar-mobile-open');
           }
           if (importEmail) {
             $('usersStatus').textContent = 'Importando historial...';
