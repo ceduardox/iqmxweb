@@ -450,6 +450,16 @@ $user = correo_current_user();
       padding: 20px 12px 40px 12px; /* Aumentado padding inferior para evitar cortes */
       overflow-y: auto;
       transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    .sidebar-new::-webkit-scrollbar {
+      display: none; /* Chrome, Safari and Opera */
+    }
+
+    .star-btn.starred {
+      color: #f59e0b !important;
     }
 
     .sidebar-top {
@@ -1744,9 +1754,9 @@ $user = correo_current_user();
 
               <div class="nav-section">
                 <span class="section-title">FILTROS</span>
-                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-star"></i> <span class="nav-label">Marcados</span></button>
-                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-bookmark"></i> <span class="nav-label">Importantes</span></button>
-                <button class="nav-item filter-btn" type="button"><i class="fa-regular fa-folder-open"></i> <span class="nav-label">Archivos</span></button>
+                <button class="nav-item filter-btn" type="button" data-filter="starred"><i class="fa-regular fa-star"></i> <span class="nav-label">Marcados</span></button>
+                <button class="nav-item filter-btn" type="button" data-filter="important"><i class="fa-regular fa-bookmark"></i> <span class="nav-label">Importantes</span></button>
+                <button class="nav-item filter-btn" type="button" data-filter="archived"><i class="fa-regular fa-folder-open"></i> <span class="nav-label">Archivos</span></button>
               </div>
 
               <div class="nav-section">
@@ -1953,6 +1963,9 @@ $user = correo_current_user();
                       <button class="action-btn" id="replyBtn" title="Responder" type="button" disabled><i class="fa-solid fa-reply"></i></button>
                       <button class="action-btn" id="openComposeBtn" title="Editar respuesta" type="button" disabled><i class="fa-solid fa-pen-to-square"></i></button>
                       <button class="action-btn" id="toggleDetailView" title="Ver HTML" type="button" disabled><i class="fa-solid fa-code"></i></button>
+                      <button class="action-btn" id="detailStarBtn" title="Marcar con estrella" type="button"><i class="fa-regular fa-star"></i></button>
+                      <button class="action-btn" id="detailImportantBtn" title="Marcar como importante" type="button"><i class="fa-regular fa-bookmark"></i></button>
+                      <button class="action-btn" id="detailArchiveBtn" title="Archivar" type="button"><i class="fa-regular fa-folder-open"></i></button>
                     </div>
                   </div>
                 </div>
@@ -2089,6 +2102,92 @@ $user = correo_current_user();
           return response.json();
         }
 
+        // LocalStorage & Filter Helpers
+        const getStarredIds = () => JSON.parse(localStorage.getItem('starred_ids') || '[]');
+        const getImportantIds = () => JSON.parse(localStorage.getItem('important_ids') || '[]');
+        const getArchivedIds = () => JSON.parse(localStorage.getItem('archived_ids') || '[]');
+
+        const saveStarredIds = (ids) => localStorage.setItem('starred_ids', JSON.stringify(ids));
+        const saveImportantIds = (ids) => localStorage.setItem('important_ids', JSON.stringify(ids));
+        const saveArchivedIds = (ids) => localStorage.setItem('archived_ids', JSON.stringify(ids));
+
+        function toggleStar(id) {
+          let ids = getStarredIds();
+          if (ids.includes(id)) {
+            ids = ids.filter(x => x !== id);
+          } else {
+            ids.push(id);
+          }
+          saveStarredIds(ids);
+          renderList('inbox');
+          renderList('sent');
+          if (state.currentDetail && state.currentDetail.id === id) {
+            updateDetailActions(state.currentDetail);
+          }
+        }
+
+        function toggleImportant(id) {
+          let ids = getImportantIds();
+          if (ids.includes(id)) {
+            ids = ids.filter(x => x !== id);
+          } else {
+            ids.push(id);
+          }
+          saveImportantIds(ids);
+          renderList('inbox');
+          renderList('sent');
+          if (state.currentDetail && state.currentDetail.id === id) {
+            updateDetailActions(state.currentDetail);
+          }
+        }
+
+        function toggleArchive(id) {
+          let ids = getArchivedIds();
+          if (ids.includes(id)) {
+            ids = ids.filter(x => x !== id);
+          } else {
+            ids.push(id);
+          }
+          saveArchivedIds(ids);
+          
+          if (state.currentDetail && state.currentDetail.id === id) {
+            state.currentDetail = null;
+            if ($('detailEmptyState')) $('detailEmptyState').style.display = 'flex';
+            if ($('detailActiveState')) $('detailActiveState').style.display = 'none';
+          }
+          renderList('inbox');
+          renderList('sent');
+        }
+
+        function updateDetailActions(item) {
+          if (!item) return;
+          const starredIds = getStarredIds();
+          const importantIds = getImportantIds();
+          const archivedIds = getArchivedIds();
+
+          const isStarred = starredIds.includes(item.id);
+          const isImportant = importantIds.includes(item.id);
+          const isArchived = archivedIds.includes(item.id);
+
+          const starBtn = $('detailStarBtn');
+          if (starBtn) {
+            starBtn.innerHTML = isStarred ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+            starBtn.style.color = isStarred ? '#f59e0b' : 'var(--text-primary)';
+          }
+
+          const importantBtn = $('detailImportantBtn');
+          if (importantBtn) {
+            importantBtn.innerHTML = isImportant ? '<i class="fa-solid fa-bookmark"></i>' : '<i class="fa-regular fa-bookmark"></i>';
+            importantBtn.style.color = isImportant ? '#a855f7' : 'var(--text-primary)';
+          }
+
+          const archiveBtn = $('detailArchiveBtn');
+          if (archiveBtn) {
+            archiveBtn.innerHTML = isArchived ? '<i class="fa-solid fa-folder-open"></i>' : '<i class="fa-regular fa-folder-open"></i>';
+            archiveBtn.style.color = isArchived ? '#10b981' : 'var(--text-primary)';
+          }
+        }
+
         function setActiveTab(name) {
           // Actualiza botones con clase tab tanto en el sidebar como en el compositor
           document.querySelectorAll('.tab').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
@@ -2118,7 +2217,28 @@ $user = correo_current_user();
           if (days > 0) {
             cutoff.setDate(cutoff.getDate() - days);
           }
-          return (state[type] || []).filter((item) => {
+
+          let sourceList = state[type] || [];
+          if (state.currentFilter === 'starred' || state.currentFilter === 'important' || state.currentFilter === 'archived') {
+            const allItems = [...(state.inbox || []), ...(state.sent || [])];
+            const uniqueItemsMap = new Map();
+            allItems.forEach(item => {
+              if (item && item.id) uniqueItemsMap.set(item.id, item);
+            });
+            sourceList = Array.from(uniqueItemsMap.values());
+          }
+
+          return sourceList.filter((item) => {
+            const starredIds = getStarredIds();
+            const importantIds = getImportantIds();
+            const archivedIds = getArchivedIds();
+
+            if (state.currentFilter === 'starred' && !starredIds.includes(item.id)) return false;
+            if (state.currentFilter === 'important' && !importantIds.includes(item.id)) return false;
+            if (state.currentFilter === 'archived' && !archivedIds.includes(item.id)) return false;
+            
+            if (!state.currentFilter && archivedIds.includes(item.id)) return false;
+
             const haystack = `${item.from || ''} ${item.to || ''} ${item.subject || ''} ${item.preview || item.text || item.html || ''}`.toLowerCase();
             if (query && !haystack.includes(query)) {
               return false;
@@ -2140,6 +2260,14 @@ $user = correo_current_user();
           const status = $(type + 'Status');
           
           if (type === 'inbox' && $('inboxCountLabel')) {
+            let title = 'Recibidos';
+            if (state.currentFilter === 'starred') title = 'Marcados';
+            else if (state.currentFilter === 'important') title = 'Importantes';
+            else if (state.currentFilter === 'archived') title = 'Archivos';
+            
+            const titleEl = document.querySelector('#tab-inbox .pane-header .title-area h2');
+            if (titleEl) titleEl.textContent = title;
+
             $('inboxCountLabel').textContent = `${list.length} correos electrónicos`;
             if ($('inboxBadgeCount')) $('inboxBadgeCount').textContent = list.length;
           } else if (type === 'sent' && $('sentCountLabel')) {
@@ -2159,6 +2287,9 @@ $user = correo_current_user();
             
             const isSelected = state.currentDetail && state.currentDetail.id === item.id;
             const activeClass = isSelected ? 'active-card' : '';
+            
+            const starredIds = getStarredIds();
+            const isStarred = starredIds.includes(item.id);
             
             return `
               <div class="item email-item-card ${activeClass}" data-index="${index}">
@@ -2181,7 +2312,9 @@ $user = correo_current_user();
                   </div>
                   <div class="card-footer-row">
                     <span class="card-badge ${item.status === 'received' ? 'received' : 'read'}">${esc(item.status || type)}</span>
-                    <button class="star-btn" type="button" onclick="event.stopPropagation()"><i class="fa-regular fa-star"></i></button>
+                    <button class="star-btn ${isStarred ? 'starred' : ''}" type="button" onclick="event.stopPropagation(); toggleStar(${item.id})">
+                      <i class="${isStarred ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -2215,6 +2348,7 @@ $user = correo_current_user();
             }
             
             renderDetailBody(item, state.currentDetailView);
+            updateDetailActions(item);
             
             // En móvil, cuando hay detalle cargado, deslizar el panel de detalle hacia la vista
             const detailPane = document.querySelector('.detail-pane');
@@ -2332,7 +2466,49 @@ $user = correo_current_user();
         }
 
         // Event listeners
-        document.querySelectorAll('.tab').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
+        document.querySelectorAll('.tab').forEach((btn) => btn.addEventListener('click', () => {
+          state.currentFilter = null;
+          document.querySelectorAll('.filter-btn').forEach((fb) => fb.classList.remove('active'));
+          setActiveTab(btn.dataset.tab);
+        }));
+
+        // Bind Filter Buttons
+        document.querySelectorAll('.filter-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const filterName = btn.dataset.filter;
+            state.currentFilter = filterName;
+            
+            setActiveTab('inbox');
+            
+            document.querySelectorAll('.filter-btn').forEach((fb) => fb.classList.toggle('active', fb.dataset.filter === filterName));
+            document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+            document.querySelectorAll('.tab[data-tab="inbox"]').forEach((t) => t.classList.add('active'));
+
+            renderList('inbox');
+          });
+        });
+
+        // Detail Actions Click Listeners
+        const detailStarBtn = $('detailStarBtn');
+        if (detailStarBtn) {
+          detailStarBtn.addEventListener('click', () => {
+            if (state.currentDetail) toggleStar(state.currentDetail.id);
+          });
+        }
+
+        const detailImportantBtn = $('detailImportantBtn');
+        if (detailImportantBtn) {
+          detailImportantBtn.addEventListener('click', () => {
+            if (state.currentDetail) toggleImportant(state.currentDetail.id);
+          });
+        }
+
+        const detailArchiveBtn = $('detailArchiveBtn');
+        if (detailArchiveBtn) {
+          detailArchiveBtn.addEventListener('click', () => {
+            if (state.currentDetail) toggleArchive(state.currentDetail.id);
+          });
+        }
         $('reloadInbox').addEventListener('click', loadInbox);
         $('reloadSent').addEventListener('click', loadSent);
         if ($('sidebarReloadInbox')) $('sidebarReloadInbox').addEventListener('click', loadInbox);
