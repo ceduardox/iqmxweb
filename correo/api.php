@@ -144,6 +144,11 @@ switch ($action) {
         if (!$result) {
             correo_json(false, array(), 'No se encontro el correo.');
         }
+        // Marcar como leído en la base de datos si es recibido y no lo está ya
+        if ($kind === 'received' && (($result['status'] ?? '') === 'received' || ($result['status'] ?? '') === 'stored')) {
+            correo_db_update_message_status($id, 'read');
+            $result['status'] = 'read';
+        }
         correo_json(true, array('data' => $result));
         break;
 

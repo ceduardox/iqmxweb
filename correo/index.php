@@ -999,6 +999,35 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
       background-color: var(--accent-color);
     }
 
+    .email-item-card.unread-card {
+      background-color: rgba(99, 102, 241, 0.02);
+    }
+    
+    .email-item-card.unread-card:hover {
+      background-color: rgba(99, 102, 241, 0.04);
+    }
+    
+    .email-item-card.unread-card .sender-name {
+      font-weight: 700 !important;
+      color: var(--text-white) !important;
+    }
+    
+    .email-item-card.unread-card .card-subject {
+      font-weight: 700 !important;
+      color: var(--text-white) !important;
+    }
+
+    .email-item-card.unread-card::after {
+      content: "";
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+    }
+
     .card-checkbox-area {
       display: flex;
       align-items: flex-start;
@@ -1042,8 +1071,8 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
 
     .sender-name {
       font-size: 13px;
-      font-weight: 600;
-      color: var(--text-white);
+      font-weight: 500;
+      color: var(--text-primary);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1061,8 +1090,8 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
 
     .card-subject {
       font-size: 12px;
-      font-weight: 600;
-      color: var(--text-primary);
+      font-weight: 500;
+      color: var(--text-secondary);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -2317,13 +2346,19 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             const titleEl = document.querySelector('#tab-inbox .pane-header .title-area h2');
             if (titleEl) titleEl.textContent = title;
 
+            // Calcular correos no leídos
+            const unreadCount = list.filter(item => item.status === 'received' || item.status === 'stored').length;
+
             $('inboxCountLabel').textContent = `${list.length} correos electrónicos`;
-            if ($('inboxBadgeCount')) $('inboxBadgeCount').textContent = list.length;
+            if ($('inboxBadgeCount')) {
+              $('inboxBadgeCount').textContent = unreadCount;
+              $('inboxBadgeCount').style.display = unreadCount > 0 ? 'inline-block' : 'none';
+            }
             
-            // Actualizar el Badge rojo en el icono de la PWA (Mac Dock / Windows Taskbar)
+            // Actualizar el Badge rojo en el icono de la PWA (Mac Dock / Windows Taskbar) con los sin leer
             if ('setAppBadge' in navigator) {
-              if (list.length > 0) {
-                navigator.setAppBadge(list.length).catch((err) => console.log('Error setAppBadge:', err));
+              if (unreadCount > 0) {
+                navigator.setAppBadge(unreadCount).catch((err) => console.log('Error setAppBadge:', err));
               } else {
                 navigator.clearAppBadge().catch((err) => console.log('Error clearAppBadge:', err));
               }
@@ -2346,11 +2381,15 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             const isSelected = state.currentDetail && state.currentDetail.id === item.id;
             const activeClass = isSelected ? 'active-card' : '';
             
+            // Verificar si no está leído (los recibidos con estado 'received' o 'stored')
+            const isUnread = type === 'inbox' && (item.status === 'received' || item.status === 'stored');
+            const unreadClass = isUnread ? 'unread-card' : '';
+
             const starredIds = getStarredIds();
             const isStarred = starredIds.includes(item.id);
             
             return `
-              <div class="item email-item-card ${activeClass}" data-index="${index}">
+              <div class="item email-item-card ${activeClass} ${unreadClass}" data-index="${index}">
                 <div class="card-checkbox-area">
                   <input type="checkbox" class="email-checkbox" onclick="event.stopPropagation()">
                 </div>
@@ -2369,7 +2408,9 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
                     <p class="card-snippet">${esc((item.preview || item.text || item.html || '').slice(0, 110))}</p>
                   </div>
                   <div class="card-footer-row">
-                    <span class="card-badge ${item.status === 'received' ? 'received' : 'read'}">${esc(item.status || type)}</span>
+                    <span class="card-badge ${isUnread ? 'received' : 'read'}">
+                      ${isUnread ? 'Sin leer' : (item.status === 'sent' ? 'Enviado' : 'Leído')}
+                    </span>
                     <button class="star-btn ${isStarred ? 'starred' : ''}" type="button" onclick="event.stopPropagation(); toggleStar(${item.id})">
                       <i class="${isStarred ? 'fa-solid' : 'fa-regular'} fa-star"></i>
                     </button>
@@ -2630,6 +2671,12 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
 
           document.querySelectorAll('.email-item-card').forEach(el => el.classList.remove('active-card'));
           card.classList.add('active-card');
+
+          // Marcar como leído localmente para actualizar la UI de inmediato
+          if (type === 'inbox' && (item.status === 'received' || item.status === 'stored')) {
+            item.status = 'read';
+            renderList('inbox');
+          }
 
           showDetail(item, type === 'inbox' ? 'received' : 'sent');
         };
