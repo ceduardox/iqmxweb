@@ -2860,15 +2860,15 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
                     return;
                   }
 
-                  console.log('Lanzando Slidedown.promptPush()...');
-                  await OneSignal.Slidedown.promptPush();
-                  console.log('Slidedown.promptPush() completado.');
+                  console.log('Solicitando permiso nativo de OneSignal...');
+                  await OneSignal.Notifications.requestPermission();
+                  console.log('Permiso nativo solicitado. Estado final:', OneSignal.Notifications.permissionNative);
                 } catch(err) {
-                  console.error('Error al lanzar Slidedown prompt, intentando fallback nativo:', err);
+                  console.error('Error al solicitar permiso nativo, intentando Slidedown:', err);
                   try {
-                    await OneSignal.Notifications.requestPermission();
+                    await OneSignal.Slidedown.promptPush();
                   } catch(e2) {
-                    console.error('Fallo en el fallback de permisos:', e2);
+                    console.error('Fallo en todas las opciones de permisos:', e2);
                     alert('No se pudo activar la solicitud de notificaciones.');
                   }
                 }
