@@ -2820,6 +2820,10 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             OneSignal.init({
               appId: oneSignalAppId,
               allowLocalhostAsSecureOrigin: true,
+              serviceWorkerPath: 'correo/OneSignalSDKWorker.js',
+              serviceWorkerParam: {
+                scope: '/correo/'
+              },
               notifyButton: {
                 enable: true,
               },
