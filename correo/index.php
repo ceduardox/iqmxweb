@@ -2816,9 +2816,10 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
         // Inicializar OneSignal si el App ID está configurado
         const oneSignalAppId = '<?php echo htmlspecialchars($oneSignalAppId, ENT_QUOTES, "UTF-8"); ?>';
         if (oneSignalAppId) {
-          window.OneSignal = window.OneSignal || [];
-          OneSignal.push(function() {
-            OneSignal.init({
+          window.OneSignalDeferred = window.OneSignalDeferred || [];
+          window.OneSignalDeferred.push(async function(OneSignal) {
+            console.log('Inicializando OneSignal v16...');
+            await OneSignal.init({
               appId: oneSignalAppId,
               allowLocalhostAsSecureOrigin: true,
               serviceWorkerPath: '/correo/OneSignalSDKWorker.js',
@@ -2829,6 +2830,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
                 enable: true,
               },
             });
+            console.log('OneSignal v16 inicializado.');
           });
 
           // Activar el prompt de suscripción al hacer clic en el botón del perfil
@@ -2842,43 +2844,31 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
               // Cerrar el menú
               if ($('profileDropdown')) $('profileDropdown').classList.remove('show');
 
-              OneSignal.push(async function(os) {
-                console.log('OneSignal push callback ejecutado. SDK Object:', os);
+              window.OneSignalDeferred = window.OneSignalDeferred || [];
+              window.OneSignalDeferred.push(async function(OneSignal) {
+                console.log('OneSignalDeferred push callback ejecutado.');
                 try {
-                  const notifications = os ? os.Notifications : OneSignal.Notifications;
-                  console.log('Notifications object:', notifications);
-                  if (notifications) {
-                    const nativePerm = notifications.permissionNative; // 'default', 'granted', 'denied'
-                    console.log('Native permission:', nativePerm);
-                    if (nativePerm === 'granted') {
-                      alert('¡Las notificaciones ya están activas en este navegador!');
-                      return;
-                    }
-                    if (nativePerm === 'denied') {
-                      alert('Has bloqueado las notificaciones de este sitio. Por favor, actívalas haciendo clic en el candado al lado de la dirección de la página en tu navegador.');
-                      return;
-                    }
-                    // Solicitar permiso nativo
-                    console.log('Solicitando permiso...');
-                    await notifications.requestPermission();
-                    console.log('Permiso solicitado. Estado final:', notifications.permissionNative);
-                  } else {
-                    console.log('Notifications namespace no disponible, intentando showSlidedownPrompt');
-                    if (os && typeof os.showSlidedownPrompt === 'function') {
-                      os.showSlidedownPrompt();
-                    } else {
-                      OneSignal.showSlidedownPrompt();
-                    }
+                  const permission = OneSignal.Notifications.permissionNative; // 'default', 'granted', 'denied'
+                  console.log('Estado de permiso nativo:', permission);
+                  
+                  if (permission === 'granted') {
+                    alert('¡Las notificaciones ya están activas en este navegador!');
+                    return;
                   }
+                  if (permission === 'denied') {
+                    alert('Has bloqueado las notificaciones de este sitio. Por favor, actívalas haciendo clic en el candado al lado de la dirección de la página en tu navegador.');
+                    return;
+                  }
+
+                  console.log('Lanzando Slidedown.promptPush()...');
+                  await OneSignal.Slidedown.promptPush();
+                  console.log('Slidedown.promptPush() completado.');
                 } catch(err) {
-                  console.error('Error al iniciar OneSignal prompt:', err);
+                  console.error('Error al lanzar Slidedown prompt, intentando fallback nativo:', err);
                   try {
-                    if (os && typeof os.showSlidedownPrompt === 'function') {
-                      os.showSlidedownPrompt();
-                    } else {
-                      OneSignal.showSlidedownPrompt();
-                    }
+                    await OneSignal.Notifications.requestPermission();
                   } catch(e2) {
+                    console.error('Fallo en el fallback de permisos:', e2);
                     alert('No se pudo activar la solicitud de notificaciones.');
                   }
                 }
