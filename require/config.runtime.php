@@ -13,4 +13,3 @@ function iqmaximo_config($key, $default = "")
 	$value = getenv($key);
 	return $value === false ? $default : $value;
 }
-?>
