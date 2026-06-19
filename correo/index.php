@@ -208,12 +208,14 @@ $user = correo_current_user();
       align-items: center;
       padding: 0 24px;
       flex-shrink: 0;
+      gap: 16px;
     }
 
     .top-bar .left-section {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
+      flex-shrink: 0;
     }
 
     .top-bar .brand {
@@ -247,8 +249,8 @@ $user = correo_current_user();
 
     .top-bar .center-section {
       flex: 1;
-      max-width: 560px;
-      margin: 0 40px;
+      max-width: 480px;
+      min-width: 150px;
     }
 
     .top-bar .search-container {
@@ -299,6 +301,7 @@ $user = correo_current_user();
       display: flex;
       align-items: center;
       gap: 16px;
+      flex-shrink: 0;
     }
 
     .icon-btn {
@@ -373,7 +376,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      padding: 20px 12px;
+      padding: 20px 12px 40px 12px; /* Aumentado padding inferior para evitar cortes */
       overflow-y: auto;
       transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -658,7 +661,7 @@ $user = correo_current_user();
     }
 
     .sidebar-footer {
-      margin-top: auto;
+      margin-top: 24px; /* Asegura un margen físico mínimo superior */
       border-top: 1px solid var(--border-color);
       padding-top: 16px;
       display: flex;
@@ -666,6 +669,7 @@ $user = correo_current_user();
       align-items: center;
       gap: 8px;
       overflow: hidden;
+      flex-shrink: 0; /* Evita que el footer se aplaste */
     }
 
     .footer-btn {
@@ -693,7 +697,7 @@ $user = correo_current_user();
     /* Sidebar Colapsada en Escritorio */
     .main-container.sidebar-collapsed .sidebar-new {
       width: 70px;
-      padding: 20px 8px;
+      padding: 20px 8px 40px 8px;
     }
 
     .main-container.sidebar-collapsed .sidebar-new .btn-compose {
@@ -756,7 +760,7 @@ $user = correo_current_user();
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Elimina scroll externo de pane */
+      overflow: hidden; 
       transition: width 0.3s ease;
     }
 
@@ -764,7 +768,7 @@ $user = correo_current_user();
       height: 100%;
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Mantener fijo y usar scroll interno */
+      overflow: hidden; 
     }
 
     .pane-header {
@@ -848,7 +852,7 @@ $user = correo_current_user();
       display: flex;
       flex-direction: column;
       flex: 1;
-      overflow-y: auto; /* Solo la lista de correos hace scroll */
+      overflow-y: auto; 
     }
 
     /* Email cards */
@@ -1023,7 +1027,7 @@ $user = correo_current_user();
       max-width: 900px;
       margin: 0 auto;
       width: 100%;
-      overflow-y: auto; /* Scroll interno para el formulario */
+      overflow-y: auto; 
       flex: 1;
     }
 
@@ -1198,7 +1202,7 @@ $user = correo_current_user();
       background-color: var(--bg-main);
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Scroll interno en cuerpo del mensaje */
+      overflow: hidden; 
     }
 
     .detail-container {
@@ -1388,7 +1392,7 @@ $user = correo_current_user();
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 24px;
-      overflow-y: auto; /* Solo el cuerpo del mensaje hace scroll */
+      overflow-y: auto; 
     }
 
     .message-body {
@@ -1399,7 +1403,7 @@ $user = correo_current_user();
 
     .message-body iframe {
       width: 100%;
-      min-height: 440px;
+      min-height: 460px;
       border: 0;
       border-radius: 8px;
       background-color: #ffffff;
@@ -1494,6 +1498,19 @@ $user = correo_current_user();
         transform: translateX(0);
       }
     }
+
+    /* Responsive header adjustments for squished search bar */
+    @media (max-width: 768px) {
+      .top-bar .brand-text span {
+        display: none;
+      }
+      .top-bar .shortcut-badge {
+        display: none;
+      }
+      .top-bar .center-section {
+        margin: 0 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1585,8 +1602,6 @@ $user = correo_current_user();
             </div>
           </div>
           <div class="right-section">
-            <button class="icon-btn" type="button"><i class="fa-regular fa-bell"></i></button>
-            <button class="icon-btn" type="button"><i class="fa-regular fa-moon"></i></button>
             <div class="user-profile">
               <div class="user-info">
                 <span class="username"><?php echo htmlspecialchars($user['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></span>
