@@ -1,0 +1,9 @@
+.git
+.codex
+.agents
+TRANSCRIPCION_*.txt
+DOCUMENTO*.md
+PROMPT*.md
+start-local-*
+local-router.php
+*.log
