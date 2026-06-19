@@ -2837,14 +2837,19 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             notifBtn.style.display = 'flex';
             notifBtn.addEventListener('click', (e) => {
               e.stopPropagation();
+              console.log('Botón Activar Notificaciones clickeado');
               
               // Cerrar el menú
               if ($('profileDropdown')) $('profileDropdown').classList.remove('show');
 
-              OneSignal.push(async function() {
+              OneSignal.push(async function(os) {
+                console.log('OneSignal push callback ejecutado. SDK Object:', os);
                 try {
-                  if (OneSignal.Notifications) {
-                    const nativePerm = OneSignal.Notifications.permissionNative; // 'default', 'granted', 'denied'
+                  const notifications = os ? os.Notifications : OneSignal.Notifications;
+                  console.log('Notifications object:', notifications);
+                  if (notifications) {
+                    const nativePerm = notifications.permissionNative; // 'default', 'granted', 'denied'
+                    console.log('Native permission:', nativePerm);
                     if (nativePerm === 'granted') {
                       alert('¡Las notificaciones ya están activas en este navegador!');
                       return;
@@ -2854,15 +2859,25 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
                       return;
                     }
                     // Solicitar permiso nativo
-                    await OneSignal.Notifications.requestPermission();
+                    console.log('Solicitando permiso...');
+                    await notifications.requestPermission();
+                    console.log('Permiso solicitado. Estado final:', notifications.permissionNative);
                   } else {
-                    // Fallback
-                    OneSignal.showSlidedownPrompt();
+                    console.log('Notifications namespace no disponible, intentando showSlidedownPrompt');
+                    if (os && typeof os.showSlidedownPrompt === 'function') {
+                      os.showSlidedownPrompt();
+                    } else {
+                      OneSignal.showSlidedownPrompt();
+                    }
                   }
                 } catch(err) {
-                  console.warn('Error al iniciar OneSignal prompt:', err);
+                  console.error('Error al iniciar OneSignal prompt:', err);
                   try {
-                    OneSignal.showSlidedownPrompt();
+                    if (os && typeof os.showSlidedownPrompt === 'function') {
+                      os.showSlidedownPrompt();
+                    } else {
+                      OneSignal.showSlidedownPrompt();
+                    }
                   } catch(e2) {
                     alert('No se pudo activar la solicitud de notificaciones.');
                   }
