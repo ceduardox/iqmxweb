@@ -230,6 +230,7 @@ $user = correo_current_user();
               <div class="toolbar" style="margin-top:12px">
                 <button class="btn" id="replyBtn" disabled>Responder</button>
                 <button class="btn secondary" id="openComposeBtn" disabled>Editar respuesta</button>
+                <button class="btn secondary" id="toggleDetailView" disabled>Ver HTML</button>
               </div>
               <div class="preview" id="detailBody"></div>
             </div>
@@ -239,7 +240,7 @@ $user = correo_current_user();
 
       <script>
         const defaultMailbox = '<?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, "UTF-8"); ?>';
-        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: defaultMailbox, importAfter: '', query: '', days: 15, currentDetail: null, currentDetailKind: 'received', composeMode: 'text' };
+        const state = { inbox: [], sent: [], users: [], activeMailboxEmail: defaultMailbox, importAfter: '', query: '', days: 15, currentDetail: null, currentDetailKind: 'received', currentDetailView: 'text', composeMode: 'text' };
         const $ = (id) => document.getElementById(id);
         const esc = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         const htmlToText = (html) => {
@@ -317,6 +318,18 @@ $user = correo_current_user();
             original,
           ].join('\n');
         };
+        const renderDetailBody = (item, view = 'text') => {
+          if (!item) {
+            $('detailBody').innerHTML = '';
+            return;
+          }
+          if (view === 'html') {
+            $('detailBody').innerHTML = `<iframe sandbox="allow-popups" srcdoc="${String(item.html || item.text || '<p>Sin contenido.</p>').replace(/"/g,'&quot;')}"></iframe>`;
+            return;
+          }
+          const text = htmlToText(item.text || item.html || 'Sin contenido.');
+          $('detailBody').innerHTML = `<div class="snippet" style="white-space:pre-wrap;line-height:1.6">${esc(text || 'Sin contenido.')}</div>`;
+        };
         async function api(action, payload = {}) {
           const response = await fetch('./api.php', {
             method: 'POST',
@@ -369,11 +382,14 @@ $user = correo_current_user();
         function showDetail(item, kind = 'received') {
           state.currentDetail = item;
           state.currentDetailKind = kind;
+          state.currentDetailView = 'text';
           $('detailTitle').textContent = item.subject || '(sin asunto)';
           $('detailMeta').textContent = `${item.from || '-'} -> ${item.to || '-'}`.trim();
-          $('detailBody').innerHTML = `<iframe sandbox="allow-popups" srcdoc="${String(item.html || item.text || '<p>Sin contenido.</p>').replace(/"/g,'&quot;')}"></iframe>`;
+          renderDetailBody(item, state.currentDetailView);
           $('replyBtn').disabled = !item;
           $('openComposeBtn').disabled = !item;
+          $('toggleDetailView').disabled = !item;
+          $('toggleDetailView').textContent = 'Ver HTML';
         }
         async function loadInbox() {
           $('inboxStatus').textContent = 'Cargando...';
@@ -497,6 +513,13 @@ $user = correo_current_user();
           setComposeMode('text');
           $('html').value = replyText(item);
           setActiveTab('compose');
+        });
+        $('toggleDetailView').addEventListener('click', () => {
+          const item = state.currentDetail;
+          if (!item) return;
+          state.currentDetailView = state.currentDetailView === 'html' ? 'text' : 'html';
+          $('toggleDetailView').textContent = state.currentDetailView === 'html' ? 'Vista normal' : 'Ver HTML';
+          renderDetailBody(item, state.currentDetailView);
         });
         $('openComposeBtn').addEventListener('click', () => {
           const item = state.currentDetail;
