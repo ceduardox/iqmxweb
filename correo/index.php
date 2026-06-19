@@ -12,9 +12,14 @@ $user = correo_current_user();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel de Correo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root{--bg:#07111d;--panel:#0d1724;--panel-2:#111f31;--line:#20324b;--text:#e8eef7;--muted:#9ab0c9;--accent:#5dd6c0;--accent-2:#7aa7ff;--danger:#ff6b6b;--shadow:0 18px 48px rgba(0,0,0,.28)}
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left, rgba(122,167,255,.22), transparent 26%),radial-gradient(circle at right 20%, rgba(93,214,192,.12), transparent 30%),linear-gradient(180deg,#08101b 0%,#0c1725 100%);color:var(--text)}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',Segoe UI,Tahoma,Geneva,Verdana,sans-serif}
+    body{margin:0;background-color:#070a13;color:#94a3b8;min-height:100vh;background-image:radial-gradient(circle at top left, rgba(59,130,246,.06) 0%, rgba(6,182,212,0) 70%);background-attachment:fixed}
     .wrap{max-width:1540px;margin:0 auto;padding:20px}
     .app-shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
     .hero,.card,.sidebar{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
@@ -51,8 +56,25 @@ $user = correo_current_user();
     .detail .small,.status{color:var(--muted);font-size:13px}
     .preview{margin-top:14px;overflow:auto;border-top:1px solid var(--line);padding-top:14px}
     .preview iframe{width:100%;min-height:420px;border:0;border-radius:12px;background:#fff}
-    .login{max-width:480px;margin:64px auto}
-    .login .card{padding:18px}
+    .wrap.login-page{max-width:none;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
+    .login-card{background-color:#0b0f19;border:1px solid #1e293b;border-radius:16px;width:100%;max-width:500px;padding:40px;box-shadow:0 20px 25px -5px rgba(0,0,0,.5),0 10px 10px -5px rgba(0,0,0,.4);position:relative}
+    .login-title{color:#fff;font-size:21px;font-weight:600;margin:0 0 30px;border-bottom:1px solid #1e293b;padding-bottom:18px;letter-spacing:-.5px}
+    .login-form{display:flex;flex-direction:column}
+    .login-group{margin-bottom:24px;display:flex;flex-direction:column;gap:8px}
+    .login-label{color:#94a3b8;font-size:13px;font-weight:500;letter-spacing:.2px}
+    .login-input-wrap{position:relative;display:flex;align-items:center}
+    .login-icon{position:absolute;left:16px;color:#64748b;font-size:15px;pointer-events:none;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px}
+    .login-input{width:100%;background-color:#e2e8f0;color:#0f172a;border:2px solid transparent;padding:14px 16px 14px 46px;border-radius:12px;font-size:14px;font-weight:500;outline:none;transition:all .2s ease}
+    .login-input::placeholder{color:#94a3b8;font-weight:400;opacity:.8}
+    .login-input:focus{background-color:#fff;border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.15)}
+    .login-input:focus + .login-icon{color:#3b82f6}
+    .login-submit{background:linear-gradient(135deg,#4ade80 0%,#3b82f6 50%,#06b6d4 100%);background-size:200% auto;color:#070a13;border:none;padding:12px 32px;border-radius:10px;font-weight:700;font-size:14px;letter-spacing:.3px;cursor:pointer;display:inline-block;margin-top:8px;margin-bottom:25px;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 4px 12px rgba(6,182,212,.25);width:max-content}
+    .login-submit:hover{background-position:right center;box-shadow:0 6px 16px rgba(6,182,212,.45);transform:translateY(-1px)}
+    .login-submit:active{transform:translateY(0)}
+    .login-note{font-size:11px;color:#475569;line-height:1.6;border-top:1px solid #1e293b;padding-top:18px;display:flex;align-items:flex-start;gap:8px}
+    .login-note svg{margin-top:2px;flex:0 0 auto;color:#64748b}
+    .login-note code{font-family:'Courier New',Courier,monospace;background-color:#111827;color:#94a3b8;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid #1e293b}
+    .login-error{margin-top:8px;color:#fca5a5;font-size:12px;display:none}
     .small{color:var(--muted);font-size:13px;margin-bottom:8px;display:block}
     .table{width:100%;border-collapse:collapse}
     .table th,.table td{padding:10px 8px;border-bottom:1px solid #22354e;text-align:left;font-size:13px;vertical-align:top}
@@ -81,24 +103,47 @@ $user = correo_current_user();
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap<?php echo !$user ? ' login-page' : ''; ?>">
     <?php if (!$user): ?>
-      <div class="login">
-        <div class="card">
-          <h2>Ingreso al panel</h2>
-          <div class="body">
-            <label class="small">Usuario</label>
-            <input class="input" id="loginUser" autocomplete="username">
-            <div style="height:10px"></div>
-            <label class="small">Contraseña</label>
-            <input class="input" id="loginPass" type="password" autocomplete="current-password">
-            <div style="height:14px"></div>
-            <div class="toolbar">
-              <button class="btn" id="loginBtn">Entrar</button>
+      <div class="login-card">
+        <h2 class="login-title">Ingreso al panel</h2>
+        <form class="login-form" autocomplete="off">
+          <div class="login-group">
+            <label for="loginUser" class="login-label">Usuario</label>
+            <div class="login-input-wrap">
+              <input type="email" id="loginUser" class="login-input" placeholder="ejemplo@iqmaximo.com" autocomplete="username" value="iqmaximo@gmail.com" required>
+              <span class="login-icon" aria-hidden="true">
+                <i class="fa-regular fa-envelope"></i>
+              </span>
             </div>
-            <div class="status" id="loginStatus"></div>
-            <div class="status">Admin inicial: se crea con `IQMAXIMO_CORREO_ADMIN_USER` y `IQMAXIMO_CORREO_ADMIN_PASS`.</div>
           </div>
+
+          <div class="login-group">
+            <label for="loginPass" class="login-label">Contraseña</label>
+            <div class="login-input-wrap">
+              <input type="password" id="loginPass" class="login-input" placeholder="Introduce tu contraseña privada" autocomplete="current-password" required>
+              <span class="login-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                  <path d="M7 11V8a5 5 0 0 1 10 0v3"></path>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <button type="button" class="login-submit" id="loginBtn">Entrar</button>
+          <div class="status login-error" id="loginStatus"></div>
+        </form>
+
+        <div class="login-note">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+          <span>
+            Admin inicial: se crea con <code>IQMAXIMO_CORREO_ADMIN_USER</code> y <code>IQMAXIMO_CORREO_ADMIN_PASS</code>.
+          </span>
         </div>
       </div>
       <script>
@@ -112,6 +157,7 @@ $user = correo_current_user();
         };
         document.getElementById('loginBtn').addEventListener('click', async () => {
           const loginStatus = document.getElementById('loginStatus');
+          loginStatus.style.display = 'block';
           loginStatus.textContent = 'Validando...';
           const data = await loginApi('login', {
             username: document.getElementById('loginUser').value,
