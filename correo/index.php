@@ -2807,7 +2807,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
         // Registrar Service Worker para soporte PWA (Mac & iPhone)
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/correo/sw.js', { scope: '/correo/' })
+            navigator.serviceWorker.register('/correo/OneSignalSDKWorker.js', { scope: '/correo/' })
               .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
               .catch(err => console.warn('[PWA] Fallo al registrar Service Worker:', err));
           });
@@ -2821,7 +2821,7 @@ $oneSignalAppId = iqmaximo_config('IQMAXIMO_ONESIGNAL_APP_ID', '');
             OneSignal.init({
               appId: oneSignalAppId,
               allowLocalhostAsSecureOrigin: true,
-              serviceWorkerPath: '/correo/sw.js',
+              serviceWorkerPath: '/correo/OneSignalSDKWorker.js',
               serviceWorkerParam: {
                 scope: '/correo/'
               },
