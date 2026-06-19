@@ -69,11 +69,20 @@ $user = correo_current_user();
     .textarea{min-height:152px;resize:vertical}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .list{display:flex;flex-direction:column;gap:10px}
-    .item{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:14px;cursor:pointer}
-    .item:hover{border-color:#39577f}
-    .meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;margin-bottom:8px}
-    .subject{font-size:15px;font-weight:800;margin:0 0 8px}
-    .snippet{color:#c7d3e2;font-size:13px;line-height:1.45;white-space:pre-wrap}
+    .item{border:1px solid #1e293b;border-radius:16px;background:#09111b;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .2s,transform .2s,background .2s,box-shadow .2s}
+    .item:hover{border-color:#39577f;background:#0b1220;transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,0,0,.18)}
+    .item.selected{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.15) inset}
+    .item-row{display:flex;gap:12px;align-items:flex-start}
+    .avatar-circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex:0 0 auto;background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 0 0 2px #09111b}
+    .item-main{flex:1;min-width:0}
+    .item-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:4px}
+    .sender-name{font-size:13px;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .email-date{font-size:12px;color:#64748b;flex:0 0 auto}
+    .subject{font-size:15px;font-weight:800;margin:0 0 6px;color:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .snippet{color:#9ab0c9;font-size:13px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .item-badges{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+    .item-badges .pill{padding:6px 10px;font-size:11px;border-radius:999px}
+    .star-icon{color:#64748b;font-size:14px;flex:0 0 auto}
     .detail{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:16px;min-height:240px}
     .detail h3{margin:0 0 10px;font-size:18px}
     .detail .small,.status{color:var(--muted);font-size:13px}
@@ -128,6 +137,8 @@ $user = correo_current_user();
     .sidebar-list{display:flex;flex-direction:column;gap:10px}
     .sidebar-card{border:1px solid #1e293b;border-radius:10px;background:#070a13;padding:14px}
     .sidebar-card.active{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.15) inset}
+    #tab-inbox .toolbar,#tab-sent .toolbar{margin-bottom:14px}
+    #tab-inbox .status,#tab-sent .status{margin-top:10px}
     .sidebar-card .title{font-weight:800;margin:0 0 4px;color:#cbd5e1}
     .sidebar-card .meta{display:flex;justify-content:space-between;gap:10px}
     .sidebar .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -171,10 +182,7 @@ $user = correo_current_user();
             <div class="login-input-wrap">
               <input type="password" id="loginPass" class="login-input" placeholder="Introduce tu contraseña privada" autocomplete="current-password" required>
               <span class="login-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-                  <path d="M7 11V8a5 5 0 0 1 10 0v3"></path>
-                </svg>
+                <i class="fa-solid fa-lock"></i>
               </span>
             </div>
           </div>
@@ -286,42 +294,23 @@ $user = correo_current_user();
         <main class="main">
       <header class="hero">
         <div class="header-left">
-          <button class="menu-toggle" type="button" aria-label="Abrir men&uacute;">
-            <i class="fa-solid fa-bars"></i>
-          </button>
           <div class="brand-wrapper">
             <div class="brand-icon" aria-hidden="true">
               <i class="fa-regular fa-envelope"></i>
             </div>
             <div class="brand-text">
               <span class="brand-title">Correo</span>
-              <span class="brand-subtitle">Panel de correo electr&oacute;nico</span>
+              <span class="brand-subtitle">Panel de correo electrónico</span>
             </div>
           </div>
         </div>
 
-        <div class="header-center">
-          <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
-            <input type="text" class="global-search-input" id="searchBox" placeholder="Buscar correos...">
-            <span class="search-shortcut">Ctrl K</span>
-          </div>
-        </div>
-
         <div class="header-right">
-          <button class="action-icon-btn" type="button" aria-label="Notificaciones">
-            <i class="fa-regular fa-bell"></i>
-            <span class="notification-dot"></span>
-          </button>
-          <button class="action-icon-btn" type="button" aria-label="Tema">
-            <i class="fa-regular fa-moon"></i>
-          </button>
           <div class="user-profile-wrapper">
             <div class="user-info">
               <span class="user-name"><?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?></span>
               <span class="user-role"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
-            <div class="user-avatar" aria-hidden="true"><?php echo strtoupper(substr((string)($user['username'] ?? 'A'), 0, 1)); ?></div>
             <button class="btn secondary" id="logoutBtn">Salir</button>
           </div>
         </div>
@@ -583,11 +572,22 @@ $user = correo_current_user();
           const status = $(type + 'Status');
           if (!list.length) { target.innerHTML = '<div class="item"><div class="snippet">Sin datos.</div></div>'; status.textContent = 'Sin datos.'; return; }
           target.innerHTML = list.map((item, index) => `
-            <div class="item" data-index="${index}">
-              <div class="meta"><span><strong>De:</strong> ${esc(item.from || '-')}</span><span>${esc(item.created_at || '')}</span></div>
-              <div class="meta"><span><strong>Para:</strong> ${esc(item.to || '-')}</span><span class="pill">${esc(item.status || type)}</span></div>
-              <div class="subject">${esc(item.subject || '(sin asunto)')}</div>
-              <div class="snippet">${esc((item.preview || item.text || item.html || '').slice(0, 220))}</div>
+            <div class="item${state.currentDetail === item ? ' selected' : ''}" data-index="${index}">
+              <div class="item-row">
+                <div class="avatar-circle">${esc(String((item.from || item.to || '?').trim().charAt(0) || '?').toUpperCase())}</div>
+                <div class="item-main">
+                  <div class="item-head">
+                    <div class="sender-name">${esc(item.from || '-')}</div>
+                    <div class="email-date">${esc(item.created_at || '')}</div>
+                  </div>
+                  <div class="subject">${esc(item.subject || '(sin asunto)')}</div>
+                  <div class="snippet">${esc((item.preview || item.text || item.html || '').slice(0, 220))}</div>
+                  <div class="item-badges">
+                    <div class="pill">${esc(item.status || type)}</div>
+                    <div class="star-icon">☆</div>
+                  </div>
+                </div>
+              </div>
             </div>
           `).join('');
           status.textContent = `${list.length} correo(s) cargado(s).`;
@@ -702,7 +702,7 @@ $user = correo_current_user();
         if ($('sidebarImportHistory')) $('sidebarImportHistory').addEventListener('click', () => { if ($('importHistory')) $('importHistory').click(); });
         if ($('sidebarLogout')) $('sidebarLogout').addEventListener('click', () => { if ($('logoutBtn')) $('logoutBtn').click(); });
         $('sendEmail').addEventListener('click', sendEmail);
-        $('searchBox').addEventListener('input', (event) => {
+        if ($('searchBox')) $('searchBox').addEventListener('input', (event) => {
           state.query = event.target.value || '';
           renderList('inbox');
           renderList('sent');
@@ -727,7 +727,7 @@ $user = correo_current_user();
           renderList('sent');
         });
         $('clearFilters').addEventListener('click', () => {
-          $('searchBox').value = '';
+          if ($('searchBox')) $('searchBox').value = '';
           $('daysFilter').value = '15';
           state.query = '';
           state.days = 15;
