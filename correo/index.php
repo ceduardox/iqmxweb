@@ -14,12 +14,13 @@ $user = correo_current_user();
   <title>Panel de Correo</title>
   <style>
     :root{--bg:#07111d;--panel:#0d1724;--panel-2:#111f31;--line:#20324b;--text:#e8eef7;--muted:#9ab0c9;--accent:#5dd6c0;--accent-2:#7aa7ff;--danger:#ff6b6b;--shadow:0 18px 48px rgba(0,0,0,.28)}
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left, rgba(122,167,255,.22), transparent 26%),radial-gradient(circle at right 20%, rgba(93,214,192,.12), transparent 30%),linear-gradient(180deg,#08101b 0%,#0c1725 100%);color:var(--text)}
+    *{box-sizing:border-box} body{margin:0;font-family:Satoshi,"Satoshi Variable","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:radial-gradient(circle at top left, rgba(122,167,255,.22), transparent 26%),radial-gradient(circle at right 20%, rgba(93,214,192,.12), transparent 30%),linear-gradient(180deg,#08101b 0%,#0c1725 100%);color:var(--text)}
     .wrap{width:100%;max-width:none;margin:0;padding:16px}
     .app-shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
     .hero,.card,.sidebar,.topbar{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
     .topbar{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:14px 16px;margin-bottom:16px}
-    .topbar-left{display:flex;align-items:center;gap:12px;min-width:0}
+    .topbar-left{display:flex;align-items:flex-start;gap:12px;min-width:0;flex:1;flex-wrap:wrap}
+    .topbar-left > *:not(.menu-btn){flex-basis:100%}
     .menu-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:#101b2a;color:var(--text);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
     .menu-btn svg,.icon-btn svg,.tab svg,.nav-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     .topbar-title{min-width:0}
@@ -134,6 +135,83 @@ $user = correo_current_user();
         });
       </script>
     <?php else: ?>
+      <div class="drawer-backdrop" id="drawerBackdrop"></div>
+      <div class="app-shell">
+        <aside class="sidebar" id="sidebarMenu">
+          <div>
+            <div class="brand">
+              <div>
+                <div class="badge">Panel de correo</div>
+                <h2>Correo</h2>
+                <div class="small">Buz&oacute;n activo</div>
+                <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
+              </div>
+              <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
+            </div>
+
+            <button class="btn-compose tab" data-tab="compose" type="button">
+              <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"></path></svg></span>
+              Redactar
+            </button>
+
+            <div class="section">
+              <div class="small">Navegaci&oacute;n</div>
+              <div class="nav">
+                <button class="tab active" data-tab="inbox" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path></svg></span>Recibidos</button>
+                <button class="tab" data-tab="sent" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h12"></path><path d="M12 6l6 6-6 6"></path></svg></span>Enviados</button>
+                <button class="tab" data-tab="compose" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>Nuevo</button>
+                <?php if (correo_is_admin()): ?><button class="tab" data-tab="users" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"></path><path d="M5 12h14"></path><path d="M5 17h14"></path></svg></span>Buzones</button><?php endif; ?>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="small">Buscar</div>
+              <div class="search-inline">
+                <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
+                <select class="input" id="sidebarDaysFilter">
+                  <option value="15">Ultimos 15 dias</option>
+                  <option value="7">Ultimos 7 dias</option>
+                  <option value="30">Ultimos 30 dias</option>
+                  <option value="90">Ultimos 90 dias</option>
+                  <option value="0">Todo</option>
+                </select>
+                <button class="btn secondary" id="sidebarClearFilters" type="button">Limpiar filtros</button>
+              </div>
+            </div>
+
+            <?php if (correo_is_admin()): ?>
+            <div class="section">
+              <div class="small">Buzones</div>
+              <div class="sidebar-list" id="sidebarUsers">
+                <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
+              </div>
+            </div>
+            <?php endif; ?>
+
+            <div class="section">
+              <div class="small">Acciones</div>
+              <div class="quick-actions">
+                <button class="btn secondary" id="sidebarReloadInbox" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path></svg></span>Recibidos</button>
+                <button class="btn secondary" id="sidebarReloadSent" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h12"></path><path d="M12 6l6 6-6 6"></path></svg></span>Enviados</button>
+                <button class="btn secondary" id="sidebarImportHistory" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M8 11l4 4 4-4"></path><path d="M5 19h14"></path></svg></span>Importar</button>
+                <button class="btn secondary" id="sidebarLogout" type="button"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5"></path><path d="M15 12H4"></path><path d="M20 4v16"></path></svg></span>Salir</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="storage-box">
+              <div class="storage-header"><span>Administrador</span><span><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span></div>
+              <p style="margin-bottom:5px;color:#64748b;"><?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
+              <div class="storage-bar-bg"><div class="storage-bar-fill"></div></div>
+            </div>
+            <div class="sidebar-footer">
+              <div class="small" style="margin:0">Panel activo</div>
+              <button class="btn secondary" id="sidebarLogoutFooter" type="button">Cerrar sesi&oacute;n</button>
+            </div>
+          </div>
+        </aside>
+        <main class="main">
       <div class="topbar">
         <div class="topbar-left">
           <button class="menu-btn" id="menuToggle" type="button" aria-label="Abrir menu">
@@ -142,81 +220,13 @@ $user = correo_current_user();
             </svg>
           </button>
           <div class="topbar-title">
+            <div class="badge">Panel de correo</div>
             <h1>Correo</h1>
-            <p>Panel tipo shared inbox para IQMaximo</p>
+            <div class="status">Buzón activo: <strong id="activeMailboxLabelMain"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></strong></div>
+            <p>Panel simple para enviar, recibir y revisar historial por buzón. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
           </div>
         </div>
         <div class="topbar-actions">
-          <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
-          <button class="btn secondary" id="logoutBtnTop" type="button">Salir</button>
-        </div>
-      </div>
-      <div class="drawer-backdrop" id="drawerBackdrop"></div>
-      <div class="app-shell">
-        <aside class="sidebar">
-          <div class="brand">
-            <div>
-              <div class="badge">Panel de correo</div>
-              <h2>Correo</h2>
-              <div class="small">Buz&oacute;n activo</div>
-              <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
-            </div>
-            <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
-          </div>
-
-          <div class="section">
-            <div class="small">Navegaci&oacute;n</div>
-            <div class="nav">
-              <button class="tab active" data-tab="inbox"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path></svg>Recibidos</button>
-              <button class="tab" data-tab="sent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h12"></path><path d="M12 6l6 6-6 6"></path></svg>Enviados</button>
-              <button class="tab" data-tab="compose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Nuevo</button>
-              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"></path><path d="M5 12h14"></path><path d="M5 17h14"></path></svg>Buzones</button><?php endif; ?>
-            </div>
-          </div>
-
-          <div class="section">
-            <div class="small">Buscar</div>
-            <div class="search-inline">
-              <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
-              <select class="input" id="sidebarDaysFilter">
-                <option value="15">Ultimos 15 dias</option>
-                <option value="7">Ultimos 7 dias</option>
-                <option value="30">Ultimos 30 dias</option>
-                <option value="90">Ultimos 90 dias</option>
-                <option value="0">Todo</option>
-              </select>
-              <button class="btn secondary" id="sidebarClearFilters">Limpiar filtros</button>
-            </div>
-          </div>
-
-          <?php if (correo_is_admin()): ?>
-          <div class="section">
-            <div class="small">Buzones</div>
-            <div class="sidebar-list" id="sidebarUsers">
-              <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
-            </div>
-          </div>
-          <?php endif; ?>
-
-          <div class="section">
-            <div class="small">Acciones</div>
-            <div class="quick-actions">
-              <button class="btn secondary" id="sidebarReloadInbox"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4z"></path><path d="M4 7l8 6 8-6"></path></svg>Recibidos</button>
-              <button class="btn secondary" id="sidebarReloadSent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h12"></path><path d="M12 6l6 6-6 6"></path></svg>Enviados</button>
-              <button class="btn secondary" id="sidebarImportHistory"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M8 11l4 4 4-4"></path><path d="M5 19h14"></path></svg>Importar</button>
-              <button class="btn secondary" id="sidebarLogout"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5"></path><path d="M15 12H4"></path><path d="M20 4v16"></path></svg>Salir</button>
-            </div>
-          </div>
-        </aside>
-        <main class="main">
-      <div class="hero">
-        <div>
-          <div class="badge">Panel de correo</div>
-          <h1>Correo</h1>
-          <div class="status">Buzón activo: <strong id="activeMailboxLabelMain"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></strong></div>
-          <p>Panel simple para enviar, recibir y revisar historial por buzón. <?php echo htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8'); ?> | <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
-        </div>
-        <div class="actions">
           <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
           <button class="btn secondary" id="logoutBtn">Salir</button>
         </div>
@@ -594,19 +604,21 @@ $user = correo_current_user();
           $('sendStatus').textContent = data.ok ? 'Correo enviado.' : (data.error || 'No se pudo enviar.');
           if (data.ok) { await Promise.all([loadInbox(), loadSent()]); }
         }
+        const doLogout = async () => {
+          await api('logout');
+          location.reload();
+        };
         document.querySelectorAll('.tab').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
         if ($('menuToggle')) $('menuToggle').addEventListener('click', () => setDrawer(!document.body.classList.contains('drawer-open')));
         if ($('drawerBackdrop')) $('drawerBackdrop').addEventListener('click', () => setDrawer(false));
-        if ($('logoutBtnTop')) $('logoutBtnTop').addEventListener('click', async () => {
-          await api('logout');
-          location.reload();
-        });
         $('reloadInbox').addEventListener('click', loadInbox);
         $('reloadSent').addEventListener('click', loadSent);
         if ($('sidebarReloadInbox')) $('sidebarReloadInbox').addEventListener('click', loadInbox);
         if ($('sidebarReloadSent')) $('sidebarReloadSent').addEventListener('click', loadSent);
         if ($('sidebarImportHistory')) $('sidebarImportHistory').addEventListener('click', () => { if ($('importHistory')) $('importHistory').click(); });
-        if ($('sidebarLogout')) $('sidebarLogout').addEventListener('click', () => { if ($('logoutBtn')) $('logoutBtn').click(); });
+        if ($('sidebarLogout')) $('sidebarLogout').addEventListener('click', doLogout);
+        if ($('sidebarLogoutFooter')) $('sidebarLogoutFooter').addEventListener('click', doLogout);
+        if ($('logoutBtn')) $('logoutBtn').addEventListener('click', doLogout);
         $('sendEmail').addEventListener('click', sendEmail);
         $('searchBox').addEventListener('input', (event) => {
           state.query = event.target.value || '';
