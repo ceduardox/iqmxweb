@@ -2729,6 +2729,34 @@ $user = correo_current_user();
         <?php if (correo_is_admin()): ?>loadUsers().catch((e) => $('usersStatus').textContent = e.message);<?php endif; ?>
         setActiveMailbox(state.activeMailboxEmail || defaultMailbox);
         setComposeMode('text');
+
+        // 1. Auto-refresh local en segundo plano (0 peticiones a Resend API)
+        // Consulta la base de datos local cada 15 segundos para ver si llegaron nuevos correos
+        setInterval(async () => {
+          try {
+            if (!document.hidden) {
+              await Promise.all([loadInbox(), loadSent()]);
+            }
+          } catch (e) {
+            console.error('Error en refresco automático:', e);
+          }
+        }, 15000);
+
+        // 2. Sincronización/importación inicial automática al cargar la página
+        // Hace una única petición a Resend para traer los últimos 5 correos en segundo plano al iniciar
+        <?php if (correo_is_admin()): ?>
+        setTimeout(async () => {
+          try {
+            const email = state.activeMailboxEmail || defaultMailbox;
+            if (email) {
+              await api('importHistory', { email, limit: 5 });
+              await Promise.all([loadInbox(), loadSent()]);
+            }
+          } catch (e) {
+            console.warn('Error en sincronización inicial:', e);
+          }
+        }, 1500);
+        <?php endif; ?>
       </script>
     <?php endif; ?>
   </div>
