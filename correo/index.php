@@ -329,6 +329,8 @@ $user = correo_current_user();
       gap: 12px;
       border-left: 1px solid var(--border-color);
       padding-left: 20px;
+      position: relative;
+      cursor: pointer;
     }
 
     .user-info {
@@ -358,6 +360,75 @@ $user = correo_current_user();
       place-items: center;
       font-weight: 700;
       font-size: 14px;
+    }
+
+    /* Profile Dropdown Menu */
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 220px;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      padding: 8px 0;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .profile-dropdown.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dropdown-header {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dropdown-username {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-white);
+      word-break: break-all;
+    }
+
+    .dropdown-role {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 8px 0;
+    }
+
+    .dropdown-item {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-white);
     }
 
     /* Main Shell */
@@ -722,7 +793,8 @@ $user = correo_current_user();
     .main-container.sidebar-collapsed .sidebar-new .nav-badge,
     .main-container.sidebar-collapsed .sidebar-new .sidebar-search-box,
     .main-container.sidebar-collapsed .sidebar-new .sidebar-date-filter,
-    .main-container.sidebar-collapsed .sidebar-new .storage-section {
+    .main-container.sidebar-collapsed .sidebar-new .storage-section,
+    .main-container.sidebar-collapsed .sidebar-new #sidebarUsers {
       display: none;
       opacity: 0;
     }
@@ -1501,7 +1573,7 @@ $user = correo_current_user();
 
     /* Responsive header adjustments for squished search bar */
     @media (max-width: 768px) {
-      .top-bar .brand-text span {
+      .top-bar .brand-text {
         display: none;
       }
       .top-bar .shortcut-badge {
@@ -1509,6 +1581,13 @@ $user = correo_current_user();
       }
       .top-bar .center-section {
         margin: 0 10px;
+      }
+      .top-bar .user-info {
+        display: none;
+      }
+      .top-bar .user-profile {
+        border-left: none;
+        padding-left: 0;
       }
     }
   </style>
@@ -1602,13 +1681,24 @@ $user = correo_current_user();
             </div>
           </div>
           <div class="right-section">
-            <div class="user-profile">
+            <div class="user-profile" id="userProfileNode">
               <div class="user-info">
                 <span class="username"><?php echo htmlspecialchars($user['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="user-role"><?php echo htmlspecialchars($user['role'] ?? 'Administrador', ENT_QUOTES, 'UTF-8'); ?></span>
               </div>
               <div class="user-avatar">
                 <?php echo strtoupper(substr($user['username'] ?? 'A', 0, 1)); ?>
+              </div>
+              <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-header">
+                  <span class="dropdown-username"><?php echo htmlspecialchars($user['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></span>
+                  <span class="dropdown-role"><?php echo htmlspecialchars($user['role'] ?? 'Administrador', ENT_QUOTES, 'UTF-8'); ?></span>
+                </div>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" id="dropdownLogoutBtn" type="button">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                  <span>Cerrar sesión</span>
+                </button>
               </div>
             </div>
           </div>
@@ -2434,6 +2524,27 @@ $user = correo_current_user();
           await api('logout');
           location.reload();
         });
+
+        // Dropdown Perfil
+        const profileBtn = $('userProfileNode');
+        const profileDropdown = $('profileDropdown');
+        if (profileBtn && profileDropdown) {
+          profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+          });
+          document.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+          });
+        }
+        const dropdownLogoutBtn = $('dropdownLogoutBtn');
+        if (dropdownLogoutBtn) {
+          dropdownLogoutBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            await api('logout');
+            location.reload();
+          });
+        }
 
         // Init
         setActiveTab('inbox');
