@@ -23,7 +23,7 @@ $user = correo_current_user();
     .wrap{max-width:1540px;margin:0 auto;padding:20px}
     .app-shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
     .hero,.card,.sidebar{background:rgba(13,23,36,.96);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-    .sidebar{position:sticky;top:20px;padding:16px;height:calc(100vh - 40px);overflow:auto}
+    .sidebar{position:sticky;top:20px;padding:24px 16px;height:calc(100vh - 40px);overflow:auto;background:#0b0f19;border:1px solid #1e293b;border-radius:12px;display:flex;flex-direction:column;justify-content:space-between}
     .main{min-width:0;display:flex;flex-direction:column;gap:18px}
     .hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;padding:22px}
     .hero h1{margin:0;font-size:28px}
@@ -81,21 +81,45 @@ $user = correo_current_user();
     .actions{display:flex;gap:8px;flex-wrap:wrap}
     .mailbox{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:14px}
     .mailbox.active{border-color:#5dd6c0;box-shadow:0 0 0 1px rgba(93,214,192,.18) inset}
-    .sidebar .section{padding:14px 0;border-top:1px solid rgba(32,50,75,.8);margin-top:14px}
-    .sidebar .section:first-of-type{border-top:0;margin-top:0;padding-top:0}
-    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .sidebar .brand h2{margin:0;font-size:22px}
-    .sidebar .brand .small{margin:6px 0 0}
-    .nav{display:grid;gap:8px}
-    .nav .tab{width:100%;text-align:left}
+    .sidebar-top-content,.sidebar-bottom-content{display:flex;flex-direction:column}
+    .sidebar-top-content{gap:22px}
+    .sidebar-bottom-content{gap:16px;margin-top:18px}
+    .sidebar .brand{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:18px;border-bottom:1px solid #1e293b}
+    .sidebar .brand h2{margin:4px 0 0;font-size:20px}
+    .sidebar .brand .small{margin:4px 0 6px}
+    .sidebar .section{display:flex;flex-direction:column;gap:12px}
+    .sidebar .section-title{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:#475569;font-weight:700;margin:0}
+    .nav{display:grid;gap:6px}
+    .sidebar .tab{width:100%;text-align:left;background:transparent;border:0;border-radius:8px;padding:10px 12px;color:#94a3b8;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;transition:all .2s}
+    .sidebar .tab:hover{background:#111827;color:#cbd5e1}
+    .sidebar .tab.active{background:#1e293b;color:#f8fafc}
+    .sidebar .tab[data-tab="compose"]{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700}
+    .sidebar .tab[data-tab="compose"]:hover{opacity:.92}
+    .sidebar .tab::before{font-family:"Font Awesome 6 Free";font-weight:900;content:"";display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-right:10px;flex:0 0 auto}
+    .sidebar .tab[data-tab="inbox"]::before{content:"\f01c"}
+    .sidebar .tab[data-tab="sent"]::before{content:"\f1d8";font-weight:400}
+    .sidebar .tab[data-tab="compose"]::before{content:"\f304";font-weight:900}
+    .sidebar .tab[data-tab="users"]::before{content:"\f233";font-weight:900}
+    .sidebar .tab span{margin-left:auto}
     .sidebar-list{display:flex;flex-direction:column;gap:10px}
-    .sidebar-card{border:1px solid var(--line);border-radius:16px;background:#09111b;padding:12px}
-    .sidebar-card.active{border-color:#5dd6c0}
-    .sidebar-card .title{font-weight:800;margin:0 0 4px}
+    .sidebar-card{border:1px solid #1e293b;border-radius:10px;background:#070a13;padding:14px}
+    .sidebar-card.active{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.15) inset}
+    .sidebar-card .title{font-weight:800;margin:0 0 4px;color:#cbd5e1}
     .sidebar-card .meta{display:flex;justify-content:space-between;gap:10px}
     .sidebar .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .sidebar .quick-actions .btn{padding:10px 12px}
+    .sidebar .quick-actions .btn{padding:10px 12px;border-radius:8px}
     .sidebar .search-inline{display:grid;gap:10px}
+    .sidebar .input{background:#070a13;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;font-size:12px}
+    .sidebar .btn.secondary{background:none;border:1px solid #1e293b;color:#94a3b8;border-radius:8px}
+    .sidebar .btn.secondary:hover{background:#111827;color:#f8fafc}
+    .storage-box{background:#070a13;border:1px solid #1e293b;border-radius:10px;padding:14px;font-size:12px}
+    .storage-header{display:flex;justify-content:space-between;margin-bottom:6px;font-weight:500;color:#cbd5e1}
+    .storage-text{color:#64748b;font-size:11px;margin-bottom:12px}
+    .storage-bar-bg{background:#1e293b;height:6px;border-radius:3px;width:100%;overflow:hidden}
+    .storage-bar-fill{background:linear-gradient(90deg,#a855f7,#3b82f6);height:100%;width:24%}
+    .sidebar-footer{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#64748b;padding-top:14px;border-top:1px solid #1e293b}
+    .footer-icon-btn,.logout-btn{cursor:pointer;transition:color .2s}
+    .footer-icon-btn:hover,.logout-btn:hover{color:#f8fafc}
     #tab-users .row{display:none}
     #tab-users #saveUser{display:none}
     @media (max-width:1180px){.app-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto}.grid{grid-template-columns:1fr}}
@@ -170,57 +194,77 @@ $user = correo_current_user();
     <?php else: ?>
       <div class="app-shell">
         <aside class="sidebar">
-          <div class="brand">
-            <div>
-              <div class="badge">Panel de correo</div>
-              <h2>Correo</h2>
-              <div class="small">Buz&oacute;n activo</div>
-              <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
+          <div class="sidebar-top-content">
+            <div class="brand">
+              <div>
+                <div class="badge">Panel de correo</div>
+                <h2>Correo</h2>
+                <div class="small">Buz&oacute;n activo</div>
+                <div class="pill" id="activeMailboxLabel"><?php echo htmlspecialchars(correo_default_mailbox(), ENT_QUOTES, 'UTF-8'); ?></div>
+              </div>
+              <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
-            <span class="pill"><?php echo htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8'); ?></span>
+
+            <button class="tab" data-tab="compose" type="button"><span>Redactar</span></button>
+
+            <div class="section">
+              <div class="section-title">Navegaci&oacute;n</div>
+              <div class="nav">
+                <button class="tab active" data-tab="inbox" type="button"><span>Recibidos</span><span class="badge-count">12</span></button>
+                <button class="tab" data-tab="sent" type="button"><span>Enviados</span></button>
+                <button class="tab" data-tab="compose" type="button"><span>Nuevo</span></button>
+                <?php if (correo_is_admin()): ?><button class="tab" data-tab="users" type="button"><span>Buzones</span></button><?php endif; ?>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Filtros</div>
+              <div class="nav">
+                <button class="tab" type="button"><span>Marcados</span></button>
+                <button class="tab" type="button"><span>Importantes</span></button>
+                <button class="tab" type="button"><span>Archivos</span></button>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Buscar</div>
+              <div class="search-inline">
+                <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
+                <p class="section-title" style="margin-top:12px;font-size:10px;"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i> Rango de fechas</p>
+                <select class="input" id="sidebarDaysFilter">
+                  <option value="15">Ultimos 15 dias</option>
+                  <option value="7">Ultimos 7 dias</option>
+                  <option value="30">Ultimos 30 dias</option>
+                  <option value="90">Ultimos 90 dias</option>
+                  <option value="0">Todo</option>
+                </select>
+                <button class="btn secondary" id="sidebarClearFilters">Limpiar filtros</button>
+              </div>
+            </div>
+
+            <?php if (correo_is_admin()): ?>
+            <div class="section">
+              <div class="section-title">Buzones</div>
+              <div class="sidebar-list" id="sidebarUsers">
+                <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
+              </div>
+            </div>
+            <?php endif; ?>
           </div>
 
-          <div class="section">
-            <div class="small">Navegaci&oacute;n</div>
-            <div class="nav">
-              <button class="tab active" data-tab="inbox">Recibidos</button>
-              <button class="tab" data-tab="sent">Enviados</button>
-              <button class="tab" data-tab="compose">Nuevo</button>
-              <?php if (correo_is_admin()): ?><button class="tab" data-tab="users">Buzones</button><?php endif; ?>
+          <div class="sidebar-bottom-content">
+            <div class="storage-box">
+              <div class="storage-header">
+                <span>Almacenamiento</span>
+                <span style="color:#94a3b8;">24%</span>
+              </div>
+              <div class="storage-text">2.4 GB de 10 GB usados</div>
+              <div class="storage-bar-bg"><div class="storage-bar-fill"></div></div>
             </div>
-          </div>
 
-          <div class="section">
-            <div class="small">Buscar</div>
-            <div class="search-inline">
-              <input class="input" id="sidebarSearchBox" placeholder="Remitente, destinatario o asunto">
-              <select class="input" id="sidebarDaysFilter">
-                <option value="15">Ultimos 15 dias</option>
-                <option value="7">Ultimos 7 dias</option>
-                <option value="30">Ultimos 30 dias</option>
-                <option value="90">Ultimos 90 dias</option>
-                <option value="0">Todo</option>
-              </select>
-              <button class="btn secondary" id="sidebarClearFilters">Limpiar filtros</button>
-            </div>
-          </div>
-
-          <?php if (correo_is_admin()): ?>
-          <div class="section">
-            <div class="small">Buzones</div>
-            <div class="sidebar-list" id="sidebarUsers">
-              <div class="sidebar-card"><div class="title">Cargando...</div><div class="snippet">Espera un momento.</div></div>
-            </div>
-          </div>
-          <?php endif; ?>
-
-          <div class="section">
-            <div class="small">Acciones</div>
-            <div class="quick-actions">
-              <button class="btn secondary" id="sidebarReloadInbox">Recibidos</button>
-              <button class="btn secondary" id="sidebarReloadSent">Enviados</button>
-              <button class="btn secondary" id="sidebarImportHistory">Importar</button>
-              <button class="btn secondary" id="sidebarLogout">Salir</button>
+            <div class="sidebar-footer">
+              <div class="footer-icon-btn"><i class="fa-solid fa-gear"></i></div>
+              <div class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesi&oacute;n</div>
             </div>
           </div>
         </aside>
@@ -463,6 +507,7 @@ $user = correo_current_user();
           return response.json();
         }
         function setActiveTab(name) {
+          if (!name) return;
           document.querySelectorAll('.tab').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
           ['inbox','sent','compose','users'].forEach((tab) => { const el = $('tab-' + tab); if (el) el.style.display = tab === name ? 'block' : 'none'; });
         }
@@ -605,7 +650,7 @@ $user = correo_current_user();
           $('sendStatus').textContent = data.ok ? 'Correo enviado.' : (data.error || 'No se pudo enviar.');
           if (data.ok) { await Promise.all([loadInbox(), loadSent()]); }
         }
-        document.querySelectorAll('.tab').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
+        document.querySelectorAll('.tab[data-tab]').forEach((btn) => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
         $('reloadInbox').addEventListener('click', loadInbox);
         $('reloadSent').addEventListener('click', loadSent);
         if ($('sidebarReloadInbox')) $('sidebarReloadInbox').addEventListener('click', loadInbox);
